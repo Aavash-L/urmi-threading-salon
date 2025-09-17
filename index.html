@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Urmi Threading Salon | Wayne, NJ</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://unpkg.com/feather-icons"></script>
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            scroll-behavior: smooth;
+        }
+        .hero-gradient {
+            background: linear-gradient(135deg, #f5f7fa 0%, #ffeef8 100%);
+        }
+        .service-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        .staff-card:hover img {
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body class="bg-white text-gray-800">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-md sticky top-0 z-50">
+        <div class="container mx-auto px-6 py-3">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center">
+                    <i data-feather="eye" class="text-pink-500 mr-2"></i>
+                    <span class="text-xl font-semibold text-gray-800">Urmi Threading Salon</span>
+                </div>
+                <div class="hidden md:flex space-x-8">
+                    <a href="#home" class="text-gray-800 hover:text-pink-500 transition">Home</a>
+                    <a href="#services" class="text-gray-800 hover:text-pink-500 transition">Services</a>
+                    <a href="#about" class="text-gray-800 hover:text-pink-500 transition">About</a>
+                    <a href="#contact" class="text-gray-800 hover:text-pink-500 transition">Contact</a>
+                </div>
+                <div class="md:hidden">
+                    <button class="mobile-menu-button">
+                        <i data-feather="menu" class="text-gray-800"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- Mobile menu -->
+        <div class="mobile-menu hidden md:hidden bg-white py-4 px-6 shadow-lg">
+            <a href="#home" class="block py-2 text-gray-800 hover:text-pink-500 transition">Home</a>
+            <a href="#services" class="block py-2 text-gray-800 hover:text-pink-500 transition">Services</a>
+            <a href="#about" class="block py-2 text-gray-800 hover:text-pink-500 transition">About</a>
+            <a href="#contact" class="block py-2 text-gray-800 hover:text-pink-500 transition">Contact</a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero-gradient py-16 md:py-28">
+        <div class="container mx-auto px-6">
+            <div class="flex flex-col md:flex-row items-center">
+                <div class="md:w-1/2 mb-10 md:mb-0" data-aos="fade-right">
+                    <h1 class="text-4xl md:text-5xl font-bold text-gray-800 mb-4">Beautiful Eyebrows Start Here</h1>
+                    <p class="text-lg text-gray-600 mb-6">4.7129 ★ Google Reviews | Wayne's premier threading salon since 2010</p>
+                    <div class="flex flex-wrap gap-4">
+                        <a href="#contact" class="bg-pink-500 hover:bg-pink-600 text-white px-6 py-3 rounded-full font-medium transition shadow-lg">Book Now</a>
+                        <a href="tel:9736539322" class="border border-pink-500 text-pink-500 hover:bg-pink-50 px-6 py-3 rounded-full font-medium transition">(973) 653-9322</a>
+                    </div>
+                </div>
+                <div class="md:w-1/2" data-aos="fade-left">
+                    <img src="https://lh3.googleusercontent.com/gps-cs-s/AC9h4nqNVuXjuHkxCgZ-TjX7bFm5ZsFahCQg9SEyxGr0TnsEuoKPVe6wXnhMd5dtrn1597bHsf0V0sGLq0LSh8mpLczF8LzzHDxzja2CMYSQVNmbGVJtOeq054Oc8SXRyNhDnv88zsQ=s1360-w1360-h1020-rw" alt="Threading Salon" class="rounded-lg shadow-xl w-full">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services & Pricing Section -->
+    <section id="services" class="py-20 bg-white">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16" data-aos="fade-up">
+                <h2 class="text-3xl font-bold text-gray-800 mb-4">Our Services & Pricing</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto">Professional services at competitive prices</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="service-card bg-white rounded-xl p-6 shadow-md transition duration-300" data-aos="fade-up" data-aos-delay="100">
+                    <div class="bg-pink-100 w-16 h-16 rounded-full flex items-center justify-center mb-4 mx-auto">
+                        <i data-feather="eye" class="text-pink-500 w-8 h-8"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-center mb-1">Eyebrow Threading</h3>
+                    <p class="text-pink-500 font-medium text-center mb-3">$10</p>
+                    <p class="text-gray-600 text-center">Precise hair removal technique that creates perfectly shaped eyebrows.</p>
+                </div>
+                <div class="service-card bg-white rounded-xl p-6 shadow-md transition duration-300" data-aos="fade-up" data-aos-delay="200">
+                    <div class="bg-pink-100 w-16 h-16 rounded-full flex items-center justify-center mb-4 mx-auto">
+                        <i data-feather="eye" class="text-pink-500 w-8 h-8"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-center mb-1">Eyebrow & Upper Lip</h3>
+                    <p class="text-pink-500 font-medium text-center mb-3">$16</p>
+                    <p class="text-gray-600 text-center">Combination service for brows and upper lip.</p>
+                </div>
+                <div class="service-card bg-white rounded-xl p-6 shadow-md transition duration-300" data-aos="fade-up" data-aos-delay="250">
+                    <div class="bg-pink-100 w-16 h-16 rounded-full flex items-center justify-center mb-4 mx-auto">
+                        <i data-feather="smile" class="text-pink-500 w-8 h-8"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-center mb-1">Upper Lip</h3>
+                    <p class="text-pink-500 font-medium text-center mb-3">$6</p>
+                    <p class="text-gray-600 text-center">Professional waxing for upper lip area.</p>
+                </div>
+                <div class="service-card bg-white rounded-xl p-6 shadow-md transition duration-300" data-aos="fade-up" data-aos-delay="300">
+                    <div class="bg-pink-100 w-16 h-16 rounded-full flex items-center justify-center mb-4 mx-auto">
+                        <i data-feather="smile" class="text-pink-500 w-8 h-8"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-center mb-1">Chin</h3>
+                    <p class="text-pink-500 font-medium text-center mb-3">$7</p>
+                    <p class="text-gray-600 text-center">Chin waxing for smooth skin.</p>
+                </div>
+                <div class="service-card bg-white rounded-xl p-6 shadow-md transition duration-300" data-aos="fade-up" data-aos-delay="350">
+                    <div class="bg-pink-100 w-16 h-16 rounded-full flex items-center justify-center mb-4 mx-auto">
+                        <i data-feather="star" class="text-pink-500 w-8 h-8"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-center mb-1">Full Face Threading</h3>
+                    <p class="text-pink-500 font-medium text-center mb-3">$35</p>
+                    <p class="text-gray-600 text-center">Complete facial hair removal for a smooth complexion.</p>
+                </div>
+                <div class="service-card bg-white rounded-xl p-6 shadow-md transition duration-300" data-aos="fade-up" data-aos-delay="400">
+                    <div class="bg-pink-100 w-16 h-16 rounded-full flex items-center justify-center mb-4 mx-auto">
+                        <i data-feather="star" class="text-pink-500 w-8 h-8"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-center mb-1">Wax with Neck</h3>
+                    <p class="text-pink-500 font-medium text-center mb-3">$40</p>
+                    <p class="text-gray-600 text-center">Full face wax including neck area.</p>
+                </div>
+                <div class="service-card bg-white rounded-xl p-6 shadow-md transition duration-300" data-aos="fade-up" data-aos-delay="450">
+                    <div class="bg-pink-100 w-16 h-16 rounded-full flex items-center justify-center mb-4 mx-auto">
+                        <i data-feather="activity" class="text-pink-500 w-8 h-8"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-center mb-1">Basic Facial</h3>
+                    <p class="text-pink-500 font-medium text-center mb-3">$65 & up</p>
+                    <p class="text-gray-600 text-center">Revitalizing facial treatment.</p>
+                </div>
+                <div class="service-card bg-white rounded-xl p-6 shadow-md transition duration-300" data-aos="fade-up" data-aos-delay="500">
+                    <div class="bg-pink-100 w-16 h-16 rounded-full flex items-center justify-center mb-4 mx-auto">
+                        <i data-feather="zap" class="text-pink-500 w-8 h-8"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-center mb-1">Bikini Wax</h3>
+                    <p class="text-pink-500 font-medium text-center mb-3">$20</p>
+                    <p class="text-gray-600 text-center">Professional bikini line waxing.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-20 bg-gray-50">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16" data-aos="fade-up">
+                <h2 class="text-3xl font-bold text-gray-800 mb-4">Meet Our Owners</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto">Family-owned salon with over a decade of experience in beauty services.</p>
+            </div>
+            <div class="flex flex-col md:flex-row justify-center items-center gap-10">
+                <div class="staff-card bg-white rounded-xl p-6 shadow-md text-center w-full md:w-1/3" data-aos="fade-up" data-aos-delay="100">
+                    <div class="overflow-hidden rounded-full w-40 h-40 mx-auto mb-4">
+                        <img src="http://static.photos/people/400x400/1" alt="Ganga Kandle Lamichhane" class="w-full h-full object-cover transition duration-300">
+                    </div>
+                    <h3 class="text-xl font-semibold mb-1">Ganga Kandle Lamichhane</h3>
+                    <p class="text-pink-500 mb-3">Co-Owner</p>
+                    <p class="text-gray-600">With 15+ years in the beauty industry, Ganga ensures every client leaves with perfect brows.</p>
+                </div>
+                <div class="staff-card bg-white rounded-xl p-6 shadow-md text-center w-full md:w-1/3" data-aos="fade-up" data-aos-delay="200">
+                    <div class="overflow-hidden rounded-full w-40 h-40 mx-auto mb-4">
+                        <img src="http://static.photos/people/400x400/2" alt="Subdra Lamichhane" class="w-full h-full object-cover transition duration-300">
+                    </div>
+                    <h3 class="text-xl font-semibold mb-1">Subdra Lamichhane</h3>
+                    <p class="text-pink-500 mb-3">Co-Owner</p>
+                    <p class="text-gray-600">Specializing in waxing techniques, Subdra brings precision and care to every service.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-20 bg-white">
+        <div class="container mx-auto px-6">
+            <div class="flex flex-col md:flex-row">
+                <div class="md:w-1/2 mb-10 md:mb-0" data-aos="fade-right">
+                    <h2 class="text-3xl font-bold text-gray-800 mb-6">Visit Us</h2>
+                    <div class="mb-8">
+                        <div class="flex items-start mb-4">
+                            <i data-feather="map-pin" class="text-pink-500 mr-3 mt-1"></i>
+                            <div>
+                                <h3 class="font-semibold text-gray-800">Address</h3>
+                                <p class="text-gray-600">150 Hinchman Ave, Wayne, NJ 07470</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start mb-4">
+                            <i data-feather="phone" class="text-pink-500 mr-3 mt-1"></i>
+                            <div>
+                                <h3 class="font-semibold text-gray-800">Phone</h3>
+                                <p class="text-gray-600">(973) 653-9322</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start">
+                            <i data-feather="clock" class="text-pink-500 mr-3 mt-1"></i>
+                            <div>
+                                <h3 class="font-semibold text-gray-800">Hours</h3>
+                                <ul class="text-gray-600">
+                                    <li class="mb-1">Tuesday: 10 AM – 6 PM</li>
+                                    <li class="mb-1">Wednesday: 10 AM – 6 PM</li>
+                                    <li class="mb-1">Thursday: 10 AM – 7 PM</li>
+                                    <li class="mb-1">Friday: 10 AM – 7 PM</li>
+                                    <li class="mb-1">Saturday: 10 AM – 6 PM</li>
+                                    <li class="mb-1">Sunday: Closed</li>
+                                    <li>Monday: 10 AM – 6 PM</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <a href="https://maps.google.com/?q=150+Hinchman+Ave,+Wayne,+NJ+07470" target="_blank" class="inline-flex items-center text-pink-500 hover:text-pink-600 font-medium">
+                        Get Directions <i data-feather="arrow-right" class="ml-2 w-4 h-4"></i>
+                    </a>
+                </div>
+                <div class="md:w-1/2" data-aos="fade-left">
+                    <div class="bg-gray-50 p-8 rounded-xl shadow-md">
+                        <h3 class="text-2xl font-semibold text-gray-800 mb-6">Book an Appointment</h3>
+                        <!-- SimplyBook.me Widget -->
+                        <script src="//widget.simplybook.me/react-widget/public/runtime.js"></script>
+                        <script src="//widget.simplybook.me/react-widget/public/app.js"></script>
+                        <link rel="stylesheet" href="//widget.simplybook.me/react-widget/public/app.css">
+                        <div id="sb_widget"></div>
+                        <script>
+                            window.addEventListener("load", () => {
+                                const themeSettings = {"colors_accent":"#e07be0","colors_accent_contrast":"#ffffff","colors_text":"#0b3052","colors_text_secondary":"#6d7785","colors_border":"#e7eaee","colors_background":"#ffffff","colors_link":"#216fec","font_sizes_h2":"24px","font_sizes_h3":"20px","font_sizes_p":"16px"};
+                                const widgetContainer = document.getElementById('sb_widget');
+                                SimplyBookWidget(widgetContainer, {
+                                    apiKey: "aead825e632c0f11dee525e8ec3cde4da62f6c053767f1528f993be42281924b",
+                                    company: "urmithreadingsalon",
+                                    baseUrl: "https://user-api-v2.simplybook.me",
+                                    theme: themeSettings
+                                });
+                            });
+                        </script>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-12">
+        <div class="container mx-auto px-6">
+            <div class="flex flex-col md:flex-row justify-between">
+                <div class="mb-8 md:mb-0">
+                    <div class="flex items-center mb-4">
+                        <i data-feather="eye" class="text-pink-400 mr-2"></i>
+                        <span class="text-xl font-semibold">Urmi Threading Salon</span>
+                    </div>
+                    <p class="text-gray-400 max-w-md">Wayne's premier threading salon offering professional eyebrow threading and waxing services since 2010.</p>
+                </div>
+                <div class="grid grid-cols-2 md:grid-cols-3 gap-8">
+                    <div>
+                        <h4 class="text-lg font-semibold mb-4">Quick Links</h4>
+                        <ul class="space-y-2">
+                            <li><a href="#home" class="text-gray-400 hover:text-white transition">Home</a></li>
+                            <li><a href="#services" class="text-gray-400 hover:text-white transition">Services</a></li>
+                            <li><a href="#about" class="text-gray-400 hover:text-white transition">About</a></li>
+                            <li><a href="#contact" class="text-gray-400 hover:text-white transition">Contact</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="text-lg font-semibold mb-4">Contact</h4>
+                        <ul class="space-y-2 text-gray-400">
+                            <li class="flex items-start">
+                                <i data-feather="map-pin" class="mr-2 mt-1 w-4 h-4"></i>
+                                <span>150 Hinchman Ave, Wayne, NJ</span>
+                            </li>
+                            <li class="flex items-center">
+                                <i data-feather="phone" class="mr-2 w-4 h-4"></i>
+                                <span>(973) 653-9322</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="text-lg font-semibold mb-4">Follow Us</h4>
+                        <div class="flex space-x-4">
+                            <a href="#" class="text-gray-400 hover:text-white transition">
+                                <i data-feather="facebook" class="w-5 h-5"></i>
+                            </a>
+                            <a href="#" class="text-gray-400 hover:text-white transition">
+                                <i data-feather="instagram" class="w-5 h-5"></i>
+                            </a>
+                            <a href="#" class="text-gray-400 hover:text-white transition">
+                                <i data-feather="twitter" class="w-5 h-5"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 mt-10 pt-6 text-center text-gray-400">
+                <p>© 2023 Urmi Threading Salon. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile menu toggle
+        document.querySelector('.mobile-menu-button').addEventListener('click', function() {
+            document.querySelector('.mobile-menu').classList.toggle('hidden');
+        });
+
+        // Initialize AOS and Feather Icons
+        AOS.init({
+            duration: 800,
+            easing: 'ease-in-out',
+            once: true
+        });
+        feather.replace();
+    </script>
+</body>
+</html>
