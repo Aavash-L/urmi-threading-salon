@@ -1,4 +1,6 @@
 {
-  "version": 2,
-  "public": "."
+  "rewrites": [
+    { "source": "/sitemap.xml", "destination": "/sitemap.xml" },
+    { "source": "/google3def4ae846b2da68.html", "destination": "/google3def4ae846b2da68.html" }
+  ]
 }
