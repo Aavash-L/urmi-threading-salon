@@ -57,12 +57,14 @@ export default function AdminDashboard() {
 
   async function cancelBooking(id: string) {
     setUpdating(id);
-    await fetch("/api/admin/bookings", {
+    const res = await fetch("/api/admin/bookings", {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ id, status: "cancelled" }),
     });
-    setBookings((prev) => prev.filter((b) => b.id !== id));
+    if (res.ok) {
+      setBookings((prev) => prev.filter((b) => b.id !== id));
+    }
     setUpdating(null);
   }
 
