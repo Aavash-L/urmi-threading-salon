@@ -15,7 +15,8 @@ export const BUSINESS = {
     lng: -74.2421,
   },
   rating: 4.7,
-  reviewCount: 137,
+  reviewCount: 138,
+  reviewsUrl: "https://g.page/r/Cfbomhoh-oQZEAE/review",
   established: 2010,
   url: "https://www.urmithreadingsalon.com",
   googleMapsUrl:

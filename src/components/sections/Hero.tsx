@@ -108,7 +108,7 @@ export default function Hero() {
                   ))}
                 </div>
                 <span className="text-xs sm:text-sm text-gray-600">
-                  <strong className="text-charcoal">4.7 ★</strong> · 137+ Google reviews
+                  <strong className="text-charcoal">4.7 ★</strong> · 138+ Google reviews
                 </span>
               </div>
             </motion.div>

@@ -9,7 +9,7 @@ import AnimatedCounter from "@/components/ui/AnimatedCounter";
 import { aboutImage1, aboutImage2, aboutImage3 } from "@/lib/images";
 
 const stats = [
-  { value: 137, suffix: "+", label: "Google Reviews" },
+  { value: 138, suffix: "+", label: "Google Reviews" },
   { value: 15, suffix: "+", label: "Years in Business" },
   { value: 4, suffix: ".7 ★", label: "Google Rating", prefix: "" },
   { value: 10000, suffix: "+", label: "Brows Shaped" },

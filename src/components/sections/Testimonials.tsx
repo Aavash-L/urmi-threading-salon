@@ -26,7 +26,7 @@ const reviewSchema = {
   aggregateRating: {
     "@type": "AggregateRating",
     ratingValue: "4.7",
-    reviewCount: "137",
+    reviewCount: "138",
     bestRating: "5",
   },
   review: TESTIMONIALS.slice(0, 6).map((t) => ({
@@ -70,7 +70,7 @@ export default function Testimonials() {
           <span className="text-lavender-100 hidden sm:block">|</span>
           <div className="flex items-center gap-1.5">
             <GoogleIcon />
-            <span className="text-gray-600 text-sm font-medium">137+ Google Reviews</span>
+            <span className="text-gray-600 text-sm font-medium">138+ Google Reviews</span>
           </div>
           <span className="text-lavender-100 hidden sm:block">|</span>
           <span className="text-gray-600 text-sm font-medium">15+ Years in Wayne, NJ</span>
@@ -121,12 +121,12 @@ export default function Testimonials() {
         {/* CTA */}
         <div className="text-center mt-10">
           <a
-            href={BUSINESS.googleMapsUrl}
+            href={BUSINESS.reviewsUrl}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 text-brand-purple font-semibold hover:underline underline-offset-4 text-sm"
           >
-            Read all 137+ reviews on Google →
+            Read all 138+ reviews on Google →
           </a>
         </div>
       </div>
