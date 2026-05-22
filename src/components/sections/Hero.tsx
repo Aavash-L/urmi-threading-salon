@@ -116,21 +116,21 @@ export default function Hero() {
 
           {/* Right column — hidden on mobile, shown from lg */}
           <motion.div
-            className="hidden lg:block lg:col-span-2 relative"
+            className="hidden lg:flex lg:col-span-2 relative items-stretch"
             initial={shouldReduce ? {} : { opacity: 0, x: 30 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.7, delay: 0.25, ease: "easeOut" }}
           >
-            <div className="relative">
+            <div className="relative w-full">
               <motion.div
                 style={{ y: imageY }}
-                className="relative rounded-3xl overflow-hidden shadow-2xl aspect-[3/4]"
+                className="relative rounded-3xl overflow-hidden shadow-2xl aspect-[2/3]"
               >
                 <Image
                   src={heroImage.src}
                   alt={heroImage.alt}
                   fill
-                  sizes="45vw"
+                  sizes="50vw"
                   className="object-cover object-center"
                   priority
                 />
