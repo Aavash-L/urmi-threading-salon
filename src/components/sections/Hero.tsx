@@ -124,13 +124,13 @@ export default function Hero() {
             <div className="relative w-full">
               <motion.div
                 style={{ y: imageY }}
-                className="relative rounded-3xl overflow-hidden shadow-2xl aspect-[2/3]"
+                className="relative rounded-3xl overflow-hidden shadow-2xl aspect-[4/5]"
               >
                 <Image
                   src={heroImage.src}
                   alt={heroImage.alt}
                   fill
-                  sizes="50vw"
+                  sizes="40vw"
                   className="object-cover object-center"
                   priority
                 />
