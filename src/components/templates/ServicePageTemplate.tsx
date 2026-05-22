@@ -1,12 +1,10 @@
 import Link from "next/link";
-import { CheckCircle2, Clock, Phone, ArrowRight } from "lucide-react";
+import { CheckCircle2, Clock, Phone } from "lucide-react";
 import type { Service } from "@/lib/services";
 import { BUSINESS, SITE_URL } from "@/lib/constants";
 import BreadcrumbSchema from "@/components/seo/BreadcrumbSchema";
 import ServiceSchema from "@/components/seo/ServiceSchema";
 import FAQSchema from "@/components/seo/FAQSchema";
-import { galleryImages } from "@/lib/images";
-import Image from "next/image";
 
 interface ServicePageTemplateProps {
   service: Service;
@@ -14,7 +12,6 @@ interface ServicePageTemplateProps {
 
 export default function ServicePageTemplate({ service }: ServicePageTemplateProps) {
   const serviceUrl = `${SITE_URL}/services/${service.slug}`;
-  const previewImages = galleryImages.slice(0, 3);
 
   const extraContent: Record<string, { intro: string; para2: string; para3: string }> = {
     "eyebrow-threading": {
@@ -167,24 +164,6 @@ export default function ServicePageTemplate({ service }: ServicePageTemplateProp
       </section>
 
       {/* Gallery preview */}
-      <section className="py-16 bg-lavender-50">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="font-serif text-3xl font-bold text-charcoal mb-8">Gallery</h2>
-          <div className="grid grid-cols-3 gap-4">
-            {previewImages.map((img, i) => (
-              <div key={i} className="rounded-2xl overflow-hidden aspect-square relative">
-                <Image src={img.src} alt={img.alt} fill className="object-cover" sizes="33vw" />
-              </div>
-            ))}
-          </div>
-          <div className="mt-6 text-center">
-            <Link href="/gallery" className="inline-flex items-center gap-1.5 text-brand-purple font-semibold hover:underline text-sm">
-              View full gallery <ArrowRight size={14} />
-            </Link>
-          </div>
-        </div>
-      </section>
-
       {/* Pricing */}
       <section className="py-16 bg-white">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
