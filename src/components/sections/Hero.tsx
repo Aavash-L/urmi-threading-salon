@@ -39,11 +39,11 @@ export default function Hero() {
       <GradientBlob color="purple" className="-bottom-40 -right-40" size={500} />
 
       <div className="relative w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-16">
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 lg:gap-16 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
 
           {/* Left column */}
           <motion.div
-            className="lg:col-span-3 space-y-5 text-center lg:text-left lg:pr-4"
+            className="space-y-5 text-center lg:text-left lg:pr-4"
             variants={container}
             initial="hidden"
             animate="show"
@@ -116,7 +116,7 @@ export default function Hero() {
 
           {/* Right column — hidden on mobile, shown from lg */}
           <motion.div
-            className="hidden lg:flex lg:col-span-2 relative items-stretch"
+            className="hidden lg:flex relative items-stretch"
             initial={shouldReduce ? {} : { opacity: 0, x: 30 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.7, delay: 0.25, ease: "easeOut" }}
@@ -130,7 +130,7 @@ export default function Hero() {
                   src={heroImage.src}
                   alt={heroImage.alt}
                   fill
-                  sizes="40vw"
+                  sizes="50vw"
                   className="object-cover object-center"
                   priority
                 />
