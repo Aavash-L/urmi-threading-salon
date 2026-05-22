@@ -49,18 +49,18 @@ export async function POST(req: NextRequest) {
     date: body.date,
     time: body.time,
     notes: body.notes || null,
-    status: "pending",
+    status: "confirmed",
   });
 
   // Notify the salon
   await resend.emails.send({
     from: "Urmi Threading Salon <bookings@urmithreadingsalon.com>",
     to: "urmithreadingandbeautysalon@gmail.com",
-    subject: `New Booking Request — ${body.service} on ${formattedDate}`,
+    subject: `New Booking — ${body.service} on ${formattedDate}`,
     html: `
       <div style="font-family:sans-serif;max-width:500px;margin:0 auto;">
-        <h2 style="color:#A855F7;">New Appointment Request!</h2>
-        <p style="color:#444;line-height:1.6;">You have a new request for <strong>${body.service}</strong> on <strong>${formattedDate} at ${body.time}</strong>.</p>
+        <h2 style="color:#A855F7;">New Appointment Booked!</h2>
+        <p style="color:#444;line-height:1.6;">You have a new confirmed booking for <strong>${body.service}</strong> on <strong>${formattedDate} at ${body.time}</strong>.</p>
         <div style="background:#F4EEF8;border-radius:12px;padding:16px;margin:20px 0;">
           <p style="margin:0 0 8px;font-weight:600;color:#1A1A1A;">Client Details</p>
           <p style="margin:0 0 4px;color:#444;font-size:13px;"><strong>Name:</strong> ${body.name}</p>
@@ -80,12 +80,12 @@ export async function POST(req: NextRequest) {
   await resend.emails.send({
     from: "Urmi Threading Salon <bookings@urmithreadingsalon.com>",
     to: body.email,
-    subject: "We received your appointment request!",
+    subject: "Your appointment is confirmed!",
     html: `
       <div style="font-family:sans-serif;max-width:500px;margin:0 auto;">
-        <h2 style="color:#A855F7;">Thanks, ${body.name}!</h2>
-        <p style="color:#444;line-height:1.6;">We received your request for <strong>${body.service}</strong> on <strong>${formattedDate} at ${body.time}</strong>.</p>
-        <p style="color:#444;line-height:1.6;">We'll confirm your appointment by phone or text within 1 hour during business hours.</p>
+        <h2 style="color:#A855F7;">You're all set, ${body.name}!</h2>
+        <p style="color:#444;line-height:1.6;">Your appointment for <strong>${body.service}</strong> on <strong>${formattedDate} at ${body.time}</strong> is confirmed.</p>
+        <p style="color:#444;line-height:1.6;">We look forward to seeing you! If you need to cancel or reschedule, please call us.</p>
         <div style="background:#F4EEF8;border-radius:12px;padding:16px;margin:20px 0;">
           <p style="margin:0 0 6px;font-weight:600;color:#1A1A1A;">Urmi Threading Salon</p>
           <p style="margin:0;color:#666;font-size:13px;">150 Hinchman Ave, Wayne, NJ 07470</p>

@@ -55,14 +55,14 @@ export default function AdminDashboard() {
 
   useEffect(() => { fetchBookings(); }, [fetchBookings]);
 
-  async function updateStatus(id: string, status: BookingStatus) {
+  async function cancelBooking(id: string) {
     setUpdating(id);
     await fetch("/api/admin/bookings", {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ id, status }),
+      body: JSON.stringify({ id, status: "cancelled" }),
     });
-    setBookings((prev) => prev.map((b) => (b.id === id ? { ...b, status } : b)));
+    setBookings((prev) => prev.filter((b) => b.id !== id));
     setUpdating(null);
   }
 
@@ -84,7 +84,7 @@ export default function AdminDashboard() {
 
   const todayCount = bookings.filter((b) => isToday(b.date) && b.status !== "cancelled").length;
   const upcomingCount = bookings.filter((b) => isFuture(b.date) && b.status !== "cancelled").length;
-  const pendingCount = bookings.filter((b) => b.status === "pending").length;
+  const totalCount = bookings.filter((b) => b.status !== "cancelled").length;
 
   function toggleDate(date: string) {
     setExpandedDates((prev) => {
@@ -128,7 +128,7 @@ export default function AdminDashboard() {
           {[
             { label: "Today", value: todayCount, color: "text-brand-purple" },
             { label: "Upcoming", value: upcomingCount, color: "text-emerald-600" },
-            { label: "Pending", value: pendingCount, color: "text-amber-600" },
+            { label: "Total", value: totalCount, color: "text-charcoal" },
           ].map(({ label, value, color }) => (
             <div key={label} className="bg-white rounded-2xl p-4 text-center card-shadow">
               <p className={`text-3xl font-bold font-serif ${color}`}>{value}</p>
@@ -211,35 +211,15 @@ export default function AdminDashboard() {
                               </div>
                             </div>
 
-                            {/* Status buttons */}
+                            {/* Cancel button */}
                             <div className="flex gap-2 shrink-0">
-                              {b.status !== "confirmed" && (
-                                <button
-                                  onClick={() => updateStatus(b.id, "confirmed")}
-                                  disabled={updating === b.id}
-                                  className="text-xs font-semibold text-emerald-600 border border-emerald-200 bg-emerald-50 hover:bg-emerald-100 px-3 py-1.5 rounded-full transition-colors disabled:opacity-50"
-                                >
-                                  Confirm
-                                </button>
-                              )}
-                              {b.status !== "cancelled" && (
-                                <button
-                                  onClick={() => updateStatus(b.id, "cancelled")}
-                                  disabled={updating === b.id}
-                                  className="text-xs font-semibold text-red-400 border border-red-200 bg-red-50 hover:bg-red-100 px-3 py-1.5 rounded-full transition-colors disabled:opacity-50"
-                                >
-                                  Cancel
-                                </button>
-                              )}
-                              {b.status === "cancelled" && (
-                                <button
-                                  onClick={() => updateStatus(b.id, "pending")}
-                                  disabled={updating === b.id}
-                                  className="text-xs font-semibold text-gray-500 border border-gray-200 bg-gray-50 hover:bg-gray-100 px-3 py-1.5 rounded-full transition-colors disabled:opacity-50"
-                                >
-                                  Restore
-                                </button>
-                              )}
+                              <button
+                                onClick={() => cancelBooking(b.id)}
+                                disabled={updating === b.id}
+                                className="text-xs font-semibold text-red-400 border border-red-200 bg-red-50 hover:bg-red-100 px-3 py-1.5 rounded-full transition-colors disabled:opacity-50"
+                              >
+                                {updating === b.id ? "…" : "Cancel"}
+                              </button>
                             </div>
                           </div>
 
