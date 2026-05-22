@@ -39,11 +39,11 @@ export default function Hero() {
       <GradientBlob color="purple" className="-bottom-40 -right-40" size={500} />
 
       <div className="relative w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-16">
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 lg:gap-12 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 lg:gap-16 items-center">
 
           {/* Left column */}
           <motion.div
-            className="lg:col-span-3 space-y-5 text-center lg:text-left"
+            className="lg:col-span-3 space-y-5 text-center lg:text-left lg:pr-4"
             variants={container}
             initial="hidden"
             animate="show"
@@ -124,23 +124,25 @@ export default function Hero() {
             <div className="relative">
               <motion.div
                 style={{ y: imageY }}
-                className="relative rounded-3xl overflow-hidden shadow-2xl aspect-[4/5]"
+                className="relative rounded-3xl overflow-hidden shadow-2xl aspect-[3/4]"
               >
                 <Image
                   src={heroImage.src}
                   alt={heroImage.alt}
                   fill
-                  sizes="40vw"
-                  className="object-cover"
+                  sizes="45vw"
+                  className="object-cover object-center"
                   priority
                 />
+                {/* subtle gradient overlay at bottom */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent" />
               </motion.div>
 
               <motion.div
                 initial={shouldReduce ? {} : { opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: 0.8, duration: 0.4 }}
-                className="absolute -top-4 -left-4 glass rounded-2xl px-4 py-2 shadow-lg"
+                className="absolute -top-4 -left-6 glass rounded-2xl px-4 py-2 shadow-lg"
               >
                 <p className="text-sm font-bold text-charcoal">Est. 2010</p>
                 <p className="text-xs text-gray-500">15+ Years</p>

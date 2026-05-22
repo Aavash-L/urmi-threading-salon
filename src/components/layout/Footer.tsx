@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { MapPin, Phone, Mail, Clock, Star, Instagram } from "lucide-react";
+import { MapPin, Phone, Mail, Clock, Star } from "lucide-react";
 import { BUSINESS } from "@/lib/constants";
 
 function InstagramIcon({ size = 18 }: { size?: number }) {
