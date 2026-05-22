@@ -9,10 +9,10 @@ export interface ImageAsset {
 }
 
 export const heroImage: ImageAsset = {
-  src: "https://images.unsplash.com/photo-1560066984-138dadb4c035?w=1200&q=80",
-  alt: "Esthetician performing precise eyebrow threading at Urmi Threading Salon in Wayne NJ",
-  width: 1200,
-  height: 1500,
+  src: "/urmimainfront.png",
+  alt: "Inside Urmi Threading Salon in Wayne NJ — clean, modern salon interior",
+  width: 1266,
+  height: 950,
 };
 
 export const salonInteriorImage: ImageAsset = {
