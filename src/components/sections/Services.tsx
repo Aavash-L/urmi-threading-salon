@@ -100,7 +100,7 @@ export default function Services() {
                     Book Now
                   </Link>
                   <Link
-                    href={`/services/${service.slug}`}
+                    href={service.id === "eyebrow-threading" ? "/eyebrow-threading-wayne-nj" : `/services/${service.slug}`}
                     className="flex-1 text-center border border-brand-purple text-brand-purple text-xs font-semibold py-2.5 rounded-full hover:bg-brand-purple hover:text-white transition-colors"
                   >
                     Learn More

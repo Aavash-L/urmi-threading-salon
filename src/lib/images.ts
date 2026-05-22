@@ -15,6 +15,13 @@ export const heroImage: ImageAsset = {
   height: 950,
 };
 
+export const threadingHeroImage: ImageAsset = {
+  src: "https://images.unsplash.com/photo-1487412947147-5cebf100ffc2?w=900&q=80",
+  alt: "Professional esthetician performing eyebrow threading at Urmi Threading Salon in Wayne NJ",
+  width: 900,
+  height: 1200,
+};
+
 export const salonInteriorImage: ImageAsset = {
   src: "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=800&q=80",
   alt: "Clean and welcoming interior of Urmi Threading Salon in Wayne NJ",

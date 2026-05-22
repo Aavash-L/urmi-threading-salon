@@ -19,12 +19,13 @@ function FacebookIcon({ size = 18 }: { size?: number }) {
 }
 
 const quickLinks = [
-  { label: "Services",         href: "/services"  },
-  { label: "Pricing",          href: "/pricing"   },
-  { label: "Current Offers",   href: "/#offers"   },
-  { label: "About Us",         href: "/about"     },
-  { label: "Book Appointment", href: "/book"      },
-  { label: "Contact",          href: "/#contact"  },
+  { label: "Eyebrow Threading Wayne NJ", href: "/eyebrow-threading-wayne-nj" },
+  { label: "Services",                   href: "/services"  },
+  { label: "Pricing",                    href: "/pricing"   },
+  { label: "Current Offers",             href: "/#offers"   },
+  { label: "About Us",                   href: "/about"     },
+  { label: "Book Appointment",           href: "/book"      },
+  { label: "Contact",                    href: "/#contact"  },
 ];
 
 export default function Footer() {
