@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useReducedMotion } from "framer-motion";
 import { ChevronLeft, ChevronRight, Sparkles, Tag } from "lucide-react";
@@ -41,6 +41,7 @@ const coupons = [
 export default function Offers() {
   const [current, setCurrent] = useState(0);
   const [direction, setDirection] = useState(1);
+  const [paused, setPaused] = useState(false);
   const shouldReduce = useReducedMotion();
 
   const prev = () => {
@@ -51,6 +52,15 @@ export default function Offers() {
     setDirection(1);
     setCurrent((c) => (c + 1) % featured.length);
   };
+
+  useEffect(() => {
+    if (paused || shouldReduce) return;
+    const timer = setInterval(() => {
+      setDirection(1);
+      setCurrent((c) => (c + 1) % featured.length);
+    }, 2000);
+    return () => clearInterval(timer);
+  }, [paused, shouldReduce]);
 
   const variants = {
     enter: (d: number) => ({ opacity: 0, x: shouldReduce ? 0 : d * 60 }),
@@ -75,46 +85,53 @@ export default function Offers() {
         </div>
 
         {/* Featured carousel */}
-        <div className="relative max-w-2xl mx-auto mb-10 px-12 sm:px-0">
-          <div className="relative rounded-3xl overflow-hidden h-64 border border-lavender-100 card-shadow">
-            <AnimatePresence custom={direction} mode="wait">
-              <motion.div
-                key={current}
-                custom={direction}
-                variants={variants}
-                initial="enter"
-                animate="center"
-                exit="exit"
-                transition={{ duration: 0.35, ease: "easeInOut" }}
-                className={`absolute inset-0 flex flex-col items-center justify-center text-center p-8 bg-gradient-to-br ${featured[current].color}`}
-              >
-                <span className="text-xs font-semibold uppercase tracking-widest text-brand-purple bg-white/70 px-3 py-1 rounded-full mb-4">
-                  {featured[current].tag}
-                </span>
-                <p className="font-serif text-5xl font-bold text-brand-pink mb-2">
-                  {featured[current].discount}
-                </p>
-                <p className="font-serif text-2xl font-bold text-charcoal mb-2">
-                  {featured[current].service}
-                </p>
-                <p className="text-gray-500 text-sm max-w-xs">
-                  {featured[current].description}
-                </p>
-              </motion.div>
-            </AnimatePresence>
+        <div className="max-w-2xl mx-auto mb-10">
+          <div
+            className="relative"
+            onMouseEnter={() => setPaused(true)}
+            onMouseLeave={() => setPaused(false)}
+          >
+            {/* Card — mx-10 leaves room for arrows on mobile */}
+            <div className="relative rounded-3xl overflow-hidden h-64 border border-lavender-100 card-shadow mx-10 sm:mx-0">
+              <AnimatePresence custom={direction} mode="wait">
+                <motion.div
+                  key={current}
+                  custom={direction}
+                  variants={variants}
+                  initial="enter"
+                  animate="center"
+                  exit="exit"
+                  transition={{ duration: 0.35, ease: "easeInOut" }}
+                  className={`absolute inset-0 flex flex-col items-center justify-center text-center p-8 bg-gradient-to-br ${featured[current].color}`}
+                >
+                  <span className="text-xs font-semibold uppercase tracking-widest text-brand-purple bg-white/70 px-3 py-1 rounded-full mb-4">
+                    {featured[current].tag}
+                  </span>
+                  <p className="font-serif text-5xl font-bold text-brand-pink mb-2">
+                    {featured[current].discount}
+                  </p>
+                  <p className="font-serif text-2xl font-bold text-charcoal mb-2">
+                    {featured[current].service}
+                  </p>
+                  <p className="text-gray-500 text-sm max-w-xs">
+                    {featured[current].description}
+                  </p>
+                </motion.div>
+              </AnimatePresence>
+            </div>
 
-            {/* Arrows — inside card on mobile, outside on sm+ */}
+            {/* Arrows — outside overflow-hidden so they're never clipped */}
             <button
               onClick={prev}
               aria-label="Previous offer"
-              className="absolute left-3 sm:-left-5 top-1/2 -translate-y-1/2 w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-white/90 sm:bg-white border border-lavender-100 shadow flex items-center justify-center hover:bg-lavender-50 transition-colors z-10"
+              className="absolute left-0 sm:-left-5 top-1/2 -translate-y-1/2 w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-white border border-lavender-100 shadow flex items-center justify-center hover:bg-lavender-50 transition-colors z-10"
             >
               <ChevronLeft size={18} className="text-charcoal" />
             </button>
             <button
               onClick={next}
               aria-label="Next offer"
-              className="absolute right-3 sm:-right-5 top-1/2 -translate-y-1/2 w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-white/90 sm:bg-white border border-lavender-100 shadow flex items-center justify-center hover:bg-lavender-50 transition-colors z-10"
+              className="absolute right-0 sm:-right-5 top-1/2 -translate-y-1/2 w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-white border border-lavender-100 shadow flex items-center justify-center hover:bg-lavender-50 transition-colors z-10"
             >
               <ChevronRight size={18} className="text-charcoal" />
             </button>
