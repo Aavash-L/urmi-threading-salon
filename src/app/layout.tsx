@@ -49,10 +49,6 @@ export const metadata: Metadata = {
     description: "Wayne NJ's top-rated threading salon since 2010. Precision eyebrow threading, waxing, facials & more.",
     images: ["/og/storefront.jpg"],
   },
-  icons: {
-    icon: [{ url: "/favicon.ico", sizes: "any" }],
-    shortcut: "/favicon.ico",
-  },
   alternates: { canonical: SITE_URL },
   robots: { index: true, follow: true, googleBot: { index: true, follow: true } },
 };
