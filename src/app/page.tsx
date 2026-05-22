@@ -4,8 +4,9 @@ import Hero from "@/components/sections/Hero";
 import TrustBar from "@/components/sections/TrustBar";
 import Offers from "@/components/sections/Offers";
 import Services from "@/components/sections/Services";
-import Testimonials from "@/components/sections/Testimonials";
 import About from "@/components/sections/About";
+import ThreadingDifference from "@/components/sections/ThreadingDifference";
+import Testimonials from "@/components/sections/Testimonials";
 import LoyaltyCard from "@/components/sections/LoyaltyCard";
 import Booking from "@/components/sections/Booking";
 import FAQ from "@/components/sections/FAQ";
@@ -31,8 +32,9 @@ export default function HomePage() {
       <TrustBar />
       <Offers />
       <Services />
-      <Testimonials />
       <About />
+      <ThreadingDifference />
+      <Testimonials />
       <LoyaltyCard />
       <Booking />
       <FAQ />
