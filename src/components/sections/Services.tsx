@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { useReducedMotion } from "framer-motion";
-import { ArrowRight, Sparkles, Heart, User, Tag } from "lucide-react";
+import { ArrowRight, Sparkles, Heart, User } from "lucide-react";
 import SectionHeading from "@/components/ui/SectionHeading";
 
 const featured = [
@@ -14,8 +14,6 @@ const featured = [
     name: "Eyebrow Threading",
     description: "Precision shaping with cotton thread — clean lines, natural arches that complement your face.",
     price: "from $10",
-    offer: "First visit? $5 OFF",
-    offerColor: "from-brand-pink to-brand-purple",
     badge: "Most Popular",
   },
   {
@@ -25,8 +23,6 @@ const featured = [
     name: "Full Face Threading",
     description: "Upper lip, chin, sides, and forehead — complete facial hair removal in one visit.",
     price: "from $35",
-    offer: "Save $10 when booked",
-    offerColor: "from-brand-purple to-lavender-100",
     badge: "Best Value",
   },
   {
@@ -36,8 +32,6 @@ const featured = [
     name: "Facials",
     description: "Customized facials to deep cleanse, hydrate, and restore your natural glow.",
     price: "from $45",
-    offer: "$5 OFF first facial",
-    offerColor: "from-brand-pink to-brand-purple",
     badge: "Trending",
   },
 ];
@@ -83,13 +77,9 @@ export default function Services() {
                   {service.description}
                 </p>
 
-                {/* Price + Offer */}
-                <div className="flex items-center justify-between mb-5">
+                {/* Price */}
+                <div className="flex items-center mb-5">
                   <span className="text-lg font-bold text-charcoal">{service.price}</span>
-                  <span className={`inline-flex items-center gap-1 text-[11px] font-bold bg-gradient-to-r ${service.offerColor} text-white px-2.5 py-1 rounded-full`}>
-                    <Tag size={9} />
-                    {service.offer}
-                  </span>
                 </div>
 
                 <div className="flex gap-2">
