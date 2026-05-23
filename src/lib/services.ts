@@ -136,44 +136,49 @@ export const SERVICES: Service[] = [
   },
   {
     id: "facials",
-    name: "Facials",
+    name: "Facial Threading",
     slug: "facials",
     shortDescription:
-      "Customized facials to cleanse, hydrate, and restore your glow.",
+      "Ancient, chemical-free hair removal using twisted cotton thread — no wax, no chemicals, no irritation.",
     description:
-      "Our customized facials go beyond the surface. Each treatment begins with a thorough skin analysis so we can select the right cleansers, masks, and serums for your specific skin type — whether you're dealing with dryness, oiliness, breakouts, or dullness.",
+      "Facial threading is an ancient hair removal technique where an aesthetician uses a twisted antibacterial cotton thread to grip and extract unwanted hair directly from the follicle. It is the gold standard for removing peach fuzz and fine facial hair with precision — leaving skin silky smooth without any chemicals, heat, or products touching the skin.",
     benefits: [
-      "Deep cleansing removes impurities and excess oil",
-      "Hydration boost for dry and dehydrated skin",
-      "Promotes cell turnover for brighter complexion",
-      "Reduces appearance of pores",
-      "Relaxing, stress-relieving experience",
+      "100% chemical-free — nothing touches skin but a cotton thread",
+      "Removes fine peach fuzz and coarser facial hair with equal precision",
+      "No irritation for sensitive or acne-prone skin",
+      "Results last 3–5 weeks as hair regrows finer over time",
+      "Brightens complexion by removing surface hair that dulls skin tone",
     ],
     whatToExpect: [
-      "Skin analysis and consultation",
-      "Double cleanse to remove makeup and impurities",
-      "Steam to open pores",
-      "Gentle extractions if needed",
-      "Custom mask application and massage",
-      "Serum and moisturizer tailored to your skin",
+      "Consultation on which facial areas to treat",
+      "Gentle cleanse of the treatment area",
+      "Threading each zone with a twisted antibacterial cotton thread",
+      "Hair removed cleanly at the follicle — no pulling or tearing of skin",
+      "Soothing aloe applied to calm the skin afterward",
     ],
     faqs: [
       {
-        question: "How often should I get a facial?",
+        question: "Is facial threading the same as a skincare facial?",
         answer:
-          "For maintenance and visible results, we recommend a facial every 4–6 weeks, which aligns with your skin's natural renewal cycle.",
+          "No — facial threading is a hair removal service, not a skincare treatment. We use a twisted cotton thread to remove unwanted facial hair and peach fuzz from the follicle. There are no extractions, masks, or serums involved.",
       },
       {
-        question: "What facial is best for acne-prone skin?",
+        question: "How long does facial threading last?",
         answer:
-          "A deep-cleansing facial with gentle extractions and a clay mask works best. We tailor every facial to your current skin condition.",
+          "Results typically last 3–5 weeks. With regular threading, hair regrows finer and sparser over time, so sessions become quicker and easier.",
+      },
+      {
+        question: "Is facial threading safe for sensitive skin?",
+        answer:
+          "Yes — it is one of the best options for sensitive skin. Nothing touches the skin except a cotton thread, so there is zero risk of a chemical reaction, burn, or wax irritation.",
       },
     ],
     icon: "Heart",
     keywords: [
-      "facial Wayne NJ",
-      "facial near me",
-      "skin care salon Wayne NJ",
+      "facial threading Wayne NJ",
+      "peach fuzz removal Wayne NJ",
+      "facial hair removal near me",
+      "threading salon Wayne NJ",
     ],
   },
   {

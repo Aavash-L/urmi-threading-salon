@@ -6,14 +6,14 @@ import ServicePageTemplate from "@/components/templates/ServicePageTemplate";
 const service = SERVICES.find((s) => s.id === "facials")!;
 
 export const metadata: Metadata = {
-  title: "Facials in Wayne, NJ — Customized Skin Treatments",
+  title: "Facial Threading in Wayne, NJ — Chemical-Free Hair Removal",
   description:
-    "Customized facials at Urmi Threading Salon, Wayne NJ. Deep cleansing, hydration & glow treatments tailored to your skin type. Book now · (973) 653-9322.",
+    "Facial threading at Urmi Threading Salon, Wayne NJ. Ancient cotton-thread technique removes peach fuzz & facial hair with zero chemicals or irritation. Book now · (973) 653-9322.",
   alternates: { canonical: `${SITE_URL}/services/facials` },
   keywords: service.keywords,
   openGraph: {
-    title: "Facials in Wayne, NJ | Urmi Threading Salon",
-    description: "Customized facial treatments for every skin type. 150 Hinchman Ave, Wayne NJ.",
+    title: "Facial Threading in Wayne, NJ | Urmi Threading Salon",
+    description: "Chemical-free facial hair removal using twisted cotton thread. Perfect for sensitive skin. 150 Hinchman Ave, Wayne NJ.",
     url: `${SITE_URL}/services/facials`,
   },
 };
