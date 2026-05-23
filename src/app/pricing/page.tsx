@@ -86,7 +86,7 @@ const menu = [
       { name: "Eyebrow Tinting",         price: "$15" },
       { name: "Eyelash Tinting",         price: "$20" },
       { name: "Eyelash Extensions",      price: "$50" },
-      { name: "Eyelash Exchange",        price: "$50" },
+      { name: "Eyelash Lifting",         price: "$55" },
     ],
   },
   {
