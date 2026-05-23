@@ -1,4 +1,5 @@
 import { BUSINESS } from "@/lib/constants";
+import { TESTIMONIALS } from "@/lib/testimonials";
 
 export default function LocalBusinessSchema() {
   const schema = {
@@ -47,7 +48,15 @@ export default function LocalBusinessSchema() {
       "@type": "AggregateRating",
       ratingValue: BUSINESS.rating.toString(),
       reviewCount: BUSINESS.reviewCount.toString(),
+      bestRating: "5",
     },
+    review: TESTIMONIALS.slice(0, 6).map((t) => ({
+      "@type": "Review",
+      author: { "@type": "Person", name: t.name },
+      reviewRating: { "@type": "Rating", ratingValue: t.rating.toString(), bestRating: "5" },
+      reviewBody: t.text,
+      datePublished: t.datePublished,
+    })),
     sameAs: [BUSINESS.googleMapsUrl, BUSINESS.instagram, BUSINESS.facebook],
     areaServed: BUSINESS.serviceArea.map((city) => ({
       "@type": "City",

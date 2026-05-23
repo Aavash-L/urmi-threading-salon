@@ -18,26 +18,6 @@ function GoogleIcon() {
   );
 }
 
-const reviewSchema = {
-  "@context": "https://schema.org",
-  "@type": "LocalBusiness",
-  "@id": "https://www.urmithreadingsalon.com",
-  name: "Urmi Threading Salon",
-  aggregateRating: {
-    "@type": "AggregateRating",
-    ratingValue: "4.7",
-    reviewCount: "138",
-    bestRating: "5",
-  },
-  review: TESTIMONIALS.slice(0, 6).map((t) => ({
-    "@type": "Review",
-    author: { "@type": "Person", name: t.name },
-    reviewRating: { "@type": "Rating", ratingValue: t.rating.toString(), bestRating: "5" },
-    reviewBody: t.text,
-    datePublished: new Date().getFullYear().toString(),
-  })),
-};
-
 const featured = TESTIMONIALS.slice(0, 6);
 
 export default function Testimonials() {
@@ -45,11 +25,6 @@ export default function Testimonials() {
 
   return (
     <section className="py-24 bg-lavender-50" aria-label="Customer testimonials">
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(reviewSchema) }}
-      />
-
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <SectionHeading
           eyebrow="What Clients Say"

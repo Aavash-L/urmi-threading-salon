@@ -59,11 +59,6 @@ const serviceSchema = {
   ],
   description:
     "Precision eyebrow threading in Wayne, NJ. 15+ years of experience. Walk-ins welcome.",
-  aggregateRating: {
-    "@type": "AggregateRating",
-    ratingValue: "4.7",
-    reviewCount: "138",
-  },
 };
 
 const faqs = [
