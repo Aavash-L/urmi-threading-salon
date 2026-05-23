@@ -8,9 +8,9 @@ import { BUSINESS } from "@/lib/constants";
 import SectionHeading from "@/components/ui/SectionHeading";
 
 const coupons = [
-  { discount: "$5 OFF",  service: "Facial",       description: "Save $5 on any facial service",   note: "Limited time" },
-  { discount: "$10 OFF", service: "Body Waxing",   description: "Save $10 on any waxing service",  note: "Limited time" },
-  { discount: "$5 OFF",  service: "Lash Lifting",  description: "Save $5 on eyelash lifting",      note: "Limited time" },
+  { discount: "$5 OFF",  service: "Facial",      note: "Limited time" },
+  { discount: "$10 OFF", service: "Body Waxing",  note: "Limited time" },
+  { discount: "$5 OFF",  service: "Lash Lifting", note: "Limited time" },
 ];
 
 export default function Offers() {
@@ -34,7 +34,7 @@ export default function Offers() {
         </div>
 
         {/* Coupon cards */}
-        <div className="flex flex-col gap-4 max-w-2xl mx-auto">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-4xl mx-auto">
           {coupons.map((coupon, i) => (
             <motion.div
               key={i}
@@ -42,46 +42,60 @@ export default function Offers() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-50px" }}
               transition={{ duration: 0.4, delay: shouldReduce ? 0 : i * 0.08 }}
-              className="relative bg-white border border-[#c9a84c]/40 rounded-2xl overflow-hidden flex card-shadow hover:border-[#c9a84c] transition-colors"
+              className="relative bg-white border border-lavender-100 rounded-2xl p-5 text-center card-shadow overflow-hidden group hover:border-brand-purple transition-colors"
             >
-              {/* Left gold section */}
-              <div className="bg-[#fdf6e9] flex flex-col items-center justify-center px-6 py-5 min-w-[130px] border-r border-dashed border-[#c9a84c]/50">
-                <span className="text-[#c9a84c] text-xl mb-1">✦</span>
-                <p className="font-serif text-3xl font-bold text-[#c9a84c] leading-none">{coupon.discount}</p>
-                <p className="text-[10px] font-bold uppercase tracking-widest text-[#b8932a] mt-1">Coupon</p>
-              </div>
+              <span className="absolute top-3 right-3 text-[10px] font-bold uppercase tracking-widest text-brand-purple bg-lavender-50 px-2 py-0.5 rounded-full flex items-center gap-1">
+                <Tag size={8} />
+                Coupon
+              </span>
 
-              {/* Right content */}
-              <div className="flex flex-col justify-center px-5 py-4 flex-1 gap-2">
-                <div>
-                  <p className="font-semibold text-charcoal text-base">{coupon.service}</p>
-                  <p className="text-xs text-gray-500 mt-0.5">{coupon.description}</p>
-                  <p className="text-[11px] text-gray-400 mt-0.5">{coupon.note}</p>
+              <div className="mt-4">
+                <p className="font-serif text-3xl font-bold text-brand-pink">{coupon.discount}</p>
+
+                <div className="flex items-center gap-2 my-3">
+                  <div className="h-px flex-1 bg-lavender-100" />
+                  <Sparkles size={10} className="text-lavender-100" />
+                  <div className="h-px flex-1 bg-lavender-100" />
                 </div>
-                <div className="flex items-center gap-2 flex-wrap mt-1">
+
+                <p className="font-semibold text-charcoal text-sm">{coupon.service}</p>
+
+                <div className="flex items-center gap-2 my-3">
+                  <div className="h-px flex-1 bg-lavender-100" />
+                  <Sparkles size={10} className="text-lavender-100" />
+                  <div className="h-px flex-1 bg-lavender-100" />
+                </div>
+
+                <p className="text-xs text-gray-400 mb-4">{coupon.note}</p>
+
+                <div className="flex flex-col gap-2">
                   <a
                     href={`tel:${BUSINESS.phoneRaw}`}
-                    className="inline-flex items-center gap-1.5 bg-[#c9a84c] text-white text-xs font-semibold px-4 py-2 rounded-full hover:bg-[#b8932a] transition-colors"
+                    className="inline-flex items-center justify-center gap-1.5 bg-brand-gradient text-white text-xs font-semibold px-4 py-2 rounded-full hover:opacity-90 transition-opacity"
                   >
-                    <Phone size={12} />
+                    <Phone size={11} />
                     Call to Redeem
                   </a>
                   <button
                     onClick={() => setActiveCoupon(i)}
-                    className="inline-flex items-center gap-1.5 border border-[#c9a84c] text-[#c9a84c] text-xs font-semibold px-4 py-2 rounded-full hover:bg-[#fdf6e9] transition-colors"
+                    className="inline-flex items-center justify-center gap-1.5 border border-brand-purple text-brand-purple text-xs font-semibold px-4 py-2 rounded-full hover:bg-lavender-50 transition-colors"
                   >
                     Show Coupon
                   </button>
                 </div>
               </div>
-
-              {/* Tag badge */}
-              <span className="absolute top-3 right-3 text-[10px] font-bold uppercase tracking-widest text-[#c9a84c] bg-[#fdf6e9] px-2 py-0.5 rounded-full flex items-center gap-1">
-                <Tag size={8} />
-                Coupon
-              </span>
             </motion.div>
           ))}
+        </div>
+
+        <div className="text-center mt-10">
+          <a
+            href={`tel:${BUSINESS.phoneRaw}`}
+            className="inline-flex items-center gap-2 bg-brand-gradient text-white font-semibold px-8 py-4 rounded-full hover:opacity-90 transition-opacity shadow-md"
+          >
+            <Phone size={16} />
+            Call to Book — {BUSINESS.phone}
+          </a>
         </div>
       </div>
 
@@ -100,7 +114,7 @@ export default function Offers() {
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: shouldReduce ? 1 : 0.92 }}
               transition={{ duration: 0.2 }}
-              className="bg-white rounded-3xl p-8 max-w-sm w-full text-center shadow-2xl border border-[#c9a84c]/30 relative"
+              className="bg-white rounded-3xl p-8 max-w-sm w-full text-center shadow-2xl border border-lavender-100 relative"
               onClick={(e) => e.stopPropagation()}
             >
               <button
@@ -112,21 +126,20 @@ export default function Offers() {
               </button>
 
               <p className="text-sm font-semibold text-charcoal mb-1">{BUSINESS.name}</p>
-              <p className="font-serif text-5xl font-bold text-[#c9a84c] my-3">
+              <p className="font-serif text-5xl font-bold text-brand-pink my-3">
                 {coupons[activeCoupon].discount}
               </p>
               <p className="font-semibold text-charcoal text-lg">{coupons[activeCoupon].service}</p>
-              <p className="text-sm text-gray-500 mt-1">{coupons[activeCoupon].description}</p>
 
               <div className="flex items-center gap-3 my-5">
                 <div className="h-px flex-1 bg-lavender-100" />
-                <span className="text-[#c9a84c] text-sm">✦</span>
+                <Sparkles size={12} className="text-brand-purple" />
                 <div className="h-px flex-1 bg-lavender-100" />
               </div>
 
               <a
                 href={`tel:${BUSINESS.phoneRaw}`}
-                className="inline-flex items-center gap-2 bg-[#c9a84c] text-white font-semibold px-6 py-3 rounded-full hover:bg-[#b8932a] transition-colors w-full justify-center"
+                className="inline-flex items-center gap-2 bg-brand-gradient text-white font-semibold px-6 py-3 rounded-full hover:opacity-90 transition-opacity w-full justify-center"
               >
                 <Phone size={16} />
                 Call {BUSINESS.phone}
