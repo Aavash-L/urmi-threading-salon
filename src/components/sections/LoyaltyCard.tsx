@@ -32,13 +32,13 @@ const programs = [
     id: "glow",
     icon: Crown,
     label: "Glow Rewards",
-    title: "Every 5th Facial or Wax",
+    title: "Every 5th Brazilian Wax",
     reward: "$15 off. Just for showing up.",
-    description: "Book any facial or waxing service and collect stamps. Every 5th visit earns you $15 off — automatically applied at checkout.",
+    description: "Come in for a Brazilian wax and collect stamps. Every 5th visit earns you $15 off — automatically applied at checkout.",
     total: 5,
     freeSlot: 5,
     stampColor: "from-brand-purple to-lavender-100",
-    rewardLabel: "$15 OFF Facial or Wax",
+    rewardLabel: "$15 OFF Brazilian Wax",
   },
 ];
 
