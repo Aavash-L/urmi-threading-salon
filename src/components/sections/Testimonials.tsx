@@ -1,8 +1,8 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { useReducedMotion } from "framer-motion";
-import { Star } from "lucide-react";
+import { useRef, useState } from "react";
+import { motion, useMotionValue, useAnimationFrame } from "framer-motion";
+import { Star, ArrowUpRight } from "lucide-react";
 import SectionHeading from "@/components/ui/SectionHeading";
 import { TESTIMONIALS } from "@/lib/testimonials";
 import { BUSINESS } from "@/lib/constants";
@@ -18,13 +18,58 @@ function GoogleIcon() {
   );
 }
 
-const featured = TESTIMONIALS.slice(0, 6);
+const CARD_WIDTH = 320;
+const CARD_GAP = 20;
+const SLOT = CARD_WIDTH + CARD_GAP;
+const LOOP_WIDTH = SLOT * TESTIMONIALS.length;
+const SPEED = 0.6;
+
+function TestimonialCard({ t }: { t: typeof TESTIMONIALS[0] }) {
+  return (
+    <div
+      className="bg-white rounded-2xl p-6 card-shadow border border-lavender-100 flex flex-col gap-4 shrink-0"
+      style={{ width: CARD_WIDTH }}
+    >
+      <div className="flex items-center gap-0.5">
+        {Array.from({ length: 5 }).map((_, j) => (
+          <Star key={j} size={13} className={j < t.rating ? "fill-amber-400 text-amber-400" : "fill-gray-200 text-gray-200"} />
+        ))}
+      </div>
+      <p className="text-gray-600 text-sm leading-relaxed flex-1 line-clamp-4">
+        &ldquo;{t.text}&rdquo;
+      </p>
+      <div className="flex items-center justify-between pt-1 border-t border-lavender-50">
+        <div>
+          <p className="font-semibold text-charcoal text-sm">{t.name}</p>
+          <p className="text-xs text-gray-400">{t.service} · {t.date}</p>
+        </div>
+        <div className="flex items-center gap-1 text-[10px] font-bold uppercase tracking-wide text-emerald-700 bg-emerald-50 border border-emerald-100 px-2 py-1 rounded-full">
+          <GoogleIcon />
+          Verified
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export default function Testimonials() {
-  const shouldReduce = useReducedMotion();
+  const x = useMotionValue(0);
+  const [paused, setPaused] = useState(false);
+  const pausedRef = useRef(false);
+
+  const handleMouseEnter = () => { setPaused(true); pausedRef.current = true; };
+  const handleMouseLeave = () => { setPaused(false); pausedRef.current = false; };
+
+  useAnimationFrame(() => {
+    if (pausedRef.current) return;
+    const next = x.get() - SPEED;
+    x.set(next <= -LOOP_WIDTH ? next + LOOP_WIDTH : next);
+  });
+
+  const doubled = [...TESTIMONIALS, ...TESTIMONIALS];
 
   return (
-    <section className="py-24 bg-lavender-50" aria-label="Customer testimonials">
+    <section className="py-24 bg-lavender-50 overflow-hidden" aria-label="Customer testimonials">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <SectionHeading
           eyebrow="What Clients Say"
@@ -33,7 +78,7 @@ export default function Testimonials() {
         />
 
         {/* Stats bar */}
-        <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-8 mt-8 mb-14">
+        <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-8 mt-8 mb-12">
           <div className="flex items-center gap-2">
             <div className="flex">
               {Array.from({ length: 5 }).map((_, i) => (
@@ -50,58 +95,41 @@ export default function Testimonials() {
           <span className="text-lavender-100 hidden sm:block">|</span>
           <span className="text-gray-600 text-sm font-medium">15+ Years in Wayne, NJ</span>
         </div>
+      </div>
 
-        {/* 3×2 grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-          {featured.map((t, i) => (
-            <motion.div
-              key={t.id}
-              initial={{ opacity: 0, y: shouldReduce ? 0 : 24 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-60px" }}
-              transition={{ duration: 0.5, delay: shouldReduce ? 0 : i * 0.08 }}
-              className="bg-white rounded-2xl p-6 card-shadow border border-lavender-100 flex flex-col gap-4"
-            >
-              {/* Stars */}
-              <div className="flex items-center gap-0.5">
-                {Array.from({ length: 5 }).map((_, j) => (
-                  <Star
-                    key={j}
-                    size={14}
-                    className={j < t.rating ? "fill-amber-400 text-amber-400" : "fill-gray-200 text-gray-200"}
-                  />
-                ))}
-              </div>
+      {/* Carousel — full bleed with fade edges */}
+      <div
+        className="relative"
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+      >
+        {/* Fade masks */}
+        <div className="pointer-events-none absolute left-0 top-0 bottom-0 w-24 z-10 bg-gradient-to-r from-lavender-50 to-transparent" />
+        <div className="pointer-events-none absolute right-0 top-0 bottom-0 w-24 z-10 bg-gradient-to-l from-lavender-50 to-transparent" />
 
-              {/* Text */}
-              <p className="text-gray-600 text-sm leading-relaxed flex-1">
-                &ldquo;{t.text}&rdquo;
-              </p>
-
-              {/* Footer */}
-              <div className="flex items-center justify-between pt-1 border-t border-lavender-50">
-                <div>
-                  <p className="font-semibold text-charcoal text-sm">{t.name}</p>
-                  <p className="text-xs text-gray-400">{t.service} · {t.date}</p>
-                </div>
-                <div className="flex items-center gap-1 text-[10px] font-bold uppercase tracking-wide text-emerald-700 bg-emerald-50 border border-emerald-100 px-2 py-1 rounded-full">
-                  <GoogleIcon />
-                  Verified
-                </div>
-              </div>
-            </motion.div>
-          ))}
+        <div className="overflow-hidden px-4">
+          <motion.div
+            className="flex"
+            style={{ x, gap: CARD_GAP }}
+          >
+            {doubled.map((t, i) => (
+              <TestimonialCard key={`${t.id}-${i}`} t={t} />
+            ))}
+          </motion.div>
         </div>
+      </div>
 
-        {/* CTA */}
+      {/* CTA */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mt-10">
           <a
             href={BUSINESS.reviewsUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 text-brand-purple font-semibold hover:underline underline-offset-4 text-sm"
+            className="inline-flex items-center gap-2 bg-white border border-lavender-100 text-brand-purple font-semibold px-6 py-3 rounded-full hover:shadow-md hover:border-brand-purple transition-all text-sm card-shadow"
           >
-            Read all 138+ reviews on Google →
+            Read all 138+ reviews on Google
+            <ArrowUpRight size={15} />
           </a>
         </div>
       </div>
