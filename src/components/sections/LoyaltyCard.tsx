@@ -132,7 +132,7 @@ export default function LoyaltyCard() {
   const Icon = program.icon;
 
   return (
-    <section className="py-24 bg-lavender-50" aria-label="Loyalty rewards program">
+    <section id="loyalty" className="py-24 bg-lavender-50" aria-label="Loyalty rewards program">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
 
         {/* Heading */}

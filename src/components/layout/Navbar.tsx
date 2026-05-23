@@ -35,6 +35,7 @@ export default function Navbar() {
   const navLinks = [
     { label: "Home", href: "/" },
     { label: "About", href: "/about" },
+    { label: "Loyalty Benefits", href: "/#loyalty" },
     { label: "Contact", href: "/contact" },
   ];
 
@@ -182,7 +183,7 @@ export default function Navbar() {
                 initial="hidden"
                 animate="show"
               >
-                {[{ label: "Home", href: "/" }, { label: "Services", href: "/services" }, ...navLinks.slice(1), { label: "Book Appointment", href: "/book" }].map(
+                {[{ label: "Home", href: "/" }, { label: "Services", href: "/services" }, { label: "About", href: "/about" }, { label: "Loyalty Benefits", href: "/#loyalty" }, { label: "Contact", href: "/contact" }, { label: "Book Appointment", href: "/book" }].map(
                   (link) => (
                     <motion.li
                       key={link.href}
