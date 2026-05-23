@@ -37,8 +37,8 @@ export default function HomePage() {
       <Testimonials />
       <LoyaltyCard />
       <Booking />
-      <FAQ />
       <Contact />
+      <FAQ />
     </>
   );
 }
