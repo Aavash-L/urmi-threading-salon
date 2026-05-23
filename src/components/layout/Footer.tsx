@@ -51,7 +51,7 @@ export default function Footer() {
               <span className="text-gray-400 text-xs ml-1.5">4.7 · 138+ reviews</span>
             </div>
             <p className="text-xs text-brand-pink mt-3 font-medium">
-              ✨ Every 10th brow threading is FREE
+              ✨ Every 9th brow threading is FREE
             </p>
             <div className="flex gap-4 mt-5">
               <a
