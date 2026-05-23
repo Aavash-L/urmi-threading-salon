@@ -40,7 +40,7 @@ export default function Services() {
   const shouldReduce = useReducedMotion();
 
   return (
-    <section id="services" className="py-24 bg-lavender-50" aria-label="Our services">
+    <section id="services" className="py-14 sm:py-24 bg-lavender-50" aria-label="Our services">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <SectionHeading
           eyebrow="What We Offer"

@@ -18,7 +18,7 @@ function GoogleIcon() {
   );
 }
 
-const CARD_WIDTH = 320;
+const CARD_WIDTH = 280;
 const CARD_GAP = 20;
 const SLOT = CARD_WIDTH + CARD_GAP;
 const LOOP_WIDTH = SLOT * TESTIMONIALS.length;
@@ -69,7 +69,7 @@ export default function Testimonials() {
   const doubled = [...TESTIMONIALS, ...TESTIMONIALS];
 
   return (
-    <section className="py-24 bg-lavender-50 overflow-hidden" aria-label="Customer testimonials">
+    <section className="py-14 sm:py-24 bg-lavender-50 overflow-hidden" aria-label="Customer testimonials">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <SectionHeading
           eyebrow="What Clients Say"

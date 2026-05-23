@@ -20,7 +20,7 @@ import { BUSINESS } from "@/lib/constants";
 
 export default function Contact() {
   return (
-    <section id="contact" className="py-24 bg-lavender-50" aria-label="Contact information">
+    <section id="contact" className="py-14 sm:py-24 bg-lavender-50" aria-label="Contact information">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <SectionHeading
           eyebrow="Find Us"
@@ -28,7 +28,7 @@ export default function Contact() {
           subtitle="We're conveniently located in Wayne, NJ. Walk in anytime or call ahead."
         />
 
-        <div className="mt-14 grid grid-cols-1 lg:grid-cols-2 gap-10">
+        <div className="mt-8 sm:mt-14 grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-10">
           {/* Contact info */}
           <div className="space-y-6">
             <div className="bg-white rounded-2xl p-6 card-shadow space-y-5">
@@ -114,7 +114,7 @@ export default function Contact() {
           </div>
 
           {/* Map */}
-          <div className="rounded-2xl overflow-hidden card-shadow h-[400px] lg:h-auto min-h-[300px]">
+          <div className="rounded-2xl overflow-hidden card-shadow h-[220px] sm:h-[350px] lg:h-auto lg:min-h-[400px]">
             <iframe
               src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3017.1234567890!2d-74.2421!3d40.9468!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2s150+Hinchman+Ave%2C+Wayne%2C+NJ+07470!5e0!3m2!1sen!2sus!4v1234567890"
               width="100%"

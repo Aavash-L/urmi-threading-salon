@@ -92,7 +92,7 @@ function FAQItem({ faq, index }: { faq: { question: string; answer: string }; in
 
 export default function FAQ() {
   return (
-    <section id="faq" className="py-24 bg-white" aria-label="Frequently asked questions">
+    <section id="faq" className="py-14 sm:py-24 bg-white" aria-label="Frequently asked questions">
       <FAQSchema faqs={homepageFAQs} />
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
         <SectionHeading
@@ -100,7 +100,7 @@ export default function FAQ() {
           title="Common Questions, Honest Answers"
           subtitle="Everything you need to know before your first threading appointment — or your fiftieth."
         />
-        <div className="mt-12 space-y-3">
+        <div className="mt-8 sm:mt-12 space-y-3">
           {homepageFAQs.map((faq, i) => (
             <FAQItem key={i} faq={faq} index={i} />
           ))}

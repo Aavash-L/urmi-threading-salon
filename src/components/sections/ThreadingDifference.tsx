@@ -33,7 +33,7 @@ export default function ThreadingDifference() {
 
   return (
     <section
-      className="py-24 bg-gradient-to-br from-brand-pink/10 via-white to-brand-purple/10"
+      className="py-14 sm:py-24 bg-gradient-to-br from-brand-pink/10 via-white to-brand-purple/10"
       aria-label="How threading works"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -43,7 +43,7 @@ export default function ThreadingDifference() {
           subtitle="Threading uses a twisted cotton thread to remove hair from the follicle — no wax, no chemicals, no skin damage. The result is a cleaner arch and sharper definition than any other method."
         />
 
-        <div className="mt-14 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+        <div className="mt-10 sm:mt-14 grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
           {steps.map(({ icon: Icon, title, body }, i) => (
             <motion.div
               key={title}

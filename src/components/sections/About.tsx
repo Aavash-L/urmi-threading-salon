@@ -26,9 +26,9 @@ export default function About() {
   const shouldReduce = useReducedMotion();
 
   return (
-    <section id="about" className="py-24 bg-lavender-50" aria-label="About Urmi Threading Salon">
+    <section id="about" className="py-14 sm:py-24 bg-lavender-50" aria-label="About Urmi Threading Salon">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center">
           {/* Image collage */}
           <motion.div
             className="relative h-[500px] hidden sm:block"
@@ -82,7 +82,7 @@ export default function About() {
         </div>
 
         {/* Stats row */}
-        <div className="mt-20 grid grid-cols-2 md:grid-cols-4 gap-6">
+        <div className="mt-10 sm:mt-20 grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
           {stats.map((stat, i) => (
             <motion.div
               key={i}

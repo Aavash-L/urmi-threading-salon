@@ -132,7 +132,7 @@ export default function LoyaltyCard() {
   const Icon = program.icon;
 
   return (
-    <section id="loyalty" className="py-24 bg-lavender-50" aria-label="Loyalty rewards program">
+    <section id="loyalty" className="py-14 sm:py-24 bg-lavender-50" aria-label="Loyalty rewards program">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
 
         {/* Heading */}
@@ -175,7 +175,7 @@ export default function LoyaltyCard() {
             animate={{ opacity: 1, y: 0 }}
             exit={shouldReduce ? {} : { opacity: 0, y: -16 }}
             transition={{ duration: 0.3 }}
-            className="bg-white rounded-3xl p-8 md:p-10 card-shadow border border-lavender-100"
+            className="bg-white rounded-3xl p-5 sm:p-8 md:p-10 card-shadow border border-lavender-100"
           >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
 

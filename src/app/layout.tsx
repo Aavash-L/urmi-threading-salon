@@ -63,7 +63,7 @@ export default function RootLayout({
       <head>
         <LocalBusinessSchema />
       </head>
-      <body className="flex flex-col min-h-screen">
+      <body className="flex flex-col min-h-screen pb-[72px] md:pb-0">
         <a href="#main-content" className="skip-link">Skip to main content</a>
         <SiteChrome />
         <main id="main-content" className="flex-1">
