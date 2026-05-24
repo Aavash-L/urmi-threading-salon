@@ -1,8 +1,12 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { Calendar, Phone, Mail, Clock, ChevronDown, ChevronUp, LogOut, RefreshCw, User } from "lucide-react";
+import { AnimatePresence, motion } from "framer-motion";
+import {
+  Calendar, Phone, Mail, Clock, ChevronDown, ChevronUp,
+  LogOut, RefreshCw, User, Bell, BellOff, X,
+} from "lucide-react";
 import type { Booking, BookingStatus } from "@/lib/supabase";
 
 const STATUS_STYLES: Record<BookingStatus, string> = {
@@ -32,28 +36,152 @@ function isFuture(dateStr: string) {
   return dateStr >= today;
 }
 
+function urlBase64ToUint8Array(base64String: string): Uint8Array<ArrayBuffer> {
+  const padding = "=".repeat((4 - (base64String.length % 4)) % 4);
+  const base64 = (base64String + padding).replace(/-/g, "+").replace(/_/g, "/");
+  const rawData = atob(base64);
+  return new Uint8Array([...rawData].map((c) => c.charCodeAt(0))) as Uint8Array<ArrayBuffer>;
+}
+
+function playChime() {
+  try {
+    const AudioCtx = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
+    if (!AudioCtx) return;
+    const ctx = new AudioCtx();
+
+    const note = (freq: number, t: number, dur: number) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.type = "sine";
+      osc.frequency.value = freq;
+      gain.gain.setValueAtTime(0, t);
+      gain.gain.linearRampToValueAtTime(0.2, t + 0.02);
+      gain.gain.exponentialRampToValueAtTime(0.001, t + dur);
+      osc.start(t);
+      osc.stop(t + dur);
+    };
+
+    const base = ctx.currentTime;
+    note(1046.5, base, 0.8);         // C6
+    note(1318.5, base + 0.13, 1.0);  // E6
+    note(1568.0, base + 0.26, 1.2);  // G6
+  } catch {}
+}
+
 export default function AdminDashboard() {
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [loading, setLoading] = useState(true);
   const [expandedDates, setExpandedDates] = useState<Set<string>>(new Set());
   const [filter, setFilter] = useState<"upcoming" | "all">("upcoming");
   const [updating, setUpdating] = useState<string | null>(null);
+  const [toast, setToast] = useState<Booking | null>(null);
+  const [pushEnabled, setPushEnabled] = useState(false);
+
+  const knownIds = useRef<Set<string>>(new Set());
+  const initialized = useRef(false);
+  const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
   const router = useRouter();
 
   const fetchBookings = useCallback(async () => {
     setLoading(true);
     const res = await fetch("/api/admin/bookings");
     if (res.status === 401) { router.push("/admin/login"); return; }
-    const data = await res.json();
+    const data: Booking[] = await res.json();
     setBookings(data);
-    setLoading(false);
 
-    // Auto-expand today
-    const today = new Date().toISOString().slice(0, 10);
-    setExpandedDates(new Set([today]));
+    // Always sync knownIds so manual refresh doesn't re-trigger chime
+    data.forEach((b) => knownIds.current.add(b.id));
+
+    if (!initialized.current) {
+      initialized.current = true;
+      const today = new Date().toISOString().slice(0, 10);
+      setExpandedDates(new Set([today]));
+    }
+
+    setLoading(false);
   }, [router]);
 
+  const silentPoll = useCallback(async () => {
+    if (!initialized.current) return;
+    try {
+      const res = await fetch("/api/admin/bookings");
+      if (!res.ok) return;
+      const data: Booking[] = await res.json();
+
+      const newOnes = data.filter((b) => !knownIds.current.has(b.id));
+      if (newOnes.length > 0) {
+        playChime();
+
+        setToast(newOnes[0]);
+        if (toastTimer.current) clearTimeout(toastTimer.current);
+        toastTimer.current = setTimeout(() => setToast(null), 6000);
+
+        setBookings(data);
+        data.forEach((b) => knownIds.current.add(b.id));
+
+        const today = new Date().toISOString().slice(0, 10);
+        if (newOnes.some((b) => b.date === today)) {
+          setExpandedDates((prev) => new Set([...prev, today]));
+        }
+      }
+    } catch {}
+  }, []);
+
+  // Initial load
   useEffect(() => { fetchBookings(); }, [fetchBookings]);
+
+  // 30-second polling
+  useEffect(() => {
+    const id = setInterval(silentPoll, 30_000);
+    return () => clearInterval(id);
+  }, [silentPoll]);
+
+  // Register service worker + set up push subscription
+  useEffect(() => {
+    if (!("serviceWorker" in navigator) || !("PushManager" in window)) return;
+
+    const vapidKey = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY;
+    if (!vapidKey) return;
+
+    navigator.serviceWorker.register("/sw.js").then(async (reg) => {
+      const perm = Notification.permission;
+      if (perm === "granted") {
+        await subscribePush(reg, vapidKey);
+      }
+    });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  async function subscribePush(reg: ServiceWorkerRegistration, vapidKey: string) {
+    try {
+      const existing = await reg.pushManager.getSubscription();
+      const sub = existing ?? await reg.pushManager.subscribe({
+        userVisibleOnly: true,
+        applicationServerKey: urlBase64ToUint8Array(vapidKey),
+      });
+      await fetch("/api/push/subscribe", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(sub),
+      });
+      setPushEnabled(true);
+    } catch {}
+  }
+
+  async function enablePush() {
+    if (!("serviceWorker" in navigator) || !("PushManager" in window)) return;
+    const vapidKey = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY;
+    if (!vapidKey) return;
+
+    const perm = await Notification.requestPermission();
+    if (perm !== "granted") return;
+
+    const reg = await navigator.serviceWorker.ready;
+    await subscribePush(reg, vapidKey);
+  }
 
   async function cancelBooking(id: string) {
     setUpdating(id);
@@ -77,7 +205,6 @@ export default function AdminDashboard() {
     ? bookings.filter((b) => isFuture(b.date) && b.status !== "cancelled")
     : bookings;
 
-  // Group by date
   const grouped = filtered.reduce<Record<string, Booking[]>>((acc, b) => {
     acc[b.date] = acc[b.date] ? [...acc[b.date], b] : [b];
     return acc;
@@ -98,6 +225,36 @@ export default function AdminDashboard() {
 
   return (
     <div className="min-h-screen bg-lavender-50">
+      {/* New booking toast */}
+      <AnimatePresence>
+        {toast && (
+          <motion.div
+            initial={{ opacity: 0, y: -24 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -24 }}
+            transition={{ type: "spring", stiffness: 400, damping: 30 }}
+            className="fixed top-20 left-1/2 -translate-x-1/2 z-50 w-[calc(100%-2rem)] max-w-sm"
+          >
+            <div className="bg-brand-gradient text-white rounded-2xl px-4 py-3 shadow-2xl flex items-center gap-3">
+              <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center shrink-0">
+                <Bell size={15} className="text-white" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="font-bold text-sm leading-tight">New Appointment!</p>
+                <p className="text-white/90 text-xs truncate">{toast.name} — {toast.service}</p>
+                <p className="text-white/70 text-xs">{toast.time} · {formatDate(toast.date)}</p>
+              </div>
+              <button
+                onClick={() => { setToast(null); if (toastTimer.current) clearTimeout(toastTimer.current); }}
+                className="text-white/70 hover:text-white transition-colors shrink-0"
+              >
+                <X size={16} />
+              </button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* Header */}
       <div className="bg-white border-b border-lavender-100 sticky top-0 z-10">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
@@ -106,6 +263,22 @@ export default function AdminDashboard() {
             <p className="text-xs text-gray-500">Urmi Threading Salon</p>
           </div>
           <div className="flex items-center gap-3">
+            {/* Push notification status */}
+            {pushEnabled ? (
+              <div className="flex items-center gap-1 text-xs text-emerald-600 font-medium">
+                <Bell size={13} />
+                Alerts on
+              </div>
+            ) : (
+              <button
+                onClick={enablePush}
+                className="flex items-center gap-1 text-xs text-gray-400 hover:text-brand-purple transition-colors"
+                title="Enable push notifications"
+              >
+                <BellOff size={13} />
+                Enable alerts
+              </button>
+            )}
             <button
               onClick={fetchBookings}
               className="p-2 rounded-full hover:bg-lavender-50 text-gray-400 hover:text-brand-purple transition-colors"
@@ -173,7 +346,6 @@ export default function AdminDashboard() {
                   key={date}
                   className={`bg-white rounded-2xl overflow-hidden card-shadow border ${today ? "border-brand-purple" : "border-lavender-100"}`}
                 >
-                  {/* Date header */}
                   <button
                     onClick={() => toggleDate(date)}
                     className="w-full flex items-center justify-between px-6 py-4 hover:bg-lavender-50/50 transition-colors"
@@ -193,7 +365,6 @@ export default function AdminDashboard() {
                     {isExpanded ? <ChevronUp size={16} className="text-gray-400" /> : <ChevronDown size={16} className="text-gray-400" />}
                   </button>
 
-                  {/* Booking rows */}
                   {isExpanded && (
                     <div className="border-t border-lavender-100 divide-y divide-lavender-50">
                       {dayBookings.map((b) => (
@@ -213,7 +384,6 @@ export default function AdminDashboard() {
                               </div>
                             </div>
 
-                            {/* Cancel button */}
                             <div className="flex gap-2 shrink-0">
                               <button
                                 onClick={() => cancelBooking(b.id)}
@@ -225,7 +395,6 @@ export default function AdminDashboard() {
                             </div>
                           </div>
 
-                          {/* Contact */}
                           <div className="flex flex-wrap gap-4 text-xs text-gray-500">
                             <a href={`tel:${b.phone}`} className="flex items-center gap-1.5 hover:text-brand-purple transition-colors">
                               <Phone size={11} />

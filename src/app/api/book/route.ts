@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { Resend } from "resend";
+import webpush from "web-push";
 import { supabase } from "@/lib/supabase";
 
 interface BookingPayload {
@@ -51,6 +52,36 @@ export async function POST(req: NextRequest) {
     notes: body.notes || null,
     status: "confirmed",
   });
+
+  // Send web push to all subscribed admin devices
+  const vapidPublic = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY;
+  const vapidPrivate = process.env.VAPID_PRIVATE_KEY;
+  if (vapidPublic && vapidPrivate) {
+    webpush.setVapidDetails(
+      "mailto:urmithreadingandbeautysalon@gmail.com",
+      vapidPublic,
+      vapidPrivate
+    );
+    const { data: subs } = await supabase.from("push_subscriptions").select("*");
+    if (subs && subs.length > 0) {
+      const payload = JSON.stringify({
+        title: "New Appointment Booked!",
+        body: `${body.name} — ${body.service} on ${formattedDate} at ${body.time}`,
+        url: "/admin",
+      });
+      await Promise.allSettled(
+        subs.map((s) =>
+          webpush
+            .sendNotification({ endpoint: s.endpoint, keys: { p256dh: s.p256dh, auth: s.auth } }, payload)
+            .catch(async (err: { statusCode?: number }) => {
+              if (err.statusCode === 410 || err.statusCode === 404) {
+                await supabase.from("push_subscriptions").delete().eq("endpoint", s.endpoint);
+              }
+            })
+        )
+      );
+    }
+  }
 
   // Notify the salon
   await resend.emails.send({

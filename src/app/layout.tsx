@@ -51,6 +51,12 @@ export const metadata: Metadata = {
   },
   alternates: { canonical: SITE_URL },
   robots: { index: true, follow: true, googleBot: { index: true, follow: true } },
+  manifest: "/manifest.json",
+  appleWebApp: {
+    capable: true,
+    title: "Urmi Admin",
+    statusBarStyle: "default",
+  },
 };
 
 export default function RootLayout({
