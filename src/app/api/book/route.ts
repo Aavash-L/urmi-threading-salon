@@ -57,7 +57,7 @@ export async function POST(req: NextRequest) {
   const tgToken = process.env.TELEGRAM_BOT_TOKEN;
   const tgChatId = process.env.TELEGRAM_CHAT_ID;
   if (tgToken && tgChatId) {
-    const msg = `New Booking!\n${body.name} - ${body.service}\n${formattedDate} at ${body.time}\nPhone: ${body.phone}`;
+    const msg = `New Booking!\n${body.name} - ${body.service}\n${formattedDate} at ${body.time}\nPhone: ${body.phone}${body.notes ? `\nNotes: ${body.notes}` : ""}`;
     await fetch(`https://api.telegram.org/bot${tgToken}/sendMessage`, {
       method: "POST",
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
