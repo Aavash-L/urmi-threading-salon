@@ -53,6 +53,18 @@ export async function POST(req: NextRequest) {
     status: "confirmed",
   });
 
+  // Send Telegram notification
+  const tgToken = process.env.TELEGRAM_BOT_TOKEN;
+  const tgChatId = process.env.TELEGRAM_CHAT_ID;
+  if (tgToken && tgChatId) {
+    const msg = `New Booking!\n${body.name} - ${body.service}\n${formattedDate} at ${body.time}\nPhone: ${body.phone}`;
+    await fetch(`https://api.telegram.org/bot${tgToken}/sendMessage`, {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: new URLSearchParams({ chat_id: tgChatId, text: msg }),
+    }).catch(() => {});
+  }
+
   // Send web push to all subscribed admin devices
   const vapidPublic = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY;
   const vapidPrivate = process.env.VAPID_PRIVATE_KEY;
