@@ -73,7 +73,8 @@ export async function POST(req: NextRequest) {
         subs.map((s) =>
           webpush
             .sendNotification({ endpoint: s.endpoint, keys: { p256dh: s.p256dh, auth: s.auth } }, payload)
-            .catch(async (err: { statusCode?: number }) => {
+            .catch(async (err: { statusCode?: number; message?: string }) => {
+              console.error("Push failed:", err.statusCode, err.message);
               if (err.statusCode === 410 || err.statusCode === 404) {
                 await supabase.from("push_subscriptions").delete().eq("endpoint", s.endpoint);
               }

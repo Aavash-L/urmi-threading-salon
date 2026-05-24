@@ -2,25 +2,19 @@ self.addEventListener('install', () => self.skipWaiting());
 self.addEventListener('activate', (e) => e.waitUntil(clients.claim()));
 
 self.addEventListener('push', (event) => {
-  if (!event.data) return;
+  let title = 'New Appointment!';
+  let body = 'A new appointment has been booked.';
 
-  let data;
-  try {
-    data = event.data.json();
-  } catch {
-    data = { title: 'New Appointment!', body: event.data.text() };
+  if (event.data) {
+    try {
+      const d = event.data.json();
+      if (d.title) title = d.title;
+      if (d.body) body = d.body;
+    } catch {}
   }
 
   event.waitUntil(
-    self.registration.showNotification(data.title || 'New Appointment!', {
-      body: data.body || 'A new appointment has been booked.',
-      icon: '/urmimainfront.png',
-      badge: '/urmimainfront.png',
-      tag: 'new-booking',
-      renotify: true,
-      requireInteraction: false,
-      data: { url: '/admin' },
-    })
+    self.registration.showNotification(title, { body, icon: '/urmimainfront.png' })
   );
 });
 
