@@ -62,7 +62,8 @@ export async function POST(req: NextRequest) {
       vapidPublic,
       vapidPrivate
     );
-    const { data: subs } = await supabase.from("push_subscriptions").select("*");
+    const { data: subs, error: subErr } = await supabase.from("push_subscriptions").select("*");
+    console.log(`Push subscriptions found: ${subs?.length ?? 0}`, subErr?.message ?? "");
     if (subs && subs.length > 0) {
       const payload = JSON.stringify({
         title: "New Appointment Booked!",
@@ -72,7 +73,7 @@ export async function POST(req: NextRequest) {
       await Promise.allSettled(
         subs.map((s) =>
           webpush
-            .sendNotification({ endpoint: s.endpoint, keys: { p256dh: s.p256dh, auth: s.auth } }, payload)
+            .sendNotification({ endpoint: s.endpoint, keys: { p256dh: s.p256dh, auth: s.auth } }, payload, { urgency: "high", TTL: 60 })
             .catch(async (err: { statusCode?: number; message?: string }) => {
               console.error("Push failed:", err.statusCode, err.message);
               if (err.statusCode === 410 || err.statusCode === 404) {
