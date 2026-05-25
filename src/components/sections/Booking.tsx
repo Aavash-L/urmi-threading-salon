@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -9,6 +9,51 @@ import { useReducedMotion } from "framer-motion";
 import { CheckCircle2, Clock, Phone } from "lucide-react";
 import SectionHeading from "@/components/ui/SectionHeading";
 import { BUSINESS } from "@/lib/constants";
+import { bookingServices } from "@/lib/services";
+
+const CATEGORY_EMOJI: Record<string, string> = {
+  Threading: "✨",
+  Waxing: "🌿",
+  Facials: "🌸",
+  "Lash & Brow": "👁️",
+  Henna: "🌺",
+};
+
+// Groups bookingServices by category in insertion order
+const servicesByCategory = bookingServices.reduce<Record<string, typeof bookingServices>>(
+  (acc, s) => {
+    if (!acc[s.category]) acc[s.category] = [];
+    acc[s.category].push(s);
+    return acc;
+  },
+  {}
+);
+
+function generateTimeSlots(date: Date, serviceDuration: number): string[] {
+  const dayOfWeek = date.getDay(); // 0=Sun
+
+  if (dayOfWeek === 0) return []; // Sunday closed
+
+  const openHour = 10;
+  const closeHour = dayOfWeek === 4 || dayOfWeek === 5 ? 19 : 18; // Thu/Fri close 7pm
+
+  const openMinutes = openHour * 60;
+  const closeMinutes = closeHour * 60;
+  const lastSlotMinutes = closeMinutes - serviceDuration;
+  // Cap minimum step at 15 min so short services (5-min Upper Lip) don't flood the list
+  const stepMinutes = Math.max(serviceDuration, 15);
+
+  const slots: string[] = [];
+  for (let m = openMinutes; m <= lastSlotMinutes; m += stepMinutes) {
+    const hours = Math.floor(m / 60);
+    const minutes = m % 60;
+    const ampm = hours >= 12 ? "PM" : "AM";
+    const displayHours = hours > 12 ? hours - 12 : hours === 0 ? 12 : hours;
+    const displayMinutes = minutes.toString().padStart(2, "0");
+    slots.push(`${displayHours}:${displayMinutes} ${ampm}`);
+  }
+  return slots;
+}
 
 const phoneRegex = /^\(\d{3}\) \d{3}-\d{4}$/;
 
@@ -23,13 +68,6 @@ const bookingSchema = z.object({
 });
 
 type BookingForm = z.infer<typeof bookingSchema>;
-
-const ALL_SLOTS = [
-  "10:00 AM", "10:30 AM", "11:00 AM", "11:30 AM",
-  "12:00 PM", "12:30 PM", "1:00 PM",  "1:30 PM",
-  "2:00 PM",  "2:30 PM",  "3:00 PM",  "3:30 PM",
-  "4:00 PM",  "4:30 PM",  "5:00 PM",  "5:30 PM",
-];
 
 export default function Booking() {
   const [submitted, setSubmitted] = useState(false);
@@ -48,19 +86,54 @@ export default function Booking() {
     setValue,
   } = useForm<BookingForm>({ resolver: zodResolver(bookingSchema) });
 
+  const selectedService = watch("service");
   const selectedDate = watch("date");
-  const selectedTime = watch("time");
+
+  const serviceInfo = selectedService
+    ? bookingServices.find((s) => s.name === selectedService)
+    : null;
+
+  // Reset time whenever service changes (new duration = new slot set)
+  useEffect(() => {
+    setValue("time", "");
+  }, [selectedService, setValue]);
 
   // Fetch booked slots whenever date changes
   useEffect(() => {
-    if (!selectedDate) { setBookedSlots([]); return; }
+    if (!selectedDate) {
+      setBookedSlots([]);
+      return;
+    }
     setLoadingSlots(true);
-    setValue("time", ""); // reset time when date changes
+    setValue("time", "");
     fetch(`/api/availability?date=${selectedDate}`)
       .then((r) => r.json())
       .then(({ bookedSlots }) => setBookedSlots(bookedSlots ?? []))
       .finally(() => setLoadingSlots(false));
   }, [selectedDate, setValue]);
+
+  const isSunday = selectedDate
+    ? new Date(selectedDate + "T12:00:00").getDay() === 0
+    : false;
+
+  const generatedSlots = useMemo(() => {
+    if (!selectedDate || !serviceInfo || isSunday) return [];
+    return generateTimeSlots(new Date(selectedDate + "T12:00:00"), serviceInfo.duration);
+  }, [selectedDate, serviceInfo, isSunday]);
+
+  const noSlotsAvailable =
+    !!(selectedDate && serviceInfo && !isSunday && generatedSlots.length === 0);
+
+  const timeDisabled =
+    !selectedDate || !selectedService || loadingSlots || isSunday || noSlotsAvailable;
+
+  let timePlaceholder: string;
+  if (!selectedService) timePlaceholder = "Select a service first";
+  else if (!selectedDate) timePlaceholder = "Pick a date first";
+  else if (loadingSlots) timePlaceholder = "Loading…";
+  else if (isSunday) timePlaceholder = "Closed on Sundays";
+  else if (noSlotsAvailable) timePlaceholder = "No slots — pick another day";
+  else timePlaceholder = "Select a time…";
 
   const onSubmit = async (data: BookingForm) => {
     setSubmitting(true);
@@ -88,7 +161,9 @@ export default function Booking() {
 
   const inputClass = (hasError: boolean) =>
     `w-full px-4 py-3 rounded-xl border text-sm text-charcoal bg-white focus:outline-none focus:ring-2 focus:ring-brand-purple transition-colors ${
-      hasError ? "border-red-400 focus:ring-red-400" : "border-lavender-100 hover:border-brand-purple/40"
+      hasError
+        ? "border-red-400 focus:ring-red-400"
+        : "border-lavender-100 hover:border-brand-purple/40"
     }`;
 
   return (
@@ -181,7 +256,9 @@ export default function Booking() {
                         className={inputClass(!!errors.name)}
                         placeholder="Jane Smith"
                       />
-                      {errors.name && <p className="text-red-500 text-xs mt-1">{errors.name.message}</p>}
+                      {errors.name && (
+                        <p className="text-red-500 text-xs mt-1">{errors.name.message}</p>
+                      )}
                     </div>
                     <div>
                       <label htmlFor="phone" className="block text-sm font-medium text-charcoal mb-1.5">
@@ -207,7 +284,9 @@ export default function Booking() {
                         className={inputClass(!!errors.phone)}
                         placeholder="(973) 653-9322"
                       />
-                      {errors.phone && <p className="text-red-500 text-xs mt-1">{errors.phone.message}</p>}
+                      {errors.phone && (
+                        <p className="text-red-500 text-xs mt-1">{errors.phone.message}</p>
+                      )}
                     </div>
                   </div>
 
@@ -223,7 +302,9 @@ export default function Booking() {
                       className={inputClass(!!errors.email)}
                       placeholder="jane@example.com"
                     />
-                    {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email.message}</p>}
+                    {errors.email && (
+                      <p className="text-red-500 text-xs mt-1">{errors.email.message}</p>
+                    )}
                   </div>
 
                   <div>
@@ -236,74 +317,27 @@ export default function Booking() {
                       className={inputClass(!!errors.service)}
                     >
                       <option value="">Select a service…</option>
-                      <optgroup label="✨ Threading">
-                        <option>Eyebrow Threading — $10</option>
-                        <option>Men's Eyebrow — $10</option>
-                        <option>Upper Lip — $6</option>
-                        <option>Lower Lip — $3</option>
-                        <option>Chin — $7</option>
-                        <option>Forehead — $7</option>
-                        <option>Side Threading — $12</option>
-                        <option>Neck Threading — $6</option>
-                        <option>Cheek Threading — $6</option>
-                        <option>Eye &amp; Lip — $16</option>
-                        <option>Eye, Lip &amp; Chin — $23</option>
-                        <option>Eye, Lip, Chin &amp; Neck — $27</option>
-                        <option>Full Face — $35</option>
-                        <option>Full Face with Neck — $40</option>
-                      </optgroup>
-                      <optgroup label="🌿 Waxing">
-                        <option>Eyebrow Wax — $12</option>
-                        <option>Nose Wax (inside) — $6</option>
-                        <option>Nose Wax — $12</option>
-                        <option>Ear Wax — $12</option>
-                        <option>Under Arm Wax — $15</option>
-                        <option>Stomach Line — $8</option>
-                        <option>Stomach Wax — $30</option>
-                        <option>Bikini Line — $20</option>
-                        <option>Deep Bikini Wax — $30</option>
-                        <option>Brazilian Wax — $45</option>
-                        <option>Butt Wax — $25</option>
-                        <option>Half Arm Wax — $20</option>
-                        <option>Full Arm Wax — $30</option>
-                        <option>Half Leg Wax — $30</option>
-                        <option>Upper Half Leg Wax — $35</option>
-                        <option>Full Leg Wax — $45</option>
-                        <option>Arm, Leg &amp; Underarm — $80</option>
-                        <option>Back Neck Wax — $12</option>
-                        <option>Women's Back Wax — $40</option>
-                        <option>Women's Chest Wax — $45</option>
-                        <option>Men's Back Wax — $50</option>
-                        <option>Men's Chest Wax — $50</option>
-                        <option>Full Body Wax — $180</option>
-                      </optgroup>
-                      <optgroup label="🌸 Facials">
-                        <option>Face Bleach — $35</option>
-                        <option>Face Polish — $45</option>
-                        <option>Eye Treatment — $50</option>
-                        <option>Mini Facial — $45</option>
-                        <option>Basic Facial — $65</option>
-                        <option>Deep Cleaning Facial — $65</option>
-                        <option>Acne Facial — $85</option>
-                        <option>Fruits Facial — $80</option>
-                        <option>Gold Facial — $80</option>
-                        <option>Repechage Facial — $80</option>
-                        <option>Diamond Facial — $90</option>
-                        <option>Four Layer Facial — $120</option>
-                      </optgroup>
-                      <optgroup label="👁️ Lash &amp; Brow">
-                        <option>Eyebrow Tinting — $15</option>
-                        <option>Eyelash Tinting — $20</option>
-                        <option>Eyelash Extensions — $50</option>
-                        <option>Eyelash Exchange — $50</option>
-                      </optgroup>
-                      <optgroup label="🌺 Henna">
-                        <option>Henna Design (hands)</option>
-                        <option>Henna Design (feet)</option>
-                        <option>Henna Design (full)</option>
-                      </optgroup>
+                      {Object.entries(servicesByCategory).map(([category, items]) => (
+                        <optgroup
+                          key={category}
+                          label={`${CATEGORY_EMOJI[category] ?? "•"} ${category}`}
+                        >
+                          {items.map((s) => (
+                            <option key={s.name} value={s.name}>
+                              {s.name}{s.price > 0 ? ` — $${s.price}` : ""}
+                            </option>
+                          ))}
+                        </optgroup>
+                      ))}
                     </select>
-                    {errors.service && <p className="text-red-500 text-xs mt-1">{errors.service.message}</p>}
+                    {errors.service && (
+                      <p className="text-red-500 text-xs mt-1">{errors.service.message}</p>
+                    )}
+                    {serviceInfo && (
+                      <p className="text-xs text-gray-500 mt-1">
+                        This service takes about {serviceInfo.duration} minutes
+                      </p>
+                    )}
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -318,23 +352,25 @@ export default function Booking() {
                         className={inputClass(!!errors.date)}
                         min={new Date().toISOString().split("T")[0]}
                       />
-                      {errors.date && <p className="text-red-500 text-xs mt-1">{errors.date.message}</p>}
+                      {errors.date && (
+                        <p className="text-red-500 text-xs mt-1">{errors.date.message}</p>
+                      )}
                     </div>
                     <div>
                       <label htmlFor="time" className="block text-sm font-medium text-charcoal mb-1.5">
                         Preferred Time <span className="text-red-500">*</span>
-                        {loadingSlots && <span className="ml-2 text-xs text-gray-400 font-normal">Checking…</span>}
+                        {loadingSlots && (
+                          <span className="ml-2 text-xs text-gray-400 font-normal">Checking…</span>
+                        )}
                       </label>
                       <select
                         id="time"
                         {...register("time")}
-                        disabled={!selectedDate || loadingSlots}
+                        disabled={timeDisabled}
                         className={`${inputClass(!!errors.time)} disabled:opacity-50 disabled:cursor-not-allowed`}
                       >
-                        <option value="">
-                          {!selectedDate ? "Pick a date first" : loadingSlots ? "Loading…" : "Select a time…"}
-                        </option>
-                        {ALL_SLOTS.map((t) => {
+                        <option value="">{timePlaceholder}</option>
+                        {generatedSlots.map((t) => {
                           const isBooked = bookedSlots.includes(t);
                           return (
                             <option key={t} value={t} disabled={isBooked}>
@@ -343,10 +379,24 @@ export default function Booking() {
                           );
                         })}
                       </select>
-                      {errors.time && <p className="text-red-500 text-xs mt-1">{errors.time.message}</p>}
-                      {selectedDate && !loadingSlots && bookedSlots.length > 0 && (
+                      {errors.time && (
+                        <p className="text-red-500 text-xs mt-1">{errors.time.message}</p>
+                      )}
+                      {isSunday && (
+                        <p className="text-xs text-amber-600 mt-1">
+                          We&apos;re closed on Sundays — please pick another day.
+                        </p>
+                      )}
+                      {noSlotsAvailable && (
+                        <p className="text-xs text-amber-600 mt-1">
+                          No available slots for this date — please pick another day.
+                        </p>
+                      )}
+                      {selectedDate && !loadingSlots && !isSunday && bookedSlots.length > 0 && generatedSlots.length > 0 && (
                         <p className="text-xs text-gray-400 mt-1">
-                          {bookedSlots.length} slot{bookedSlots.length !== 1 ? "s" : ""} unavailable on this date
+                          {bookedSlots.filter((b) => generatedSlots.includes(b)).length > 0
+                            ? `${bookedSlots.filter((b) => generatedSlots.includes(b)).length} slot${bookedSlots.filter((b) => generatedSlots.includes(b)).length !== 1 ? "s" : ""} unavailable on this date`
+                            : null}
                         </p>
                       )}
                     </div>
@@ -381,7 +431,10 @@ export default function Booking() {
 
                   <p className="text-center text-sm text-gray-500">
                     Prefer to call?{" "}
-                    <a href={`tel:${BUSINESS.phoneRaw}`} className="text-brand-purple font-medium hover:underline">
+                    <a
+                      href={`tel:${BUSINESS.phoneRaw}`}
+                      className="text-brand-purple font-medium hover:underline"
+                    >
                       <Phone size={12} className="inline mr-1" />
                       {BUSINESS.phone}
                     </a>

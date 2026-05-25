@@ -11,6 +11,86 @@ export interface Service {
   keywords: string[];
 }
 
+// ---------------------------------------------------------------------------
+// Booking services — source of truth for the booking form (name, duration, price)
+// ---------------------------------------------------------------------------
+
+export interface BookingService {
+  name: string;
+  duration: number; // minutes
+  price: number;    // 0 = price on consultation
+  category: string;
+}
+
+export const bookingServices: BookingService[] = [
+  // Threading
+  { name: "Eyebrow Threading",          duration: 15,  price: 10,  category: "Threading" },
+  { name: "Men's Eyebrow",              duration: 15,  price: 10,  category: "Threading" },
+  { name: "Upper Lip",                  duration: 5,   price: 6,   category: "Threading" },
+  { name: "Lower Lip",                  duration: 5,   price: 3,   category: "Threading" },
+  { name: "Chin",                       duration: 10,  price: 7,   category: "Threading" },
+  { name: "Forehead",                   duration: 10,  price: 7,   category: "Threading" },
+  { name: "Side Threading",             duration: 15,  price: 12,  category: "Threading" },
+  { name: "Neck Threading",             duration: 10,  price: 6,   category: "Threading" },
+  { name: "Cheek Threading",            duration: 10,  price: 6,   category: "Threading" },
+  { name: "Eye & Lip",                  duration: 20,  price: 16,  category: "Threading" },
+  { name: "Eye, Lip & Chin",            duration: 25,  price: 23,  category: "Threading" },
+  { name: "Eye, Lip, Chin & Neck",      duration: 30,  price: 27,  category: "Threading" },
+  { name: "Full Face",                  duration: 30,  price: 35,  category: "Threading" },
+  { name: "Full Face with Neck",        duration: 35,  price: 40,  category: "Threading" },
+
+  // Waxing
+  { name: "Eyebrow Wax",                duration: 15,  price: 12,  category: "Waxing" },
+  { name: "Nose Wax (inside)",          duration: 10,  price: 6,   category: "Waxing" },
+  { name: "Nose Wax",                   duration: 10,  price: 12,  category: "Waxing" },
+  { name: "Ear Wax",                    duration: 10,  price: 12,  category: "Waxing" },
+  { name: "Under Arm Wax",              duration: 15,  price: 15,  category: "Waxing" },
+  { name: "Stomach Line",               duration: 10,  price: 8,   category: "Waxing" },
+  { name: "Stomach Wax",                duration: 25,  price: 30,  category: "Waxing" },
+  { name: "Bikini Line",                duration: 20,  price: 20,  category: "Waxing" },
+  { name: "Deep Bikini Wax",            duration: 25,  price: 30,  category: "Waxing" },
+  { name: "Brazilian Wax",              duration: 30,  price: 45,  category: "Waxing" },
+  { name: "Butt Wax",                   duration: 20,  price: 25,  category: "Waxing" },
+  { name: "Half Arm Wax",               duration: 20,  price: 20,  category: "Waxing" },
+  { name: "Full Arm Wax",               duration: 30,  price: 30,  category: "Waxing" },
+  { name: "Half Leg Wax",               duration: 30,  price: 30,  category: "Waxing" },
+  { name: "Upper Half Leg Wax",         duration: 30,  price: 35,  category: "Waxing" },
+  { name: "Full Leg Wax",               duration: 45,  price: 45,  category: "Waxing" },
+  { name: "Arm, Leg & Underarm Combo",  duration: 90,  price: 80,  category: "Waxing" },
+  { name: "Back Neck Wax",              duration: 10,  price: 12,  category: "Waxing" },
+  { name: "Women's Back Wax",           duration: 30,  price: 40,  category: "Waxing" },
+  { name: "Women's Chest Wax",          duration: 30,  price: 45,  category: "Waxing" },
+  { name: "Men's Back Wax",             duration: 30,  price: 50,  category: "Waxing" },
+  { name: "Men's Chest Wax",            duration: 30,  price: 50,  category: "Waxing" },
+  { name: "Full Body Wax",              duration: 120, price: 180, category: "Waxing" },
+
+  // Facials
+  { name: "Face Bleach",                duration: 30,  price: 35,  category: "Facials" },
+  { name: "Face Polish",                duration: 30,  price: 45,  category: "Facials" },
+  { name: "Eye Treatment",              duration: 30,  price: 50,  category: "Facials" },
+  { name: "Basic Facial",               duration: 45,  price: 65,  category: "Facials" },
+  { name: "Diamond Facial",             duration: 60,  price: 90,  category: "Facials" },
+
+  // Lash & Brow
+  { name: "Eyebrow Tinting",            duration: 20,  price: 15,  category: "Lash & Brow" },
+  { name: "Eyelash Tinting",            duration: 20,  price: 20,  category: "Lash & Brow" },
+  { name: "Eyelash Extensions",         duration: 90,  price: 50,  category: "Lash & Brow" },
+  { name: "Eyelash Exchange",           duration: 90,  price: 50,  category: "Lash & Brow" },
+
+  // Henna (price varies by design complexity)
+  { name: "Henna Design (hands)",       duration: 60,  price: 0,   category: "Henna" },
+  { name: "Henna Design (feet)",        duration: 90,  price: 0,   category: "Henna" },
+  { name: "Henna Design (full)",        duration: 120, price: 0,   category: "Henna" },
+];
+
+export function getBookingServiceByName(name: string): BookingService | undefined {
+  return bookingServices.find(s => s.name === name);
+}
+
+// ---------------------------------------------------------------------------
+// Rich service data — used by service detail pages (/services/*)
+// ---------------------------------------------------------------------------
+
 export const SERVICES: Service[] = [
   {
     id: "eyebrow-threading",
