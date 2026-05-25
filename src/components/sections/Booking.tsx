@@ -7,7 +7,6 @@ import { z } from "zod";
 import { motion, AnimatePresence } from "framer-motion";
 import { useReducedMotion } from "framer-motion";
 import { CheckCircle2, Clock, Phone } from "lucide-react";
-import SectionHeading from "@/components/ui/SectionHeading";
 import { BUSINESS } from "@/lib/constants";
 import { bookingServices } from "@/lib/services";
 
@@ -167,15 +166,9 @@ export default function Booking() {
     }`;
 
   return (
-    <section id="book" className="py-14 sm:py-24 bg-white" aria-label="Book an appointment">
+    <section id="book" className="pt-32 pb-14 sm:pb-24 bg-white" aria-label="Book an appointment">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <SectionHeading
-          eyebrow="Book Now"
-          title="Reserve Your Appointment"
-          subtitle="Fill out the form below and we'll confirm your appointment within 1 hour during business hours."
-        />
-
-        <div className="mt-8 sm:mt-14 grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12 items-start">
+        <div className="mt-0 grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12 items-start">
           {/* Left: hours — pushed below form on mobile */}
           <div className="space-y-6 order-last lg:order-first">
             <div className="bg-lavender-50 rounded-2xl p-6 space-y-4">
