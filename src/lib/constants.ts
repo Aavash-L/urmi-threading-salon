@@ -24,7 +24,7 @@ export const BUSINESS = {
   instagram: "https://www.instagram.com/urmithreading.wayne",
   facebook: "https://www.facebook.com/profile.php?id=100071167904006",
   hours: [
-    { days: "Monday – Wednesday", open: "10:00 AM", close: "6:00 PM" },
+    { days: "Monday – Wednesday", open: "10:00 AM", close: "6:30 PM" },
     { days: "Thursday – Friday", open: "10:00 AM", close: "7:00 PM" },
     { days: "Saturday", open: "10:00 AM", close: "6:00 PM" },
     { days: "Sunday", open: "Closed", close: "" },
