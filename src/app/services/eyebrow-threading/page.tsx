@@ -8,7 +8,7 @@ const service = SERVICES.find((s) => s.id === "eyebrow-threading")!;
 export const metadata: Metadata = {
   title: "Eyebrow Threading in Wayne, NJ — Precision Brow Shaping",
   description:
-    "Expert eyebrow threading in Wayne, NJ at Urmi Threading Salon. 15+ years of precision brow shaping. Walk-ins welcome · 4.7 ★ · (973) 653-9322.",
+    "Expert eyebrow threading in Wayne, NJ at Urmi Threading Salon. 15+ years of precision brow shaping. Walk-ins welcome · 4.8 ★ · (973) 653-9322.",
   alternates: { canonical: `${SITE_URL}/services/eyebrow-threading` },
   keywords: service.keywords,
   openGraph: {

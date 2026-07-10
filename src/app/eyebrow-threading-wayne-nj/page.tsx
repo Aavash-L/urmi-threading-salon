@@ -9,7 +9,7 @@ import { threadingHeroImage } from "@/lib/images";
 export const metadata: Metadata = {
   title: "Eyebrow Threading in Wayne, NJ | Urmi Threading Salon",
   description:
-    "Wayne, NJ's top-rated eyebrow threading salon since 2010. 4.7★ with 138+ Google reviews. Precision threading by experienced estheticians. Walk-ins welcome. Call (973) 653-9322.",
+    "Wayne, NJ's top-rated eyebrow threading salon since 2010. 4.8★ with 155+ Google reviews. Precision threading by experienced estheticians. Walk-ins welcome. Call (973) 653-9322.",
   alternates: { canonical: "https://www.urmithreadingsalon.com/eyebrow-threading-wayne-nj" },
   keywords: [
     "eyebrow threading Wayne NJ",
@@ -20,7 +20,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Eyebrow Threading in Wayne, NJ | Urmi Threading Salon",
     description:
-      "Wayne's most trusted threading salon since 2010. 138+ five-star reviews. Walk-ins welcome at 150 Hinchman Ave.",
+      "Wayne's most trusted threading salon since 2010. 155+ five-star reviews. Walk-ins welcome at 150 Hinchman Ave.",
     url: "https://www.urmithreadingsalon.com/eyebrow-threading-wayne-nj",
     type: "website",
     images: [{ url: "/og/eyebrow-threading-wayne-nj.jpg", width: 1200, height: 630 }],
@@ -203,7 +203,7 @@ export default function EyebrowThreadingWayneNJ() {
               </h1>
 
               <p className="text-lg text-gray-600 leading-relaxed max-w-lg">
-                15+ years shaping Wayne&apos;s brows. 138+ five-star Google reviews. Walk-ins welcome every day.
+                15+ years shaping Wayne&apos;s brows. 155+ five-star Google reviews. Walk-ins welcome every day.
               </p>
 
               <div className="flex flex-col sm:flex-row gap-3">
@@ -230,7 +230,7 @@ export default function EyebrowThreadingWayneNJ() {
                       <Star key={i} size={14} className="fill-amber-400 text-amber-400" />
                     ))}
                   </div>
-                  <span className="text-sm font-semibold text-charcoal">4.7 · 138+ reviews</span>
+                  <span className="text-sm font-semibold text-charcoal">4.8 · 155+ reviews</span>
                 </div>
                 <div className="h-4 w-px bg-lavender-100 hidden sm:block" />
                 <span className="text-sm text-gray-600">Est. <strong className="text-charcoal">2010</strong></span>
@@ -254,7 +254,7 @@ export default function EyebrowThreadingWayneNJ() {
               </div>
               <div className="absolute -bottom-4 -left-4 bg-white rounded-2xl px-4 py-3 shadow-lg border border-lavender-100">
                 <p className="text-xs font-bold text-charcoal">Wayne, NJ&apos;s #1 Threading Salon</p>
-                <p className="text-xs text-gray-500">15+ years · 138+ reviews</p>
+                <p className="text-xs text-gray-500">15+ years · 155+ reviews</p>
               </div>
             </div>
           </div>
@@ -271,7 +271,7 @@ export default function EyebrowThreadingWayneNJ() {
             <p>
               Located at <strong>150 Hinchman Ave in Wayne, New Jersey</strong>, Urmi Threading Salon has been
               the go-to destination for precision eyebrow threading since 2010. Over 15 years, we&apos;ve built
-              a reputation that speaks for itself: 138+ five-star Google reviews from real Wayne residents and
+              a reputation that speaks for itself: 155+ five-star Google reviews from real Wayne residents and
               clients who drive in from across Passaic County.
             </p>
             <p>
@@ -513,7 +513,7 @@ export default function EyebrowThreadingWayneNJ() {
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 text-brand-purple font-semibold hover:underline underline-offset-4 transition-all"
             >
-              Read all 138+ reviews on Google →
+              Read all 155+ reviews on Google →
             </a>
           </div>
         </div>
@@ -625,7 +625,7 @@ export default function EyebrowThreadingWayneNJ() {
             Ready for Your Best Brows?
           </h2>
           <p className="text-gray-600 text-lg">
-            Join 138+ Wayne, NJ clients who trust Urmi Threading Salon. Walk-ins welcome — or book your spot in seconds.
+            Join 155+ Wayne, NJ clients who trust Urmi Threading Salon. Walk-ins welcome — or book your spot in seconds.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link

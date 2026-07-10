@@ -48,7 +48,7 @@ export default function Footer() {
               {Array.from({ length: 5 }).map((_, i) => (
                 <Star key={i} size={13} className="fill-amber-400 text-amber-400" />
               ))}
-              <span className="text-gray-400 text-xs ml-1.5">4.7 · 138+ reviews</span>
+              <span className="text-gray-400 text-xs ml-1.5">4.8 · 155+ reviews</span>
             </div>
             <p className="text-xs text-brand-pink mt-3 font-medium">
               ✨ Every 9th brow threading is FREE

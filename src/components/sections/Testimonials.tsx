@@ -85,12 +85,12 @@ export default function Testimonials() {
                 <Star key={i} size={16} className="fill-amber-400 text-amber-400" />
               ))}
             </div>
-            <span className="font-bold text-charcoal">4.7</span>
+            <span className="font-bold text-charcoal">4.8</span>
           </div>
           <span className="text-lavender-100 hidden sm:block">|</span>
           <div className="flex items-center gap-1.5">
             <GoogleIcon />
-            <span className="text-gray-600 text-sm font-medium">138+ Google Reviews</span>
+            <span className="text-gray-600 text-sm font-medium">155+ Google Reviews</span>
           </div>
           <span className="text-lavender-100 hidden sm:block">|</span>
           <span className="text-gray-600 text-sm font-medium">15+ Years in Wayne, NJ</span>
@@ -128,7 +128,7 @@ export default function Testimonials() {
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 bg-white border border-lavender-100 text-brand-purple font-semibold px-6 py-3 rounded-full hover:shadow-md hover:border-brand-purple transition-all text-sm card-shadow"
           >
-            Read all 138+ reviews on Google
+            Read all 155+ reviews on Google
             <ArrowUpRight size={15} />
           </a>
         </div>

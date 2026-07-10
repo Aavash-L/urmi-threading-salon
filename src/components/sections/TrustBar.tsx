@@ -2,7 +2,7 @@ import { ShieldCheck, Star, Sparkles, Clock } from "lucide-react";
 
 const items = [
   { icon: Clock, label: "15+ Years Experience" },
-  { icon: Star, label: "4.7 ★ Google Rating" },
+  { icon: Star, label: "4.8 ★ Google Rating" },
   { icon: ShieldCheck, label: "Sanitized Tools Per Client" },
   { icon: Sparkles, label: "Walk-Ins Welcome" },
 ];

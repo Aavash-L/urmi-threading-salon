@@ -15,7 +15,7 @@ import Contact from "@/components/sections/Contact";
 export const metadata: Metadata = {
   title: "Eyebrow Threading Salon in Wayne, NJ",
   description:
-    "Wayne NJ's most trusted threading salon since 2010. Walk-in eyebrow threading, waxing, facials, lash extensions & henna. 4.7 ★ · (973) 653-9322.",
+    "Wayne NJ's most trusted threading salon since 2010. Walk-in eyebrow threading, waxing, facials, lash extensions & henna. 4.8 ★ · (973) 653-9322.",
   alternates: { canonical: SITE_URL },
   keywords: [
     "threading salon Wayne NJ",
