@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { SITE_URL } from "@/lib/constants";
 import Hero from "@/components/sections/Hero";
 import TrustBar from "@/components/sections/TrustBar";
-import Offers from "@/components/sections/Offers";
 import Services from "@/components/sections/Services";
 import About from "@/components/sections/About";
 import ThreadingDifference from "@/components/sections/ThreadingDifference";
@@ -30,7 +29,6 @@ export default function HomePage() {
     <>
       <Hero />
       <TrustBar />
-      <Offers />
       <Services />
       <About />
       <ThreadingDifference />

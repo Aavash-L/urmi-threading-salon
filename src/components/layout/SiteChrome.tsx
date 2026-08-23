@@ -5,6 +5,7 @@ import Navbar from "./Navbar";
 import Footer from "./Footer";
 import FloatingCallButton from "./FloatingCallButton";
 import ScrollProgress from "./ScrollProgress";
+import PromoBanner from "./PromoBanner";
 
 export default function SiteChrome() {
   const pathname = usePathname();
@@ -12,6 +13,7 @@ export default function SiteChrome() {
 
   return (
     <>
+      <PromoBanner />
       <ScrollProgress />
       <Navbar />
     </>

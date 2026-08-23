@@ -32,7 +32,7 @@ export default function Hero() {
   return (
     <section
       ref={ref}
-      className="relative min-h-[100svh] flex items-center overflow-hidden bg-blush-50 pt-16 sm:pt-20"
+      className="relative min-h-[100svh] flex items-center overflow-hidden bg-blush-50 pt-24 sm:pt-28"
       aria-label="Hero section"
     >
       <GradientBlob color="pink" className="-top-40 -left-40" size={600} />
@@ -108,7 +108,7 @@ export default function Hero() {
                   ))}
                 </div>
                 <span className="text-xs sm:text-sm text-gray-600">
-                  <strong className="text-charcoal">4.8 ★</strong> · 155+ Google reviews
+                  <strong className="text-charcoal">4.8 ★</strong> · 171+ Google reviews
                 </span>
               </div>
             </motion.div>

@@ -15,7 +15,7 @@ export const BUSINESS = {
     lng: -74.2421,
   },
   rating: 4.8,
-  reviewCount: 155,
+  reviewCount: 171,
   reviewsUrl: "https://g.page/r/Cfbomhoh-oQZEAE/review",
   established: 2010,
   url: "https://www.urmithreadingsalon.com",
@@ -27,7 +27,7 @@ export const BUSINESS = {
     { days: "Monday – Wednesday", open: "10:00 AM", close: "6:30 PM" },
     { days: "Thursday – Friday", open: "10:00 AM", close: "7:00 PM" },
     { days: "Saturday", open: "10:00 AM", close: "6:00 PM" },
-    { days: "Sunday", open: "Closed", close: "" },
+    { days: "Sunday", open: "11:00 AM", close: "5:00 PM" },
   ],
   serviceArea: [
     "Wayne",

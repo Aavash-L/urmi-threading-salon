@@ -29,7 +29,7 @@ export default function LocalBusinessSchema() {
         "@type": "OpeningHoursSpecification",
         dayOfWeek: ["Monday", "Tuesday", "Wednesday"],
         opens: "10:00",
-        closes: "18:00",
+        closes: "18:30",
       },
       {
         "@type": "OpeningHoursSpecification",
@@ -42,6 +42,12 @@ export default function LocalBusinessSchema() {
         dayOfWeek: "Saturday",
         opens: "10:00",
         closes: "18:00",
+      },
+      {
+        "@type": "OpeningHoursSpecification",
+        dayOfWeek: "Sunday",
+        opens: "11:00",
+        closes: "17:00",
       },
     ],
     aggregateRating: {

@@ -82,7 +82,7 @@ export default function AboutPage() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
             {[
               { value: 15, suffix: "+", label: "Years in Business" },
-              { value: 155, suffix: "+", label: "Google Reviews" },
+              { value: 171, suffix: "+", label: "Google Reviews" },
               { value: 10000, suffix: "+", label: "Brows Shaped" },
               { value: 4, suffix: ".8 ★", label: "Avg Rating" },
             ].map((stat, i) => (

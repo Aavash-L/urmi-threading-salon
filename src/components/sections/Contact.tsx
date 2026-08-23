@@ -72,11 +72,7 @@ export default function Contact() {
                         <tr key={i}>
                           <td className="pr-4 py-0.5 font-medium text-charcoal">{h.days}</td>
                           <td className="py-0.5">
-                            {h.open === "Closed" ? (
-                              <span className="text-gray-400">Closed</span>
-                            ) : (
-                              `${h.open} – ${h.close}`
-                            )}
+                            {`${h.open} – ${h.close}`}
                           </td>
                         </tr>
                       ))}

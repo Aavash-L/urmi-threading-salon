@@ -145,7 +145,7 @@ export const LOCATIONS: Location[] = [
       {
         question: "What's the best threading salon near Clifton, NJ?",
         answer:
-          "Urmi Threading Salon in Wayne is consistently rated the best in the region, with a 4.8-star Google rating from 155+ reviews. Many of those reviewers come specifically from Clifton.",
+          "Urmi Threading Salon in Wayne is consistently rated the best in the region, with a 4.8-star Google rating from 171+ reviews. Many of those reviewers come specifically from Clifton.",
       },
     ],
     testimonialIds: ["5", "4", "9"],
@@ -191,7 +191,7 @@ export const LOCATIONS: Location[] = [
       {
         question: "What hours is Urmi Threading Salon open?",
         answer:
-          "Mon–Wed: 10 AM–6 PM, Thu–Fri: 10 AM–7 PM, Saturday: 10 AM–6 PM. Closed Sunday.",
+          "Mon–Wed: 10 AM–6:30 PM, Thu–Fri: 10 AM–7 PM, Saturday: 10 AM–6 PM, Sunday: 11 AM–5 PM.",
       },
     ],
     testimonialIds: ["1", "8", "10"],
@@ -251,7 +251,7 @@ export const LOCATIONS: Location[] = [
     directions:
       "From Fair Lawn, take Route 208 North to Route 23 North. Exit at Hinchman Ave and we're on your right at 150 Hinchman Ave. The drive takes approximately 20 minutes.",
     intro:
-      "Fair Lawn has excellent options for beauty services, but clients who've discovered Urmi Threading Salon in Wayne keep making the 20-minute drive — because the results simply can't be matched locally. Since 2010, we've been the destination threading salon for Fair Lawn residents who know that the best brow shaping is worth the trip. Our 4.8-star Google rating, earned from 155+ real reviews, says everything.",
+      "Fair Lawn has excellent options for beauty services, but clients who've discovered Urmi Threading Salon in Wayne keep making the 20-minute drive — because the results simply can't be matched locally. Since 2010, we've been the destination threading salon for Fair Lawn residents who know that the best brow shaping is worth the trip. Our 4.8-star Google rating, earned from 171+ real reviews, says everything.",
     reasons: [
       {
         title: "Worth Every Minute of the Drive",
@@ -261,7 +261,7 @@ export const LOCATIONS: Location[] = [
       {
         title: "Real Results, Real Reviews",
         description:
-          "4.8 stars from 155+ genuine Google reviews. We don't just promise great brows — our clients tell you about them.",
+          "4.8 stars from 171+ genuine Google reviews. We don't just promise great brows — our clients tell you about them.",
       },
       {
         title: "Natural Technique",

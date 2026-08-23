@@ -31,10 +31,9 @@ const servicesByCategory = bookingServices.reduce<Record<string, typeof bookingS
 function generateTimeSlots(date: Date, serviceDuration: number): string[] {
   const dayOfWeek = date.getDay(); // 0=Sun
 
-  if (dayOfWeek === 0) return []; // Sunday closed
-
-  const openHour = 10;
-  const closeHour = dayOfWeek === 4 || dayOfWeek === 5 ? 19 : 18; // Thu/Fri close 7pm
+  const openHour = dayOfWeek === 0 ? 11 : 10; // Sunday opens 11am
+  const closeHour =
+    dayOfWeek === 0 ? 17 : dayOfWeek === 4 || dayOfWeek === 5 ? 19 : 18; // Sun close 5pm, Thu/Fri close 7pm
 
   const openMinutes = openHour * 60;
   const closeMinutes = closeHour * 60;
@@ -111,26 +110,21 @@ export default function Booking() {
       .finally(() => setLoadingSlots(false));
   }, [selectedDate, setValue]);
 
-  const isSunday = selectedDate
-    ? new Date(selectedDate + "T12:00:00").getDay() === 0
-    : false;
-
   const generatedSlots = useMemo(() => {
-    if (!selectedDate || !serviceInfo || isSunday) return [];
+    if (!selectedDate || !serviceInfo) return [];
     return generateTimeSlots(new Date(selectedDate + "T12:00:00"), serviceInfo.duration);
-  }, [selectedDate, serviceInfo, isSunday]);
+  }, [selectedDate, serviceInfo]);
 
   const noSlotsAvailable =
-    !!(selectedDate && serviceInfo && !isSunday && generatedSlots.length === 0);
+    !!(selectedDate && serviceInfo && generatedSlots.length === 0);
 
   const timeDisabled =
-    !selectedDate || !selectedService || loadingSlots || isSunday || noSlotsAvailable;
+    !selectedDate || !selectedService || loadingSlots || noSlotsAvailable;
 
   let timePlaceholder: string;
   if (!selectedService) timePlaceholder = "Select a service first";
   else if (!selectedDate) timePlaceholder = "Pick a date first";
   else if (loadingSlots) timePlaceholder = "Loading…";
-  else if (isSunday) timePlaceholder = "Closed on Sundays";
   else if (noSlotsAvailable) timePlaceholder = "No slots — pick another day";
   else timePlaceholder = "Select a time…";
 
@@ -192,7 +186,7 @@ export default function Booking() {
                     <tr key={i} className="border-b border-lavender-50 last:border-0">
                       <td className="py-2 font-medium text-charcoal pr-4">{h.days}</td>
                       <td className="py-2 text-gray-600">
-                        {h.open === "Closed" ? "Closed" : `${h.open} – ${h.close}`}
+                        {`${h.open} – ${h.close}`}
                       </td>
                     </tr>
                   ))}
@@ -375,17 +369,12 @@ export default function Booking() {
                       {errors.time && (
                         <p className="text-red-500 text-xs mt-1">{errors.time.message}</p>
                       )}
-                      {isSunday && (
-                        <p className="text-xs text-amber-600 mt-1">
-                          We&apos;re closed on Sundays — please pick another day.
-                        </p>
-                      )}
                       {noSlotsAvailable && (
                         <p className="text-xs text-amber-600 mt-1">
                           No available slots for this date — please pick another day.
                         </p>
                       )}
-                      {selectedDate && !loadingSlots && !isSunday && bookedSlots.length > 0 && generatedSlots.length > 0 && (
+                      {selectedDate && !loadingSlots && bookedSlots.length > 0 && generatedSlots.length > 0 && (
                         <p className="text-xs text-gray-400 mt-1">
                           {bookedSlots.filter((b) => generatedSlots.includes(b)).length > 0
                             ? `${bookedSlots.filter((b) => generatedSlots.includes(b)).length} slot${bookedSlots.filter((b) => generatedSlots.includes(b)).length !== 1 ? "s" : ""} unavailable on this date`

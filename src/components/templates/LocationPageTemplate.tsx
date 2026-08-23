@@ -192,7 +192,7 @@ export default function LocationPageTemplate({ location }: LocationPageTemplateP
                     <tr key={i} className="border-b border-lavender-50 last:border-0">
                       <td className="py-1.5 font-medium text-charcoal pr-6">{h.days}</td>
                       <td className="py-1.5 text-gray-600">
-                        {h.open === "Closed" ? "Closed" : `${h.open} – ${h.close}`}
+                        {`${h.open} – ${h.close}`}
                       </td>
                     </tr>
                   ))}
