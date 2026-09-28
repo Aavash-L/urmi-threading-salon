@@ -43,7 +43,7 @@ const menu = [
       { name: "Stomach Wax",             price: "$30"  },
       { name: "Bikini Line",             price: "$20"  },
       { name: "Deep Bikini Wax",         price: "$30"  },
-      { name: "Brazilian Wax",           price: "$45"  },
+      { name: "Brazilian Wax",           price: "$45",  deal: "$10 off first visit" },
       { name: "Butt Wax",                price: "$25"  },
       { name: "Half Arm Wax",            price: "$20"  },
       { name: "Full Arm Wax",            price: "$30"  },
@@ -56,7 +56,7 @@ const menu = [
       { name: "Women's Chest Wax",       price: "$45"  },
       { name: "Men's Back Wax",          price: "$50"  },
       { name: "Men's Chest Wax",         price: "$50"  },
-      { name: "Full Body Wax",           price: "$180" },
+      { name: "Full Body Wax",           price: "$180", deal: "$20 off" },
     ],
   },
   {
@@ -191,6 +191,14 @@ export default function PricingPage() {
                 <div className="flex items-center gap-2">
                   <Sparkles size={10} className="text-brand-purple/40 shrink-0" />
                   <span className="text-sm text-charcoal font-medium">{item.name}</span>
+                  {"deal" in item && (
+                    <Link
+                      href="/#offers"
+                      className="text-[10px] sm:text-xs font-bold uppercase tracking-wide bg-brand-gradient text-white px-2 py-0.5 rounded-full hover:opacity-90"
+                    >
+                      {item.deal}
+                    </Link>
+                  )}
                 </div>
                 <span className={`text-sm font-bold ${item.price === "Quote" ? "text-brand-purple" : "text-charcoal"}`}>
                   {item.price}

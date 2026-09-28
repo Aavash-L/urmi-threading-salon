@@ -5,7 +5,7 @@ import { motion, useMotionValue, useAnimationFrame } from "framer-motion";
 import { Star, ArrowUpRight } from "lucide-react";
 import SectionHeading from "@/components/ui/SectionHeading";
 import { TESTIMONIALS } from "@/lib/testimonials";
-import { BUSINESS } from "@/lib/constants";
+import { BUSINESS, REVIEWS_LABEL, RATING_LABEL } from "@/lib/constants";
 
 function GoogleIcon() {
   return (
@@ -85,12 +85,12 @@ export default function Testimonials() {
                 <Star key={i} size={16} className="fill-amber-400 text-amber-400" />
               ))}
             </div>
-            <span className="font-bold text-charcoal">4.8</span>
+            <span className="font-bold text-charcoal">{RATING_LABEL}</span>
           </div>
           <span className="text-lavender-100 hidden sm:block">|</span>
           <div className="flex items-center gap-1.5">
             <GoogleIcon />
-            <span className="text-gray-600 text-sm font-medium">171+ Google Reviews</span>
+            <span className="text-gray-600 text-sm font-medium">{REVIEWS_LABEL} Google Reviews</span>
           </div>
           <span className="text-lavender-100 hidden sm:block">|</span>
           <span className="text-gray-600 text-sm font-medium">15+ Years in Wayne, NJ</span>
@@ -128,7 +128,7 @@ export default function Testimonials() {
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 bg-white border border-lavender-100 text-brand-purple font-semibold px-6 py-3 rounded-full hover:shadow-md hover:border-brand-purple transition-all text-sm card-shadow"
           >
-            Read all 171+ reviews on Google
+            Read all {REVIEWS_LABEL} reviews on Google
             <ArrowUpRight size={15} />
           </a>
         </div>

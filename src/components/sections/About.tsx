@@ -7,9 +7,10 @@ import { CheckCircle2 } from "lucide-react";
 import SectionHeading from "@/components/ui/SectionHeading";
 import AnimatedCounter from "@/components/ui/AnimatedCounter";
 import { aboutImage1, aboutImage2, aboutImage3 } from "@/lib/images";
+import { REVIEW_COUNT_ROUNDED } from "@/lib/constants";
 
 const stats = [
-  { value: 171, suffix: "+", label: "Google Reviews" },
+  { value: REVIEW_COUNT_ROUNDED, suffix: "+", label: "Google Reviews" },
   { value: 15, suffix: "+", label: "Years in Business" },
   { value: 4, suffix: ".8 ★", label: "Google Rating", prefix: "" },
   { value: 10000, suffix: "+", label: "Brows Shaped" },

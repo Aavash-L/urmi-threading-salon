@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
-import { SITE_URL } from "@/lib/constants";
+import { SITE_URL, RATING_LABEL } from "@/lib/constants";
 import Hero from "@/components/sections/Hero";
 import TrustBar from "@/components/sections/TrustBar";
+import WaxOffers from "@/components/sections/WaxOffers";
 import Services from "@/components/sections/Services";
 import About from "@/components/sections/About";
 import ThreadingDifference from "@/components/sections/ThreadingDifference";
@@ -14,7 +15,7 @@ import Contact from "@/components/sections/Contact";
 export const metadata: Metadata = {
   title: "Eyebrow Threading Salon in Wayne, NJ",
   description:
-    "Wayne NJ's most trusted threading salon since 2010. Walk-in eyebrow threading, waxing, facials, lash extensions & henna. 4.8 ★ · (973) 653-9322.",
+    `Wayne NJ's most trusted threading salon since 2010. Walk-in eyebrow threading, waxing, facials, lash extensions & henna. ${RATING_LABEL} ★ · (973) 653-9322.`,
   alternates: { canonical: SITE_URL },
   keywords: [
     "threading salon Wayne NJ",
@@ -29,6 +30,7 @@ export default function HomePage() {
     <>
       <Hero />
       <TrustBar />
+      <WaxOffers />
       <Services />
       <About />
       <ThreadingDifference />

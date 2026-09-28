@@ -5,6 +5,7 @@ import { BUSINESS, SITE_URL } from "@/lib/constants";
 import BreadcrumbSchema from "@/components/seo/BreadcrumbSchema";
 import ServiceSchema from "@/components/seo/ServiceSchema";
 import FAQSchema from "@/components/seo/FAQSchema";
+import WaxOffers from "@/components/sections/WaxOffers";
 
 interface ServicePageTemplateProps {
   service: Service;
@@ -118,6 +119,8 @@ export default function ServicePageTemplate({ service }: ServicePageTemplateProp
           </div>
         </div>
       </section>
+
+      {service.id === "waxing" && <WaxOffers />}
 
       {/* What is it */}
       <section className="py-16 bg-white">

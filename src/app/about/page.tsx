@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { CheckCircle2, Phone } from "lucide-react";
-import { BUSINESS, SITE_URL } from "@/lib/constants";
+import { BUSINESS, SITE_URL, REVIEW_COUNT_ROUNDED } from "@/lib/constants";
 import { aboutImage1, aboutImage2, salonInteriorImage } from "@/lib/images";
 import BreadcrumbSchema from "@/components/seo/BreadcrumbSchema";
 import AnimatedCounter from "@/components/ui/AnimatedCounter";
@@ -82,7 +82,7 @@ export default function AboutPage() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
             {[
               { value: 15, suffix: "+", label: "Years in Business" },
-              { value: 171, suffix: "+", label: "Google Reviews" },
+              { value: REVIEW_COUNT_ROUNDED, suffix: "+", label: "Google Reviews" },
               { value: 10000, suffix: "+", label: "Brows Shaped" },
               { value: 4, suffix: ".8 ★", label: "Avg Rating" },
             ].map((stat, i) => (

@@ -3,7 +3,7 @@ import { Playfair_Display, Inter } from "next/font/google";
 import "./globals.css";
 import SiteChrome, { SiteFooter } from "@/components/layout/SiteChrome";
 import LocalBusinessSchema from "@/components/seo/LocalBusinessSchema";
-import { BUSINESS, SITE_URL } from "@/lib/constants";
+import { BUSINESS, SITE_URL, RATING_LABEL } from "@/lib/constants";
 
 const playfair = Playfair_Display({
   subsets: ["latin"],
@@ -24,7 +24,7 @@ export const metadata: Metadata = {
     template: "%s | Urmi Threading Salon",
   },
   description:
-    "Wayne NJ's top-rated threading salon since 2010. Eyebrow threading, waxing, facials, lash extensions & henna. 4.8 ★ on Google · Walk-ins welcome · (973) 653-9322.",
+    `Wayne NJ's top-rated threading salon since 2010. Eyebrow threading, waxing, facials, lash extensions & henna. ${RATING_LABEL} ★ on Google · Walk-ins welcome · (973) 653-9322.`,
   keywords: [
     "threading salon Wayne NJ",
     "eyebrow threading near me",
@@ -40,7 +40,7 @@ export const metadata: Metadata = {
     siteName: BUSINESS.name,
     title: "Urmi Threading Salon — Eyebrow Threading in Wayne, NJ",
     description:
-      "Wayne NJ's top-rated threading salon since 2010. Precision eyebrow threading, waxing, facials & more. 4.8 ★ rating · Walk-ins welcome.",
+      `Wayne NJ's top-rated threading salon since 2010. Precision eyebrow threading, waxing, facials & more. ${RATING_LABEL} ★ rating · Walk-ins welcome.`,
     images: [{ url: "/og/storefront.jpg", width: 1200, height: 630, alt: "Urmi Threading Salon in Wayne NJ" }],
   },
   twitter: {

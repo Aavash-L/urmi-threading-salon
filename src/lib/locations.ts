@@ -1,3 +1,4 @@
+import { REVIEWS_LABEL, RATING_LABEL } from "@/lib/constants";
 export interface Location {
   city: string;
   slug: string;
@@ -145,7 +146,7 @@ export const LOCATIONS: Location[] = [
       {
         question: "What's the best threading salon near Clifton, NJ?",
         answer:
-          "Urmi Threading Salon in Wayne is consistently rated the best in the region, with a 4.8-star Google rating from 171+ reviews. Many of those reviewers come specifically from Clifton.",
+          `Urmi Threading Salon in Wayne is consistently rated the best in the region, with a ${RATING_LABEL}-star Google rating from ${REVIEWS_LABEL} reviews. Many of those reviewers come specifically from Clifton.`,
       },
     ],
     testimonialIds: ["5", "4", "9"],
@@ -251,7 +252,7 @@ export const LOCATIONS: Location[] = [
     directions:
       "From Fair Lawn, take Route 208 North to Route 23 North. Exit at Hinchman Ave and we're on your right at 150 Hinchman Ave. The drive takes approximately 20 minutes.",
     intro:
-      "Fair Lawn has excellent options for beauty services, but clients who've discovered Urmi Threading Salon in Wayne keep making the 20-minute drive — because the results simply can't be matched locally. Since 2010, we've been the destination threading salon for Fair Lawn residents who know that the best brow shaping is worth the trip. Our 4.8-star Google rating, earned from 171+ real reviews, says everything.",
+      `Fair Lawn has excellent options for beauty services, but clients who've discovered Urmi Threading Salon in Wayne keep making the 20-minute drive — because the results simply can't be matched locally. Since 2010, we've been the destination threading salon for Fair Lawn residents who know that the best brow shaping is worth the trip. Our ${RATING_LABEL}-star Google rating, earned from ${REVIEWS_LABEL} real reviews, says everything.`,
     reasons: [
       {
         title: "Worth Every Minute of the Drive",
@@ -261,7 +262,7 @@ export const LOCATIONS: Location[] = [
       {
         title: "Real Results, Real Reviews",
         description:
-          "4.8 stars from 171+ genuine Google reviews. We don't just promise great brows — our clients tell you about them.",
+          `${RATING_LABEL} stars from ${REVIEWS_LABEL} genuine Google reviews. We don't just promise great brows — our clients tell you about them.`,
       },
       {
         title: "Natural Technique",
@@ -307,7 +308,7 @@ export const LOCATIONS: Location[] = [
       {
         title: "Established Reputation",
         description:
-          "15+ years in business. Thousands of satisfied clients. A 4.8-star Google rating. When you're choosing where to trust with your face, reputation matters.",
+          `15+ years in business. Thousands of satisfied clients. A ${RATING_LABEL}-star Google rating. When you're choosing where to trust with your face, reputation matters.`,
       },
       {
         title: "Efficient, Respectful of Your Time",

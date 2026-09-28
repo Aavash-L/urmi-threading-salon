@@ -14,8 +14,9 @@ export const BUSINESS = {
     lat: 40.9468,
     lng: -74.2421,
   },
+  // rating + reviewCount are refreshed daily from Google by scripts/update-reviews.mjs
   rating: 4.8,
-  reviewCount: 171,
+  reviewCount: 250,
   reviewsUrl: "https://g.page/r/Cfbomhoh-oQZEAE/review",
   established: 2010,
   url: "https://www.urmithreadingsalon.com",
@@ -44,3 +45,29 @@ export const BUSINESS = {
 } as const;
 
 export const SITE_URL = "https://www.urmithreadingsalon.com";
+
+// Shown as "250+" — rounded down to the nearest 10 so the label never overstates the live count.
+export const REVIEW_COUNT_ROUNDED = Math.floor(BUSINESS.reviewCount / 10) * 10;
+export const REVIEWS_LABEL = `${REVIEW_COUNT_ROUNDED}+`;
+export const RATING_LABEL = BUSINESS.rating.toFixed(1);
+
+export const WAX_OFFERS = [
+  {
+    id: "brazilian",
+    service: "Brazilian Wax",
+    discount: 10,
+    price: 45,
+    tag: "First visit",
+    headline: "Your first Brazilian, $10 off",
+    blurb: "New to Urmi? Your first Brazilian wax is $10 off. It's quick and gentle, and we use soothing aftercare every time.",
+  },
+  {
+    id: "full-body",
+    service: "Full Body Wax",
+    discount: 20,
+    price: 180,
+    tag: "Best value",
+    headline: "Full Body Wax, $20 off",
+    blurb: "Head-to-toe smooth in a single visit. Arms, legs, underarms, back and more, all done in one appointment.",
+  },
+] as const;

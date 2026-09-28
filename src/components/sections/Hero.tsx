@@ -7,7 +7,7 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import { useReducedMotion } from "framer-motion";
 import { Phone, Sparkles, Star, MapPin } from "lucide-react";
 import GradientBlob from "@/components/ui/GradientBlob";
-import { BUSINESS } from "@/lib/constants";
+import { BUSINESS, REVIEWS_LABEL, RATING_LABEL } from "@/lib/constants";
 import { heroImage } from "@/lib/images";
 
 export default function Hero() {
@@ -92,13 +92,20 @@ export default function Hero() {
             {/* Social proof */}
             <motion.div variants={item} className="flex items-center justify-center lg:justify-start gap-4 pt-1">
               <div className="flex -space-x-2.5" aria-hidden="true">
-                {["bg-brand-pink", "bg-brand-purple", "bg-amber-400", "bg-emerald-400"].map((color, i) => (
-                  <div
-                    key={i}
-                    className={`w-8 h-8 sm:w-9 sm:h-9 rounded-full ${color} border-2 border-white flex items-center justify-center text-white text-xs font-bold`}
-                  >
-                    {["P", "S", "A", "J"][i]}
-                  </div>
+                {[
+                  "1494790108377-be9c29b29330",
+                  "1544005313-94ddf0286df2",
+                  "1531746020798-e6953c6e8e04",
+                  "1534528741775-53994a69daeb",
+                ].map((id) => (
+                  <Image
+                    key={id}
+                    src={`https://images.unsplash.com/photo-${id}?w=96&h=96&fit=crop&crop=faces`}
+                    alt=""
+                    width={36}
+                    height={36}
+                    className="w-8 h-8 sm:w-9 sm:h-9 rounded-full object-cover border-2 border-white shadow-sm"
+                  />
                 ))}
               </div>
               <div>
@@ -108,7 +115,7 @@ export default function Hero() {
                   ))}
                 </div>
                 <span className="text-xs sm:text-sm text-gray-600">
-                  <strong className="text-charcoal">4.8 ★</strong> · 171+ Google reviews
+                  <strong className="text-charcoal">{RATING_LABEL} ★</strong> · {REVIEWS_LABEL} Google reviews
                 </span>
               </div>
             </motion.div>
