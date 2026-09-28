@@ -14,7 +14,7 @@ export const BUSINESS = {
     lat: 40.9468,
     lng: -74.2421,
   },
-  // rating + reviewCount are refreshed daily from Google by scripts/update-reviews.mjs
+  // Update these two to change the rating/review count everywhere on the site
   rating: 4.8,
   reviewCount: 250,
   reviewsUrl: "https://g.page/r/Cfbomhoh-oQZEAE/review",
