@@ -190,7 +190,7 @@ These are asserted by `scripts/verify-site.mjs` (added in a later phase).
 
 - [x] Phase 0 — discovery, map, baseline (this document)
 - [x] Phase 1 — accuracy & conversion repairs
-- [ ] Phase 2 — booking correctness & shared catalog
+- [x] Phase 2 — booking correctness & shared catalog
 - [ ] Phase 3 — metadata, local content, schema, privacy
 - [ ] Phase 4 — performance, accessibility, proof
 
@@ -267,3 +267,103 @@ in `BUSINESS.reviews` but hidden until `verified` is set.
 - Assets: favicon, apple-icon, both OG images, app icons all 200.
 - `scripts/check-ui.mjs` (Chrome, 320/360/390/768/1024/1440): no overflow, call and
   request controls visible in the first viewport on the tested routes.
+
+## Phase 2 — Booking correctness and shared service data
+
+Commit: `fix: make appointment requests consistent and reliable`
+
+### Catalog (`src/lib/catalog.ts`)
+
+One typed list with stable id, name, category, starting price (or `null` = quote),
+scheduling duration, service page and bookability. It drives `/pricing`, every service
+page's price list, the homepage cards, the booking `<select>`, and server validation.
+
+- All published prices preserved (including Mini, Deep Cleaning, Acne, Fruits, Gold,
+  Repechage and Four Layer facials, which were on the menu but missing from booking).
+- "Arm, Leg & Underarm Combo" (booking) and "Arm, Leg & Underarm" (menu) unified.
+- **Eyelash Exchange** — only in the old booking list, never on the menu, meaning
+  unconfirmed → not offered online; the form points to the phone.
+- **Eyelash Lifting** ($55, on the menu) is bookable.
+- **Gift cards** are `bookable: false` and shown as "Ask About Gift Cards" (call).
+- Durations for items that were not in the old booking list are scheduling estimates
+  (Mini 30; other facials 60; Four Layer 90; lifting 60) — owner to confirm.
+- Service pages link to `/book?service=<id>` (exact service pages) or
+  `/book?category=<id>` (waxing, facials, henna, tinting → category listed first, no
+  service auto-chosen). Unknown or non-bookable ids are ignored.
+
+### Request model
+
+Online bookings are **preferred-time requests**. They are stored with
+`status: "pending"`; staff confirm or cancel in `/admin` (new **Confirm** button).
+The client email (only when an email was given) says "received … not confirmed yet";
+a separate "confirmed" email is sent only when staff press Confirm.
+
+### Availability (`src/lib/booking/scheduling.ts`)
+
+- Hours come from `WEEKLY_HOURS` (the old form hardcoded 18:00 on Mon–Wed).
+- All date math in America/New_York via `Intl`, independent of server/browser zone.
+- 15-minute grid; last start = close − service duration.
+- Past times (plus a 30-minute lead) removed from today; past dates return nothing.
+- Up to 60 days ahead.
+- Overlap-aware capacity (`BOOKING_RULES.capacity = 2` concurrent online requests;
+  the old site only blocked identical start times). **Owner to confirm capacity.**
+- `/api/availability?date&service` computes slots server-side; failures return 503 —
+  the form shows "We couldn't check available times…" with a retry, never all-open.
+- The form keys requests by service+date and aborts stale fetches.
+
+### Submission (`src/lib/booking/submit.ts`, `/api/book`)
+
+- One zod schema shared by client and server (`src/lib/booking/schema.ts`).
+- Server re-validates service id, date, hours, past time and capacity at submit.
+- Simultaneous requests: insert, re-read, and withdraw this request if it ranks beyond
+  capacity for its time (→ 409 "That time is no longer available…").
+- Success only if the request is stored **and** at least one staff channel (email,
+  Telegram, push) accepted it; otherwise the row is withdrawn and the visitor sees the
+  failure text. Client input is HTML-escaped in every email.
+- Email is optional ("Email address (optional)") on client and server; staff
+  notifications don't depend on it; `""` is stored so a NOT NULL column still works.
+- Honeypot field for bots.
+- Resend is created lazily, so `next build` no longer needs `RESEND_API_KEY`.
+
+### Admin
+
+`/admin` shows times from both the new `HH:MM` and legacy `h:mm AM` formats, sorts
+by time, adds **Confirm**, and only shows email when present. Separately, the
+middleware, admin API, push-subscribe and login routes now deny access when
+`ADMIN_PASSWORD` is unset (previously an unset variable matched a missing cookie).
+The cookie still stores the password itself; replacing it with a signed session is
+recommended but was not in scope.
+
+### Analytics (`src/lib/analytics.ts`)
+
+No analytics provider exists and none was added (no property ID invented). Events
+`call_click`, `directions_click`, `booking_start`, `booking_request_success`,
+`booking_request_error` are pushed to `window.dataLayer` only if a tag manager has
+created it, and dispatched as a `urmi:analytics` DOM event. Payloads contain only
+`page_path`, `placement` and `service_id` (enforced by an allow-list and a test).
+
+### Tests
+
+`npm test` (vitest, 31 tests, all passing):
+
+- scheduling: Mon–Wed 18:30 close (15-min Wednesday service ends at 18:30),
+  Thu/Fri 19:00, Sat/Sun, durations, off-grid times, past times and dates, 60-day
+  limit, New York midnight, spring-forward and fall-back, overlap and capacity.
+- submission: pending storage + staff sink message, client acknowledgement wording,
+  optional/invalid email, invalid/non-bookable/ambiguous service ids, past and
+  out-of-hours rejection, read failure, insert failure, total notification failure
+  (no false success), three simultaneous requests for one time (2 succeed, 1 → 409),
+  capacity overlap, HTML escaping, honeypot.
+- availability API: valid, unknown service (400), store failure (503, no slots), past date.
+- analytics payload allow-list.
+
+`node scripts/e2e-booking.mjs` (Chrome, server started with `BOOKING_TEST_SINK`),
+8/8 passing: exact preselection from a service page; category preselection; invalid id
+ignored; service kept after navigating away; availability failure UI; field-level
+error announcement and focus; failed submit shows no success and keeps values;
+successful submit stored as `pending` in the test sink with "not confirmed yet" shown.
+
+No production records or messages were created: every automated run used the test
+sink (`BOOKING_TEST_SINK`), which cannot be enabled when `VERCEL_ENV=production`.
+
+The owner-run phone/delivery test is in `docs/operational-test.md`.

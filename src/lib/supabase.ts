@@ -24,9 +24,11 @@ export interface Booking {
   id: string;
   name: string;
   phone: string;
+  /** "" when the client did not give one. */
   email: string;
   service: string;
   date: string;
+  /** "HH:MM" (new) or "h:mm AM" (older rows). */
   time: string;
   notes: string | null;
   status: BookingStatus;
