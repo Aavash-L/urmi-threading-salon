@@ -1,9 +1,10 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Playfair_Display, Inter } from "next/font/google";
 import "./globals.css";
 import SiteChrome, { SiteFooter } from "@/components/layout/SiteChrome";
 import LocalBusinessSchema from "@/components/seo/LocalBusinessSchema";
-import { BUSINESS, SITE_URL, RATING_LABEL } from "@/lib/constants";
+import { SITE_URL } from "@/lib/constants";
+import { pageMetadata } from "@/lib/seo";
 
 const playfair = Playfair_Display({
   subsets: ["latin"],
@@ -17,46 +18,18 @@ const inter = Inter({
   variable: "--font-inter",
 });
 
+// Every public page sets its own canonical; the root does not, so 404s and
+// admin pages never inherit the homepage canonical.
+const rootDefaults: Metadata = { ...pageMetadata("/"), alternates: undefined };
+
 export const metadata: Metadata = {
-  metadataBase: new URL("https://www.urmithreadingsalon.com"),
-  title: {
-    default: "Urmi Threading Salon — Eyebrow Threading in Wayne, NJ",
-    template: "%s | Urmi Threading Salon",
-  },
-  description:
-    `Wayne NJ's top-rated threading salon since 2010. Eyebrow threading, waxing, facials, lash extensions & henna. ${RATING_LABEL} ★ on Google · Walk-ins welcome · (973) 653-9322.`,
-  keywords: [
-    "threading salon Wayne NJ",
-    "eyebrow threading near me",
-    "best eyebrow threading Wayne NJ",
-    "eyebrow salon Wayne NJ",
-    "threading salon near me",
-    "waxing and threading Wayne NJ",
-  ],
-  openGraph: {
-    type: "website",
-    locale: "en_US",
-    url: SITE_URL,
-    siteName: BUSINESS.name,
-    title: "Urmi Threading Salon — Eyebrow Threading in Wayne, NJ",
-    description:
-      `Wayne NJ's top-rated threading salon since 2010. Precision eyebrow threading, waxing, facials & more. ${RATING_LABEL} ★ rating · Walk-ins welcome.`,
-    images: [{ url: "/og/storefront.jpg", width: 1200, height: 630, alt: "Urmi Threading Salon in Wayne NJ" }],
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Urmi Threading Salon — Eyebrow Threading in Wayne, NJ",
-    description: "Wayne NJ's top-rated threading salon since 2010. Precision eyebrow threading, waxing, facials & more.",
-    images: ["/og/storefront.jpg"],
-  },
-  alternates: { canonical: SITE_URL },
+  metadataBase: new URL(SITE_URL),
+  ...rootDefaults,
   robots: { index: true, follow: true, googleBot: { index: true, follow: true } },
-  manifest: "/manifest.json",
-  appleWebApp: {
-    capable: true,
-    title: "Urmi Admin",
-    statusBarStyle: "default",
-  },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#FFF5F8",
 };
 
 export default function RootLayout({
@@ -69,7 +42,7 @@ export default function RootLayout({
       <head>
         <LocalBusinessSchema />
       </head>
-      <body className="flex flex-col min-h-screen pb-[72px] md:pb-0">
+      <body className="flex flex-col min-h-screen">
         <a href="#main-content" className="skip-link">Skip to main content</a>
         <SiteChrome />
         <main id="main-content" className="flex-1">

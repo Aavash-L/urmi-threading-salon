@@ -6,6 +6,9 @@
   --color-blush-50: #FFF5F8;
   --color-brand-pink: #FF4FA2;
   --color-brand-purple: #A855F7;
+  /* Text/control purple that meets 4.5:1 on white, blush-50 and lavender-50 */
+  --color-brand-purple-strong: #7E22CE;
+  --color-brand-pink-strong: #BE185D;
   --color-charcoal: #1A1A1A;
 
   --font-serif: var(--font-playfair);
@@ -15,6 +18,28 @@
 @layer base {
   html {
     scroll-behavior: smooth;
+    /* fixed promo bar (40px) + header, so in-page anchors are not hidden */
+    scroll-padding-top: 7rem;
+  }
+
+  /* Keep focused/anchored content clear of the sticky call bar (< lg). */
+  @media (max-width: 1023.98px) {
+    html {
+      scroll-padding-bottom: 6rem;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
   }
 
   body {
@@ -30,7 +55,7 @@
   }
 
   :focus-visible {
-    outline: 2px solid #A855F7;
+    outline: 3px solid #7E22CE;
     outline-offset: 2px;
     border-radius: 4px;
   }
@@ -38,11 +63,11 @@
 
 @layer utilities {
   .bg-brand-gradient {
-    background: linear-gradient(135deg, #FF4FA2 0%, #A855F7 100%);
+    background: linear-gradient(135deg, #C0267A 0%, #8B35E0 100%);
   }
 
   .text-brand-gradient {
-    background: linear-gradient(135deg, #FF4FA2 0%, #A855F7 100%);
+    background: linear-gradient(135deg, #C0267A 0%, #8B35E0 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -68,7 +93,7 @@
     left: -9999px;
     z-index: 9999;
     padding: 0.5rem 1rem;
-    background: #A855F7;
+    background: #7E22CE;
     color: white;
     border-radius: 0 0 8px 8px;
   }

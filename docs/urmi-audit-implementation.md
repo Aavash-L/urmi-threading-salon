@@ -189,9 +189,81 @@ These are asserted by `scripts/verify-site.mjs` (added in a later phase).
 ### 4. Phase checklist
 
 - [x] Phase 0 — discovery, map, baseline (this document)
-- [ ] Phase 1 — accuracy & conversion repairs
+- [x] Phase 1 — accuracy & conversion repairs
 - [ ] Phase 2 — booking correctness & shared catalog
 - [ ] Phase 3 — metadata, local content, schema, privacy
 - [ ] Phase 4 — performance, accessibility, proof
 
 Test/verification results are appended per phase below.
+
+## Phase 1 — Accuracy and conversion repairs
+
+Commit: `fix: correct salon content and prioritize calls`
+
+Scope note: a few Phase 3 items landed here because the same files were being
+rewritten: the exact title/description/H1 map (`src/lib/seo.ts`), the conservative
+BeautySalon JSON-LD, and the location-page copy (the old copy contained the
+invented travel times and parking claims this phase had to remove).
+
+### What changed
+
+- **Single business source** — `src/lib/constants.ts` (`BUSINESS`, `WEEKLY_HOURS`,
+  `CTA`, `FOOTER_BLURB`). `foundingYear: null`; no founding, "Est.", "15+ years",
+  "10,000 brows", "#1", "most trusted", "top-rated", "thousands", "five-star",
+  "Verified", "CDC-compliant", "medical-grade", "zero irritation", "no skin damage" or
+  "safe for all" wording remains in rendered text, metadata or JSON-LD.
+- **Phone-first CTAs** — `src/components/ui/CallCta.tsx`. Filled "Call (973) 653-9322"
+  + outlined "Request an Appointment" in the header (≥1024px), hero, service,
+  location, contact, pricing and about pages; helper text for the automated
+  receptionist next to the main call actions. "Get Directions" links to Google Maps.
+- **Sticky bar** — `FloatingCallButton.tsx` now shows below 1024px (was below 768px,
+  leaving 768–1023px with no call/request control). Safe-area padding, a spacer below
+  the footer, and `scroll-padding-bottom` keep it from covering content. On `/book`
+  it shows "View Request Form" (in-page link) instead of reloading `/book`.
+- Hardcoded "Open Today" / "Open · Walk-ins Welcome" removed → "Walk-ins welcome
+  during salon hours" + "View Hours" (`/contact#hours`).
+- **Hero** — exact eyebrow/H1/body copy; social links moved to the Contact section.
+- **Service cards** — third card is now "Facials", "From $45" (Mini Facial, from the
+  catalog) → `/services/facials`. "Learn More" labels replaced with descriptive text.
+- **/services/facials** — skincare facials content, H2s "Skincare Facials",
+  "Facial Prices", "Before Your Visit", "Facial Questions". Prices come from
+  `src/lib/catalog.ts`. No threading benefits, process, FAQ or Service description
+  remain on the URL (HTML and JSON-LD checked).
+- **Booking copy** — `/book` has one H1 "Request an Appointment", intro before the form
+  on every breakpoint (no CSS `order-*`), "Send Appointment Request", honest
+  success/failure text. "Guarantees your preferred time slot" and "within 1 hour"
+  removed.
+- **Reviews** — 10 unsourced testimonials, stock reviewer avatars, "Verified" badges,
+  "x weeks ago" strings and review JSON-LD removed. Rating/count hidden
+  (`BUSINESS.reviews.verified = false`). "Read Reviews on Google" uses the place ID
+  resolved from the site's existing review short link; "Leave a Review" is separate.
+- **Offers** — centralized in `src/lib/offers.ts` with eligibility, dates and stacking
+  fields. Terms are unconfirmed, so the site shows "Ask about current salon offers."
+  + "Call About Offers". No "$5" offer exists anywhere in the repository.
+- **Loyalty** — the 9-stamp/8-stamp card and "Every 9th brow threading is FREE"
+  footer line removed → "Ask about our loyalty cards on your next visit."
+- **Technical** — favicon 1,910,625 B → 4,496 B (16/32/48 ICO); `apple-icon.png`
+  180px; 192/512/maskable PNG icons; both OG images are 1200×630 crops of the real
+  salon photo; hero image dimensions corrected (1360×1020); no duplicated brand in
+  any title; the landing page's literal `&apos;` strings are gone; admin manifest and
+  Apple web-app title moved to `src/app/admin/layout.tsx`.
+- **Contrast tokens** — `brand-purple-strong` #7E22CE (6.98:1 on white) for text;
+  gradient buttons #C0267A→#8B35E0 (≥5.5:1 with white text).
+- Stock imagery with alt text claiming Urmi staff/premises removed; only the two real
+  salon interior photos remain, with literal descriptions.
+
+### Operator-requested items reverted by this audit
+
+On 2026-09-28 (before this audit) the site operator asked for "$10 off first Brazilian"
+and "$20 off Full Body Wax" cards, 250+ reviews at 4.8 stars, and stock portrait avatars.
+Per the audit rules: the avatars are removed; the offers are kept in
+`src/lib/offers.ts` but hidden until `termsVerified` is set; the rating/count is kept
+in `BUSINESS.reviews` but hidden until `verified` is set.
+
+### Checks
+
+- `next build` ✓, `tsc --noEmit` ✓
+- Crawl: all 21 routes 200 with the exact titles/H1s from the brief; `/book` has one H1.
+- Assets: favicon, apple-icon, both OG images, app icons all 200.
+- `scripts/check-ui.mjs` (Chrome, 320/360/390/768/1024/1440): no overflow, call and
+  request controls visible in the first viewport on the tested routes.

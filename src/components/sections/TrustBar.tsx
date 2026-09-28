@@ -1,29 +1,26 @@
-import { ShieldCheck, Star, Sparkles, Clock } from "lucide-react";
-import { RATING_LABEL } from "@/lib/constants";
+import { Clock, Heart, MapPin, Sparkles } from "lucide-react";
+import { formatPrice, getCatalogItem } from "@/lib/catalog";
+
+const browPrice = formatPrice(getCatalogItem("eyebrow-threading")!);
 
 const items = [
-  { icon: Clock, label: "15+ Years Experience" },
-  { icon: Star, label: `${RATING_LABEL} ★ Google Rating` },
-  { icon: ShieldCheck, label: "Sanitized Tools Per Client" },
-  { icon: Sparkles, label: "Walk-Ins Welcome" },
+  { icon: Heart, label: "Family-owned salon" },
+  { icon: Sparkles, label: `Eyebrow threading from ${browPrice}` },
+  { icon: Clock, label: "Walk-ins welcome during salon hours" },
+  { icon: MapPin, label: "150 Hinchman Ave, Wayne" },
 ];
 
 export default function TrustBar() {
   return (
-    <div className="bg-white border-y border-lavender-100 py-5" aria-label="Trust indicators">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-0 md:divide-x divide-lavender-100">
-          {items.map(({ icon: Icon, label }) => (
-            <div
-              key={label}
-              className="flex items-center justify-center gap-2 px-4 text-sm font-medium text-charcoal"
-            >
-              <Icon size={16} className="text-brand-purple shrink-0" />
-              <span>{label}</span>
-            </div>
-          ))}
-        </div>
-      </div>
+    <div className="bg-white border-y border-lavender-100 py-5">
+      <ul className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-0 lg:divide-x divide-lavender-100">
+        {items.map(({ icon: Icon, label }) => (
+          <li key={label} className="flex items-center sm:justify-center gap-2 px-2 text-sm font-medium text-charcoal">
+            <Icon size={16} className="text-brand-purple-strong shrink-0" aria-hidden="true" />
+            <span>{label}</span>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }

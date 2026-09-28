@@ -7,8 +7,17 @@ import { z } from "zod";
 import { motion, AnimatePresence } from "framer-motion";
 import { useReducedMotion } from "framer-motion";
 import { CheckCircle2, Clock, Phone } from "lucide-react";
+import HoursTable from "@/components/ui/HoursTable";
+import { CallButton, CallHelper } from "@/components/ui/CallCta";
 import { BUSINESS } from "@/lib/constants";
-import { bookingServices } from "@/lib/services";
+import { CATALOG, CATEGORIES } from "@/lib/catalog";
+
+const bookingServices = CATALOG.filter((s) => s.bookable).map((s) => ({
+  name: s.name,
+  duration: s.duration,
+  price: s.price ?? 0,
+  category: CATEGORIES.find((c) => c.id === s.category)!.label,
+}));
 
 const CATEGORY_EMOJI: Record<string, string> = {
   Threading: "✨",
@@ -67,7 +76,20 @@ const bookingSchema = z.object({
 
 type BookingForm = z.infer<typeof bookingSchema>;
 
-export default function Booking() {
+export const BOOKING_COPY = {
+  heading: "Request an Appointment",
+  intro:
+    "Choose your service and preferred time. Your appointment is confirmed only after the salon confirms your request. For same-day availability, call (973) 653-9322.",
+  submit: "Send Appointment Request",
+  successHeading: "Appointment Request Received",
+  successBody:
+    "Your request has been received, but your appointment is not confirmed yet. The salon will contact you to confirm availability. For urgent questions, call (973) 653-9322.",
+  failure: "We couldn't send your request. Please try again or call (973) 653-9322.",
+  availabilityError: "We couldn't check available times. Please try again or call (973) 653-9322.",
+} as const;
+
+export default function Booking({ headingLevel = "h2" }: { headingLevel?: "h1" | "h2" }) {
+  const Heading = headingLevel;
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState("");
@@ -143,10 +165,10 @@ export default function Booking() {
         setBookedSlots([]);
       } else {
         const body = await res.json();
-        setSubmitError(body.error ?? "Something went wrong. Please try again.");
+        setSubmitError(body.error ?? BOOKING_COPY.failure);
       }
     } catch {
-      setSubmitError("Something went wrong. Please try again.");
+      setSubmitError(BOOKING_COPY.failure);
     } finally {
       setSubmitting(false);
     }
@@ -160,43 +182,21 @@ export default function Booking() {
     }`;
 
   return (
-    <section id="book" className="pt-32 pb-14 sm:pb-24 bg-white" aria-label="Book an appointment">
+    <section
+      id="book"
+      className={`${headingLevel === "h1" ? "pt-32" : "pt-14 sm:pt-20"} pb-14 sm:pb-24 bg-white`}
+      aria-labelledby="book-heading"
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="mt-0 grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12 items-start">
-          {/* Left: hours — pushed below form on mobile */}
-          <div className="space-y-6 order-last lg:order-first">
-            <div className="bg-lavender-50 rounded-2xl p-6 space-y-4">
-              <h3 className="font-serif text-2xl font-bold text-charcoal">
-                Walk in, or book ahead — your choice.
-              </h3>
-              <p className="text-gray-600 text-sm leading-relaxed">
-                We welcome walk-ins every day, but booking ahead guarantees your preferred time slot.
-                Most threading appointments take 10–30 minutes, so you can fit us into any schedule.
-              </p>
-            </div>
-
-            <div className="bg-white border border-lavender-100 rounded-2xl p-6 card-shadow">
-              <div className="flex items-center gap-2 mb-4">
-                <Clock size={18} className="text-brand-purple" />
-                <h4 className="font-semibold text-charcoal">Business Hours</h4>
-              </div>
-              <table className="text-sm w-full">
-                <tbody>
-                  {BUSINESS.hours.map((h, i) => (
-                    <tr key={i} className="border-b border-lavender-50 last:border-0">
-                      <td className="py-2 font-medium text-charcoal pr-4">{h.days}</td>
-                      <td className="py-2 text-gray-600">
-                        {`${h.open} – ${h.close}`}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-
+        <div className="max-w-3xl mb-8">
+          <Heading id="book-heading" className="font-serif text-4xl md:text-5xl font-bold text-charcoal mb-4">
+            {BOOKING_COPY.heading}
+          </Heading>
+          <p className="text-lg text-gray-700 leading-relaxed">{BOOKING_COPY.intro}</p>
+        </div>
+        <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,3fr)_minmax(0,2fr)] gap-8 sm:gap-12 items-start">
           {/* Right: booking form — first on mobile */}
-          <div className="bg-white border border-lavender-100 rounded-2xl p-5 sm:p-8 card-shadow order-first lg:order-last">
+          <div id="request-form" className="bg-white border border-lavender-100 rounded-2xl p-5 sm:p-8 card-shadow scroll-mt-28 min-w-0">
             <AnimatePresence mode="wait">
               {submitted ? (
                 <motion.div
@@ -212,15 +212,13 @@ export default function Booking() {
                   >
                     <CheckCircle2 size={56} className="text-emerald-500" />
                   </motion.div>
-                  <h3 className="font-serif text-2xl font-bold text-charcoal">Request Received!</h3>
-                  <p className="text-gray-600 text-sm leading-relaxed max-w-xs">
-                    We&apos;ll confirm your appointment by text or call within 1 hour during business hours.
-                  </p>
+                  <h3 className="font-serif text-2xl font-bold text-charcoal">{BOOKING_COPY.successHeading}</h3>
+                  <p className="text-gray-700 text-sm leading-relaxed max-w-sm">{BOOKING_COPY.successBody}</p>
                   <button
                     onClick={() => setSubmitted(false)}
                     className="mt-2 text-brand-purple text-sm font-medium hover:underline"
                   >
-                    Book another appointment
+                    Send another request
                   </button>
                 </motion.div>
               ) : (
@@ -408,7 +406,7 @@ export default function Booking() {
                     disabled={submitting}
                     className="w-full bg-brand-gradient text-white font-semibold py-4 rounded-full hover:opacity-90 transition-opacity disabled:opacity-50 text-base"
                   >
-                    {submitting ? "Submitting…" : "Request Appointment"}
+                    {submitting ? "Sending…" : BOOKING_COPY.submit}
                   </button>
 
                   <p className="text-center text-sm text-gray-500">
@@ -425,6 +423,22 @@ export default function Booking() {
               )}
             </AnimatePresence>
           </div>
+
+          <aside className="space-y-6 min-w-0" aria-label="Salon hours and calling">
+            <div className="bg-lavender-50 rounded-2xl p-6 space-y-3">
+              <h3 className="font-serif text-2xl font-bold text-charcoal">Prefer to Call?</h3>
+              <CallButton placement="booking_aside" className="w-full sm:w-auto" />
+              <CallHelper />
+            </div>
+            <div className="bg-white border border-lavender-100 rounded-2xl p-6">
+              <div className="flex items-center gap-2 mb-3">
+                <Clock size={18} className="text-brand-purple-strong" aria-hidden="true" />
+                <h3 className="font-semibold text-charcoal">Salon Hours</h3>
+              </div>
+              <HoursTable />
+              <p className="text-sm text-gray-700 mt-3">Walk-ins are welcome during salon hours.</p>
+            </div>
+          </aside>
         </div>
       </div>
     </section>

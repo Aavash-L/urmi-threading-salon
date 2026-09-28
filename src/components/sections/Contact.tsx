@@ -15,92 +15,78 @@ function FacebookIcon({ size = 18 }: { size?: number }) {
     </svg>
   );
 }
-import SectionHeading from "@/components/ui/SectionHeading";
 import { BUSINESS } from "@/lib/constants";
+import { CallButton, DirectionsLink } from "@/components/ui/CallCta";
+import HoursTable from "@/components/ui/HoursTable";
 
-export default function Contact() {
+export default function Contact({ headingLevel = "h2" }: { headingLevel?: "h2" | "h3" }) {
+  const H = headingLevel;
   return (
-    <section id="contact" className="py-14 sm:py-24 bg-lavender-50" aria-label="Contact information">
+    <section id="contact" className="py-14 sm:py-20 bg-lavender-50" aria-labelledby="visit-heading">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <SectionHeading
-          eyebrow="Find Us"
-          title="Visit Urmi Threading Salon"
-          subtitle="We're conveniently located in Wayne, NJ. Walk in anytime or call ahead."
-        />
+        <H id="visit-heading" className="font-serif text-3xl md:text-4xl font-bold text-charcoal text-center">
+          Visit Urmi Threading Salon
+        </H>
+        <p className="mt-3 text-center text-gray-700">
+          We have one salon location: {BUSINESS.address.full}.
+        </p>
 
-        <div className="mt-8 sm:mt-14 grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-10">
-          {/* Contact info */}
-          <div className="space-y-6">
+        <div className="mt-8 sm:mt-12 grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-10">
+          <div className="space-y-6 min-w-0">
             <div className="bg-white rounded-2xl p-6 card-shadow space-y-5">
               <div className="flex items-start gap-4">
                 <div className="w-10 h-10 bg-lavender-50 rounded-xl flex items-center justify-center shrink-0">
-                  <MapPin size={18} className="text-brand-purple" />
+                  <MapPin size={18} className="text-brand-purple-strong" aria-hidden="true" />
                 </div>
                 <div>
                   <p className="font-semibold text-charcoal mb-1">Address</p>
-                  <address className="text-gray-600 not-italic text-sm leading-relaxed">
+                  <address className="text-gray-700 not-italic text-sm leading-relaxed">
                     {BUSINESS.address.street}<br />
                     {BUSINESS.address.city}, {BUSINESS.address.state} {BUSINESS.address.zip}
                   </address>
-                </div>
-              </div>
-
-              <div className="flex items-center gap-4">
-                <div className="w-10 h-10 bg-lavender-50 rounded-xl flex items-center justify-center shrink-0">
-                  <Phone size={18} className="text-brand-purple" />
-                </div>
-                <div>
-                  <p className="font-semibold text-charcoal mb-1">Phone</p>
-                  <a
-                    href={`tel:${BUSINESS.phoneRaw}`}
-                    className="text-brand-purple hover:underline text-sm font-medium"
-                  >
-                    {BUSINESS.phone}
-                  </a>
+                  <DirectionsLink placement="contact" className="mt-1" />
                 </div>
               </div>
 
               <div className="flex items-start gap-4">
                 <div className="w-10 h-10 bg-lavender-50 rounded-xl flex items-center justify-center shrink-0">
-                  <Clock size={18} className="text-brand-purple" />
+                  <Phone size={18} className="text-brand-purple-strong" aria-hidden="true" />
                 </div>
                 <div>
-                  <p className="font-semibold text-charcoal mb-2">Hours</p>
-                  <table className="text-sm text-gray-600 w-full">
-                    <tbody>
-                      {BUSINESS.hours.map((h, i) => (
-                        <tr key={i}>
-                          <td className="pr-4 py-0.5 font-medium text-charcoal">{h.days}</td>
-                          <td className="py-0.5">
-                            {`${h.open} – ${h.close}`}
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
+                  <p className="font-semibold text-charcoal mb-2">Phone</p>
+                  <CallButton placement="contact" className="text-sm" />
+                </div>
+              </div>
+
+              <div id="hours" className="flex items-start gap-4 scroll-mt-28">
+                <div className="w-10 h-10 bg-lavender-50 rounded-xl flex items-center justify-center shrink-0">
+                  <Clock size={18} className="text-brand-purple-strong" aria-hidden="true" />
+                </div>
+                <div className="min-w-0 flex-1">
+                  <p className="font-semibold text-charcoal mb-2">Salon Hours</p>
+                  <HoursTable />
+                  <p className="text-sm text-gray-700 mt-2">Walk-ins are welcome during salon hours.</p>
                 </div>
               </div>
             </div>
 
             <div className="bg-white rounded-2xl p-6 card-shadow">
-              <p className="font-semibold text-charcoal mb-4">Follow Us</p>
-              <div className="flex gap-4">
+              <p className="font-semibold text-charcoal mb-3">Follow Us</p>
+              <div className="flex flex-wrap gap-x-6 gap-y-2">
                 <a
                   href={BUSINESS.instagram}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-2 text-sm text-gray-600 hover:text-brand-pink transition-colors"
-                  aria-label="Urmi Threading Salon on Instagram"
+                  className="flex items-center gap-2 text-sm text-gray-700 underline underline-offset-4 hover:no-underline min-h-11"
                 >
                   <InstagramIcon size={18} />
-                  @urmithreading.wayne
+                  Instagram {BUSINESS.instagramHandle}
                 </a>
                 <a
                   href={BUSINESS.facebook}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-2 text-sm text-gray-600 hover:text-brand-purple transition-colors"
-                  aria-label="Urmi Threading Salon on Facebook"
+                  className="flex items-center gap-2 text-sm text-gray-700 underline underline-offset-4 hover:no-underline min-h-11"
                 >
                   <FacebookIcon size={18} />
                   Facebook
@@ -109,17 +95,13 @@ export default function Contact() {
             </div>
           </div>
 
-          {/* Map */}
-          <div className="rounded-2xl overflow-hidden card-shadow h-[220px] sm:h-[350px] lg:h-auto lg:min-h-[400px]">
+          <div className="rounded-2xl overflow-hidden card-shadow bg-white">
             <iframe
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3017.1234567890!2d-74.2421!3d40.9468!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2s150+Hinchman+Ave%2C+Wayne%2C+NJ+07470!5e0!3m2!1sen!2sus!4v1234567890"
-              width="100%"
-              height="100%"
-              style={{ border: 0 }}
-              allowFullScreen
+              src={BUSINESS.mapEmbedUrl}
+              className="w-full h-[260px] sm:h-[350px] lg:h-full lg:min-h-[420px] border-0"
               loading="lazy"
               referrerPolicy="no-referrer-when-downgrade"
-              title="Urmi Threading Salon location at 150 Hinchman Ave, Wayne, NJ 07470"
+              title={`Map showing ${BUSINESS.name} at ${BUSINESS.address.full}`}
             />
           </div>
         </div>
