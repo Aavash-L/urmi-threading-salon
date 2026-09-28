@@ -69,7 +69,8 @@ export const BUSINESS = {
     verified: false,
     rating: 4.8,
     count: 250,
-    readUrl: `https://search.google.com/local/reviews?placeid=${GOOGLE_PLACE_ID}`,
+    // Google Maps URLs API: opens this salon's profile (reviews tab is one tap away).
+    readUrl: `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent("Urmi Threading Salon")}&query_place_id=${GOOGLE_PLACE_ID}`,
     writeUrl: "https://g.page/r/Cfbomhoh-oQZEAE/review",
   },
   serviceArea: [

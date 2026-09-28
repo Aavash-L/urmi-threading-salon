@@ -191,7 +191,7 @@ These are asserted by `scripts/verify-site.mjs` (added in a later phase).
 - [x] Phase 0 — discovery, map, baseline (this document)
 - [x] Phase 1 — accuracy & conversion repairs
 - [x] Phase 2 — booking correctness & shared catalog
-- [ ] Phase 3 — metadata, local content, schema, privacy
+- [x] Phase 3 — metadata, local content, schema, privacy
 - [ ] Phase 4 — performance, accessibility, proof
 
 Test/verification results are appended per phase below.
@@ -367,3 +367,91 @@ No production records or messages were created: every automated run used the tes
 sink (`BOOKING_TEST_SINK`), which cannot be enabled when `VERCEL_ENV=production`.
 
 The owner-run phone/delivery test is in `docs/operational-test.md`.
+
+## Phase 3 — Metadata, local content, schema and privacy
+
+Commit: `fix: align local pages metadata and structured data`
+
+(The exact metadata map, service/location copy and the BeautySalon object were
+implemented in Phase 1 — see the note there. This phase adds privacy, crawl
+settings and verification.)
+
+### Metadata and headings
+
+`src/lib/seo.ts` holds every final title and description from the brief. Titles are
+`{ absolute }`, so the root template is never appended. Each page sets its own
+canonical, `og:url`, `og:title`, `og:description`, `og:image` (1200×630) and the
+matching Twitter card. The root layout no longer sets a canonical, so a 404 never
+inherits the homepage canonical.
+
+### Page roles and cross-links
+
+- `/eyebrow-threading-wayne-nj` — local commercial landing page (intro, "Prices,
+  Hours & Your Visit", FAQ, links to nearby-town pages).
+- `/services/eyebrow-threading` — service detail and prices.
+- `/locations/wayne-nj` — practical visiting info (route, map, hours).
+Each links to the other two with descriptive labels. Canonicals unchanged; nothing
+was noindexed.
+
+### Location pages
+
+Invented travel times, mileage, highway itineraries, parking and "Why X residents
+choose us" content removed. Every non-Wayne page states "We have one salon location:
+150 Hinchman Ave, Wayne, NJ 07470." and has "Plan Your Route" with "Get Directions to
+Our Wayne Salon" (Google Maps directions URL, checked 200). The previous map embed
+used a synthetic `pb=` string; it now uses the address query embed (checked 200, shows
+150 Hinchman Ave). The BreadcrumbList no longer references the non-existent
+`/locations` page.
+
+### Structured data
+
+- One BeautySalon entity (root layout), generated from `BUSINESS`/`WEEKLY_HOURS`/
+  `SERVICES`. Compared field-by-field with the object in the brief: **identical**.
+- No foundingDate, geo, aggregateRating, review, priceRange or offer dates.
+- Service entities reference `{"@id": "https://www.urmithreadingsalon.com"}` as provider
+  and use the page's visible intro as description.
+- FAQPage markup is built from the same arrays the pages render;
+  `scripts/verify-site.mjs` checks every question and answer is visible.
+- JSON-LD is serialized with `<` escaped.
+
+### Privacy (`/privacy`)
+
+Traced data flow:
+
+| Data | Where it goes |
+|---|---|
+| Name, phone, service, preferred date/time, notes, optional email | Supabase `bookings` table |
+| Same fields | Staff email via Resend to `urmithreadingandbeautysalon@gmail.com`; Telegram bot message (if configured); web push to subscribed staff devices (name, service, date/time) |
+| Email (optional) | Client acknowledgement / confirmation / cancellation via Resend |
+| Service + date only | Browser `sessionStorage` (draft; cleared on success) |
+| IP/request data | Vercel hosting |
+| Map embed, directions and review links | Google |
+| Analytics | none installed; allow-listed non-personal events only |
+
+The page uses the exact core copy from the brief plus only the facts above, with the
+form notice linking to it. **Owner decisions still needed:** retention period for
+requests and staff messages, whether a formal privacy policy/legal review is wanted,
+and which email address is public (`info@urmithreadingsalon.com` was in the old
+constants but appears unused; the gmail address is the one that receives requests).
+
+### Crawl settings
+
+- Sitemap: the original 21 URLs + `/privacy` (22), no admin/API routes. `lastmod` is a
+  fixed content date per route (`src/app/sitemap.ts`), not the request time.
+- `robots.txt` unchanged (allow all; disallow `/api/`, `/admin/`).
+- Custom 404 page (`noindex`) keeps a genuine 404 status.
+- `next.config.ts` adds a permanent apex→www redirect that preserves the path; it only
+  applies if the bare domain is served by the app. The live apex currently answers
+  **307** from Vercel's domain settings — switching it to a permanent redirect is an
+  owner/dashboard action (not changed here).
+- Reviews "read" link uses the Google Maps URLs API with the place ID (the
+  `search.google.com/local/reviews` form returned 404); it opens "Urmi Threading Salon".
+
+### Checks
+
+`node scripts/verify-site.mjs` against the production build: 22 sitemap routes,
+23 internal link targets, 38 in-page anchors, all assets — all passed (status, single H1,
+exact titles, no duplicate brand, self canonical/og:url, OG/Twitter parity, JSON-LD parses,
+exactly one BeautySalon, no unverified markup, FAQ answers visible, unchanged phone and
+address on every page, no banned claims, genuine 404, `/gallery` 308, one-location
+sentence and no travel/parking claims on non-Wayne pages).
