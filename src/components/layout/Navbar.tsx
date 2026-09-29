@@ -1,176 +1,225 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ChevronDown, Menu, Sparkles, X } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Menu, X, ChevronDown, Phone, Sparkles } from "lucide-react";
+import { BUSINESS } from "@/lib/constants";
 import { SERVICES } from "@/lib/services";
-import { CallButton, RequestButton } from "@/components/ui/CallCta";
-
-const links = [
-  { label: "Pricing", href: "/pricing" },
-  { label: "About", href: "/about", wideOnly: true },
-  { label: "Contact", href: "/contact" },
-];
-
-const mobileLinks = [
-  { label: "Home", href: "/" },
-  { label: "Services", href: "/services" },
-  ...SERVICES.map((s) => ({ label: s.name, href: `/services/${s.slug}`, nested: true })),
-  { label: "Pricing", href: "/pricing" },
-  { label: "About", href: "/about" },
-  { label: "Contact & Hours", href: "/contact" },
-  { label: "Request an Appointment", href: "/book" },
-];
+import { useReducedMotion } from "framer-motion";
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [servicesOpen, setServicesOpen] = useState(false);
   const pathname = usePathname();
-  const menuButton = useRef<HTMLButtonElement>(null);
-  const firstMobileLink = useRef<HTMLAnchorElement>(null);
-  const servicesRef = useRef<HTMLDivElement>(null);
+  const shouldReduce = useReducedMotion();
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 20);
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    const handleScroll = () => setScrolled(window.scrollY > 50);
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Lock background scroll and move focus into the open mobile menu.
   useEffect(() => {
-    if (!mobileOpen) return;
-    document.body.style.overflow = "hidden";
-    firstMobileLink.current?.focus();
-    return () => {
-      document.body.style.overflow = "";
-    };
-  }, [mobileOpen]);
-
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key !== "Escape") return;
-      if (mobileOpen) closeMobile();
-      setServicesOpen(false);
-    };
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [mobileOpen]);
-
-  function closeMobile() {
     setMobileOpen(false);
-    // Return focus to the control that opened the menu.
-    requestAnimationFrame(() => menuButton.current?.focus());
-  }
+    setServicesOpen(false);
+  }, [pathname]);
 
-  const linkClass = (href: string) =>
-    `text-sm font-medium py-2 underline-offset-4 hover:underline ${
-      pathname === href ? "text-brand-purple-strong underline" : "text-charcoal"
-    }`;
+  useEffect(() => {
+    document.body.style.overflow = mobileOpen ? "hidden" : "";
+    return () => { document.body.style.overflow = ""; };
+  }, [mobileOpen]);
+
+  const navLinks = [
+    { label: "Home", href: "/" },
+    { label: "About", href: "/about" },
+    { label: "Loyalty Benefits", href: "/#loyalty" },
+    { label: "Contact", href: "/contact" },
+  ];
 
   return (
     <>
       <header
-        className={`fixed top-10 left-0 right-0 z-30 transition-shadow ${
-          scrolled || mobileOpen ? "bg-white/95 backdrop-blur shadow-md" : "bg-blush-50/95"
+        className={`fixed top-10 left-0 right-0 z-30 transition-all duration-300 ${
+          scrolled || mobileOpen
+            ? "glass shadow-lg py-3"
+            : "bg-transparent py-5"
         }`}
       >
-        <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4" aria-label="Main navigation">
-          <Link href="/" className="flex items-center gap-2 min-h-11" onClick={() => setMobileOpen(false)}>
-            <Sparkles size={20} className="text-brand-pink-strong" aria-hidden="true" />
-            <span className="font-serif font-bold text-xl text-charcoal">Urmi Threading</span>
-            <span className="sr-only">Salon home</span>
+        <nav
+          className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between"
+          aria-label="Main navigation"
+        >
+          {/* Logo */}
+          <Link href="/" className="flex items-center gap-2 group" aria-label="Urmi Threading Salon home">
+            <Sparkles size={20} className="text-brand-pink" />
+            <span className="font-serif font-bold text-xl text-charcoal group-hover:text-brand-purple transition-colors">
+              Urmi Threading
+            </span>
           </Link>
 
-          <div className="hidden lg:flex items-center gap-5 xl:gap-7">
+          {/* Desktop nav */}
+          <div className="hidden lg:flex items-center gap-8">
+            <Link
+              href="/"
+              className={`text-sm font-medium transition-colors hover:text-brand-purple ${
+                pathname === "/" ? "text-brand-purple" : "text-charcoal"
+              }`}
+            >
+              Home
+            </Link>
+
+            {/* Services dropdown */}
             <div
-              ref={servicesRef}
               className="relative"
               onMouseEnter={() => setServicesOpen(true)}
               onMouseLeave={() => setServicesOpen(false)}
-              onBlur={(e) => {
-                if (!servicesRef.current?.contains(e.relatedTarget as Node)) setServicesOpen(false);
-              }}
             >
               <button
-                type="button"
-                className="flex items-center gap-1 text-sm font-medium text-charcoal py-2 min-h-11"
+                className="flex items-center gap-1 text-sm font-medium text-charcoal hover:text-brand-purple transition-colors"
                 aria-expanded={servicesOpen}
-                aria-controls="services-menu"
-                onClick={() => setServicesOpen((o) => !o)}
+                aria-haspopup="true"
               >
                 Services
-                <ChevronDown size={14} aria-hidden="true" className={`transition-transform ${servicesOpen ? "rotate-180" : ""}`} />
+                <ChevronDown
+                  size={14}
+                  className={`transition-transform ${servicesOpen ? "rotate-180" : ""}`}
+                />
               </button>
-              <div id="services-menu" hidden={!servicesOpen} className="absolute top-full left-0 pt-2 w-60">
-                <ul className="bg-white rounded-2xl shadow-xl border border-lavender-100 py-2">
-                  <li>
-                    <Link href="/services" className="block px-4 py-2.5 text-sm font-semibold text-brand-purple-strong hover:bg-lavender-50">
-                      All Services
-                    </Link>
-                  </li>
-                  {SERVICES.map((s) => (
-                    <li key={s.slug}>
-                      <Link href={`/services/${s.slug}`} className="block px-4 py-2.5 text-sm text-charcoal hover:bg-lavender-50">
-                        {s.name}
+              <AnimatePresence>
+                {servicesOpen && (
+                  <motion.div
+                    initial={shouldReduce ? { opacity: 1 } : { opacity: 0, y: -8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={shouldReduce ? { opacity: 1 } : { opacity: 0, y: -8 }}
+                    transition={{ duration: 0.15 }}
+                    className="absolute top-full left-0 pt-2 w-56"
+                    role="menu"
+                  >
+                    <div className="bg-white rounded-2xl shadow-xl border border-lavender-100 py-2 overflow-hidden">
+                      <Link
+                        href="/services"
+                        className="block px-4 py-2 text-sm font-semibold text-brand-purple hover:bg-lavender-50 transition-colors"
+                        role="menuitem"
+                      >
+                        All Services
                       </Link>
-                    </li>
-                  ))}
-                </ul>
-              </div>
+                      <div className="h-px bg-lavender-100 mx-4 my-1" />
+                      {SERVICES.map((service) => (
+                        <Link
+                          key={service.id}
+                          href={`/services/${service.slug}`}
+                          className="block px-4 py-2 text-sm text-charcoal hover:bg-lavender-50 hover:text-brand-purple transition-colors"
+                          role="menuitem"
+                        >
+                          {service.name}
+                        </Link>
+                      ))}
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
 
-            {links.map((l) => (
-              <Link key={l.href} href={l.href} className={`${linkClass(l.href)} ${l.wideOnly ? "hidden xl:inline" : ""}`}>
-                {l.label}
+            {navLinks.slice(1).map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                className={`text-sm font-medium transition-colors hover:text-brand-purple ${
+                  pathname === link.href ? "text-brand-purple" : "text-charcoal"
+                }`}
+              >
+                {link.label}
               </Link>
             ))}
 
-            <CallButton placement="header" size="sm" />
-            {pathname !== "/book" && <RequestButton placement="header" size="sm" />}
+            <a
+              href={`tel:${BUSINESS.phoneRaw}`}
+              className="flex items-center gap-1.5 text-sm font-medium text-charcoal hover:text-brand-purple transition-colors"
+            >
+              <Phone size={14} />
+              {BUSINESS.phone}
+            </a>
+
+            <Link
+              href="/book"
+              className="bg-brand-gradient text-white text-sm font-semibold px-5 py-2.5 rounded-full hover:opacity-90 transition-opacity shadow-md"
+            >
+              Book Now
+            </Link>
           </div>
 
+          {/* Mobile hamburger */}
           <button
-            ref={menuButton}
-            type="button"
-            className="lg:hidden inline-flex items-center justify-center w-11 h-11 rounded-lg text-charcoal hover:bg-lavender-50"
-            onClick={() => (mobileOpen ? closeMobile() : setMobileOpen(true))}
+            className="lg:hidden p-2 rounded-lg text-charcoal hover:bg-lavender-50 transition-colors"
+            onClick={() => setMobileOpen(!mobileOpen)}
             aria-label={mobileOpen ? "Close menu" : "Open menu"}
             aria-expanded={mobileOpen}
-            aria-controls="mobile-menu"
           >
-            {mobileOpen ? <X size={24} aria-hidden="true" /> : <Menu size={24} aria-hidden="true" />}
+            {mobileOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
         </nav>
       </header>
 
-      {mobileOpen && (
-        <div
-          id="mobile-menu"
-          className="lg:hidden fixed inset-x-0 top-[6.5rem] bottom-0 z-20 bg-white overflow-y-auto px-6 pb-40"
-        >
-          <nav aria-label="Mobile navigation">
-            <ul>
-              {mobileLinks.map((l, i) => (
-                <li key={l.href}>
-                  <Link
-                    ref={i === 0 ? firstMobileLink : undefined}
-                    href={l.href}
-                    onClick={() => setMobileOpen(false)}
-                    className={`block border-b border-lavender-100 ${
-                      "nested" in l ? "pl-4 py-2.5 text-base text-gray-700" : "py-3 text-xl font-serif font-bold text-charcoal"
-                    }`}
-                  >
-                    {l.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </nav>
-        </div>
-      )}
+      {/* Mobile full-screen menu */}
+      <AnimatePresence>
+        {mobileOpen && (
+          <motion.div
+            initial={shouldReduce ? { opacity: 1 } : { opacity: 0, x: "100%" }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={shouldReduce ? { opacity: 1 } : { opacity: 0, x: "100%" }}
+            transition={{ type: "spring", stiffness: 300, damping: 30 }}
+            className="lg:hidden fixed inset-0 z-20 bg-white flex flex-col pt-24 pb-8 px-6"
+          >
+            <nav aria-label="Mobile navigation">
+              <motion.ul
+                className="space-y-1"
+                variants={{
+                  show: { transition: { staggerChildren: shouldReduce ? 0 : 0.07 } },
+                  hidden: {},
+                }}
+                initial="hidden"
+                animate="show"
+              >
+                {[{ label: "Home", href: "/" }, { label: "Services", href: "/services" }, { label: "About", href: "/about" }, { label: "Loyalty Benefits", href: "/#loyalty" }, { label: "Contact", href: "/contact" }, { label: "Book Appointment", href: "/book" }].map(
+                  (link) => (
+                    <motion.li
+                      key={link.href}
+                      variants={{
+                        hidden: { opacity: 0, x: shouldReduce ? 0 : 20 },
+                        show: { opacity: 1, x: 0, transition: { duration: 0.3 } },
+                      }}
+                    >
+                      <Link
+                        href={link.href}
+                        className={`block text-2xl font-serif font-bold py-3 border-b border-lavender-100 transition-colors ${
+                          link.href === "/book"
+                            ? "text-brand-purple"
+                            : "text-charcoal hover:text-brand-purple"
+                        }`}
+                      >
+                        {link.label}
+                      </Link>
+                    </motion.li>
+                  )
+                )}
+              </motion.ul>
+            </nav>
+
+            <div className="mt-auto">
+              <a
+                href={`tel:${BUSINESS.phoneRaw}`}
+                className="flex items-center justify-center gap-2 bg-brand-gradient text-white font-semibold py-4 rounded-full text-lg"
+              >
+                <Phone size={18} className="fill-white" />
+                {BUSINESS.phone}
+              </a>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </>
   );
 }

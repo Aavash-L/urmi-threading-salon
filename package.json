@@ -6,10 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint",
-    "test": "vitest run",
-    "typecheck": "tsc --noEmit",
-    "check:ui": "node scripts/check-ui.mjs"
+    "lint": "eslint"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.4.0",
@@ -30,12 +27,9 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@types/web-push": "^3.6.4",
-    "axe-core": "^4.13.0",
     "eslint": "^9",
     "eslint-config-next": "16.2.6",
-    "playwright-core": "^1.63.0",
     "tailwindcss": "^4",
-    "typescript": "^5",
-    "vitest": "^3.2.7"
+    "typescript": "^5"
   }
 }

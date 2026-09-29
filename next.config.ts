@@ -13,21 +13,19 @@ const nextConfig: NextConfig = {
     ];
   },
   async redirects() {
-    return [
-      { source: "/gallery", destination: "/", permanent: true },
-      // If the bare domain is ever served by this app, send it permanently to www with the
-      // path and query intact. (Today Vercel's domain settings redirect apex → www with a
-      // temporary 307; switching that to 308 is a dashboard change for the owner.)
-      {
-        source: "/:path*",
-        has: [{ type: "host", value: "urmithreadingsalon.com" }],
-        destination: "https://www.urmithreadingsalon.com/:path*",
-        permanent: true,
-      },
-    ];
+    return [{ source: "/gallery", destination: "/", permanent: true }];
   },
   images: {
-    formats: ["image/avif", "image/webp"],
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "images.unsplash.com",
+      },
+      {
+        protocol: "https",
+        hostname: "unsplash.com",
+      },
+    ],
   },
 };
 

@@ -8,7 +8,6 @@ import {
   LogOut, RefreshCw, User, Bell, BellOff, X,
 } from "lucide-react";
 import type { Booking, BookingStatus } from "@/lib/supabase";
-import { labelFor, toMinutes } from "@/lib/booking/scheduling";
 
 const STATUS_STYLES: Record<BookingStatus, string> = {
   pending: "bg-amber-50 text-amber-700 border-amber-200",
@@ -21,16 +20,6 @@ const STATUS_LABELS: Record<BookingStatus, string> = {
   confirmed: "Confirmed",
   cancelled: "Cancelled",
 };
-
-// Requests store "HH:MM"; older rows stored "10:15 AM". Show both the same way.
-function displayTime(t: string) {
-  const m = toMinutes(t);
-  return m == null ? t : labelFor(m);
-}
-
-function sortByTime(a: Booking, b: Booking) {
-  return (toMinutes(a.time) ?? 0) - (toMinutes(b.time) ?? 0);
-}
 
 function formatDate(dateStr: string) {
   const d = new Date(dateStr + "T00:00:00");
@@ -97,6 +86,7 @@ export default function AdminDashboard() {
   const router = useRouter();
 
   const fetchBookings = useCallback(async () => {
+    setLoading(true);
     const res = await fetch("/api/admin/bookings");
     if (res.status === 401) { router.push("/admin/login"); return; }
     const data: Booking[] = await res.json();
@@ -141,8 +131,6 @@ export default function AdminDashboard() {
   }, []);
 
   // Initial load
-  // fetchBookings only sets state after its first await, so this is not a synchronous cascade.
-  // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(() => { fetchBookings(); }, [fetchBookings]);
 
   // 30-second polling
@@ -150,6 +138,22 @@ export default function AdminDashboard() {
     const id = setInterval(silentPoll, 30_000);
     return () => clearInterval(id);
   }, [silentPoll]);
+
+  // Register service worker + set up push subscription
+  useEffect(() => {
+    if (!("serviceWorker" in navigator) || !("PushManager" in window)) return;
+
+    const vapidKey = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY;
+    if (!vapidKey) return;
+
+    navigator.serviceWorker.register("/sw.js").then(async (reg) => {
+      const perm = Notification.permission;
+      if (perm === "granted") {
+        await subscribePush(reg, vapidKey);
+      }
+    });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   async function subscribePush(reg: ServiceWorkerRegistration, vapidKey: string) {
     try {
@@ -167,21 +171,6 @@ export default function AdminDashboard() {
     } catch {}
   }
 
-  // Register service worker + set up push subscription
-  useEffect(() => {
-    if (!("serviceWorker" in navigator) || !("PushManager" in window)) return;
-
-    const vapidKey = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY;
-    if (!vapidKey) return;
-
-    navigator.serviceWorker.register("/sw.js").then(async (reg) => {
-      const perm = Notification.permission;
-      if (perm === "granted") {
-        await subscribePush(reg, vapidKey);
-      }
-    });
-  }, []);
-
   async function enablePush() {
     if (!("serviceWorker" in navigator) || !("PushManager" in window)) return;
     const vapidKey = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY;
@@ -192,19 +181,6 @@ export default function AdminDashboard() {
 
     const reg = await navigator.serviceWorker.ready;
     await subscribePush(reg, vapidKey);
-  }
-
-  async function confirmBooking(id: string) {
-    setUpdating(id);
-    const res = await fetch("/api/admin/bookings", {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ id, status: "confirmed" }),
-    });
-    if (res.ok) {
-      setBookings((prev) => prev.map((b) => (b.id === id ? { ...b, status: "confirmed" } : b)));
-    }
-    setUpdating(null);
   }
 
   async function cancelBooking(id: string) {
@@ -233,7 +209,6 @@ export default function AdminDashboard() {
     acc[b.date] = acc[b.date] ? [...acc[b.date], b] : [b];
     return acc;
   }, {});
-  Object.values(grouped).forEach((list) => list.sort(sortByTime));
   const dates = Object.keys(grouped).sort();
 
   const todayCount = bookings.filter((b) => isToday(b.date) && b.status !== "cancelled").length;
@@ -243,8 +218,7 @@ export default function AdminDashboard() {
   function toggleDate(date: string) {
     setExpandedDates((prev) => {
       const next = new Set(prev);
-      if (next.has(date)) next.delete(date);
-      else next.add(date);
+      next.has(date) ? next.delete(date) : next.add(date);
       return next;
     });
   }
@@ -266,9 +240,9 @@ export default function AdminDashboard() {
                 <Bell size={15} className="text-white" />
               </div>
               <div className="flex-1 min-w-0">
-                <p className="font-bold text-sm leading-tight">New Appointment Request</p>
+                <p className="font-bold text-sm leading-tight">New Appointment!</p>
                 <p className="text-white/90 text-xs truncate">{toast.name} — {toast.service}</p>
-                <p className="text-white/70 text-xs">{displayTime(toast.time)} · {formatDate(toast.date)}</p>
+                <p className="text-white/70 text-xs">{toast.time} · {formatDate(toast.date)}</p>
               </div>
               <button
                 onClick={() => { setToast(null); if (toastTimer.current) clearTimeout(toastTimer.current); }}
@@ -306,7 +280,7 @@ export default function AdminDashboard() {
               </button>
             )}
             <button
-              onClick={() => { setLoading(true); fetchBookings(); }}
+              onClick={fetchBookings}
               className="p-2 rounded-full hover:bg-lavender-50 text-gray-400 hover:text-brand-purple transition-colors"
               aria-label="Refresh"
             >
@@ -406,20 +380,11 @@ export default function AdminDashboard() {
                               <p className="text-sm text-brand-purple font-medium">{b.service}</p>
                               <div className="flex items-center gap-1 text-xs text-gray-500">
                                 <Clock size={11} />
-                                {displayTime(b.time)}
+                                {b.time}
                               </div>
                             </div>
 
                             <div className="flex gap-2 shrink-0">
-                              {b.status === "pending" && (
-                                <button
-                                  onClick={() => confirmBooking(b.id)}
-                                  disabled={updating === b.id}
-                                  className="text-xs font-semibold text-emerald-800 border border-emerald-300 bg-emerald-50 hover:bg-emerald-100 px-3 py-1.5 rounded-full transition-colors disabled:opacity-50"
-                                >
-                                  {updating === b.id ? "…" : "Confirm"}
-                                </button>
-                              )}
                               <button
                                 onClick={() => cancelBooking(b.id)}
                                 disabled={updating === b.id}
@@ -435,12 +400,10 @@ export default function AdminDashboard() {
                               <Phone size={11} />
                               {b.phone}
                             </a>
-                            {b.email && (
-                              <a href={`mailto:${b.email}`} className="flex items-center gap-1.5 hover:text-brand-purple transition-colors">
-                                <Mail size={11} />
-                                {b.email}
-                              </a>
-                            )}
+                            <a href={`mailto:${b.email}`} className="flex items-center gap-1.5 hover:text-brand-purple transition-colors">
+                              <Mail size={11} />
+                              {b.email}
+                            </a>
                           </div>
 
                           {b.notes && (

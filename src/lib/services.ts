@@ -1,346 +1,387 @@
-import type { CategoryId, ServicePageSlug } from "@/lib/catalog";
-
-// Content for the /services/* detail pages. Prices are never written here; each page
-// lists catalog item ids and the template reads prices from src/lib/catalog.ts.
-// Copy is limited to what the salon's menu supports — no treatment guarantees,
-// longevity promises or medical claims.
-
-export interface ServiceSection {
-  heading: string;
-  body: string;
-  /** Phrases inside `body` that should render as links. */
-  links?: { text: string; href: string }[];
-}
-
-export interface FAQ {
-  question: string;
-  answer: string;
-}
-
 export interface Service {
-  id: ServicePageSlug;
-  slug: ServicePageSlug;
-  /** Short label for navigation, cards and breadcrumbs. */
+  id: string;
   name: string;
-  h1: string;
-  intro: string;
-  /** One-line summary for cards. */
+  slug: string;
   shortDescription: string;
-  about: ServiceSection;
-  priceHeading: string;
-  priceItemIds: string[];
-  priceNote?: string;
-  /** Renders "<name> from $<price>." for each id, followed by `tail`. */
-  priceSummary?: { ids: string[]; tail: string };
-  extraSections?: ServiceSection[];
-  beforeVisit: ServiceSection;
-  faqHeading: string;
-  faqs: FAQ[];
-  /** Preselection passed to /book. */
-  booking: { service?: string; category?: CategoryId };
-  related: { text: string; href: string }[];
+  description: string;
+  benefits: string[];
+  whatToExpect: string[];
+  faqs: { question: string; answer: string }[];
   icon: string;
+  keywords: string[];
 }
 
-export const PRICING_NOTE =
-  "Prices shown are starting prices. Call to confirm the price for your selected service.";
+// ---------------------------------------------------------------------------
+// Booking services — source of truth for the booking form (name, duration, price)
+// ---------------------------------------------------------------------------
 
-const SUITABILITY: ServiceSection = {
-  heading: "Before Your Visit",
-  body: "Tell us about sensitivities, recent treatments, and any products you use before your appointment. Call if you are unsure which service to choose.",
-};
+export interface BookingService {
+  name: string;
+  duration: number; // minutes
+  price: number;    // 0 = price on consultation
+  category: string;
+}
 
-const REQUEST_FAQ: FAQ = {
-  question: "Do I need an appointment?",
-  answer:
-    "Walk-ins are welcome during salon hours. You can also call (973) 653-9322 or send an appointment request online. An online request is not confirmed until the salon confirms it.",
-};
+export const bookingServices: BookingService[] = [
+  // Threading
+  { name: "Eyebrow Threading",          duration: 15,  price: 10,  category: "Threading" },
+  { name: "Men's Eyebrow",              duration: 15,  price: 10,  category: "Threading" },
+  { name: "Upper Lip",                  duration: 5,   price: 6,   category: "Threading" },
+  { name: "Lower Lip",                  duration: 5,   price: 3,   category: "Threading" },
+  { name: "Chin",                       duration: 10,  price: 7,   category: "Threading" },
+  { name: "Forehead",                   duration: 10,  price: 7,   category: "Threading" },
+  { name: "Side Threading",             duration: 15,  price: 12,  category: "Threading" },
+  { name: "Neck Threading",             duration: 10,  price: 6,   category: "Threading" },
+  { name: "Cheek Threading",            duration: 10,  price: 6,   category: "Threading" },
+  { name: "Eye & Lip",                  duration: 20,  price: 16,  category: "Threading" },
+  { name: "Eye, Lip & Chin",            duration: 25,  price: 23,  category: "Threading" },
+  { name: "Eye, Lip, Chin & Neck",      duration: 30,  price: 27,  category: "Threading" },
+  { name: "Full Face",                  duration: 30,  price: 35,  category: "Threading" },
+  { name: "Full Face with Neck",        duration: 35,  price: 40,  category: "Threading" },
+
+  // Waxing
+  { name: "Eyebrow Wax",                duration: 15,  price: 12,  category: "Waxing" },
+  { name: "Nose Wax (inside)",          duration: 10,  price: 6,   category: "Waxing" },
+  { name: "Nose Wax",                   duration: 10,  price: 12,  category: "Waxing" },
+  { name: "Ear Wax",                    duration: 10,  price: 12,  category: "Waxing" },
+  { name: "Under Arm Wax",              duration: 15,  price: 15,  category: "Waxing" },
+  { name: "Stomach Line",               duration: 10,  price: 8,   category: "Waxing" },
+  { name: "Stomach Wax",                duration: 25,  price: 30,  category: "Waxing" },
+  { name: "Bikini Line",                duration: 20,  price: 20,  category: "Waxing" },
+  { name: "Deep Bikini Wax",            duration: 25,  price: 30,  category: "Waxing" },
+  { name: "Brazilian Wax",              duration: 30,  price: 45,  category: "Waxing" },
+  { name: "Butt Wax",                   duration: 20,  price: 25,  category: "Waxing" },
+  { name: "Half Arm Wax",               duration: 20,  price: 20,  category: "Waxing" },
+  { name: "Full Arm Wax",               duration: 30,  price: 30,  category: "Waxing" },
+  { name: "Half Leg Wax",               duration: 30,  price: 30,  category: "Waxing" },
+  { name: "Upper Half Leg Wax",         duration: 30,  price: 35,  category: "Waxing" },
+  { name: "Full Leg Wax",               duration: 45,  price: 45,  category: "Waxing" },
+  { name: "Arm, Leg & Underarm Combo",  duration: 90,  price: 80,  category: "Waxing" },
+  { name: "Back Neck Wax",              duration: 10,  price: 12,  category: "Waxing" },
+  { name: "Women's Back Wax",           duration: 30,  price: 40,  category: "Waxing" },
+  { name: "Women's Chest Wax",          duration: 30,  price: 45,  category: "Waxing" },
+  { name: "Men's Back Wax",             duration: 30,  price: 50,  category: "Waxing" },
+  { name: "Men's Chest Wax",            duration: 30,  price: 50,  category: "Waxing" },
+  { name: "Full Body Wax",              duration: 120, price: 180, category: "Waxing" },
+
+  // Facials
+  { name: "Face Bleach",                duration: 30,  price: 35,  category: "Facials" },
+  { name: "Face Polish",                duration: 30,  price: 45,  category: "Facials" },
+  { name: "Eye Treatment",              duration: 30,  price: 50,  category: "Facials" },
+  { name: "Basic Facial",               duration: 45,  price: 65,  category: "Facials" },
+  { name: "Diamond Facial",             duration: 60,  price: 90,  category: "Facials" },
+
+  // Lash & Brow
+  { name: "Eyebrow Tinting",            duration: 20,  price: 15,  category: "Lash & Brow" },
+  { name: "Eyelash Tinting",            duration: 20,  price: 20,  category: "Lash & Brow" },
+  { name: "Eyelash Extensions",         duration: 90,  price: 50,  category: "Lash & Brow" },
+  { name: "Eyelash Exchange",           duration: 90,  price: 50,  category: "Lash & Brow" },
+
+  // Henna (price varies by design complexity)
+  { name: "Henna Design (hands)",       duration: 60,  price: 0,   category: "Henna" },
+  { name: "Henna Design (feet)",        duration: 90,  price: 0,   category: "Henna" },
+  { name: "Henna Design (full)",        duration: 120, price: 0,   category: "Henna" },
+];
+
+export function getBookingServiceByName(name: string): BookingService | undefined {
+  return bookingServices.find(s => s.name === name);
+}
+
+// ---------------------------------------------------------------------------
+// Rich service data — used by service detail pages (/services/*)
+// ---------------------------------------------------------------------------
 
 export const SERVICES: Service[] = [
   {
     id: "eyebrow-threading",
-    slug: "eyebrow-threading",
     name: "Eyebrow Threading",
-    h1: "Eyebrow Threading: Service & Prices",
-    intro:
-      "Explore eyebrow shaping with cotton thread at our Wayne salon. Eyebrow threading starts at $10. Tell us the shape you prefer before your service.",
-    shortDescription: "Brow shaping with cotton thread, from $10.",
-    about: {
-      heading: "About This Service",
-      body: "Eyebrow threading shapes the brows by removing unwanted hair with a twisted cotton thread. Before we start, let us know whether you want a natural shape, a more defined arch, or a light clean-up. Planning a first visit? Our eyebrow threading in Wayne page covers hours and what to expect when you arrive.",
-      links: [{ text: "eyebrow threading in Wayne", href: "/eyebrow-threading-wayne-nj" }],
-    },
-    priceHeading: "Service Options & Prices",
-    priceItemIds: ["eyebrow-threading", "mens-eyebrow-threading", "eye-lip-threading", "eyebrow-tinting"],
-    beforeVisit: SUITABILITY,
-    faqHeading: "Common Questions",
+    slug: "eyebrow-threading",
+    shortDescription:
+      "Precision shaping with cotton thread — clean lines, natural arches.",
+    description:
+      "Our signature eyebrow threading service uses 100% cotton thread to remove unwanted hair with surgical precision. Unlike waxing, threading lifts hair directly from the follicle without touching the skin with hot wax — making it ideal for all skin types including sensitive and acne-prone skin.",
+    benefits: [
+      "No chemicals or heat applied to skin",
+      "Precise hair-by-hair removal",
+      "Lasts 3–4 weeks",
+      "Safe for all skin types including sensitive skin",
+      "Defines natural brow arch to complement your face shape",
+    ],
+    whatToExpect: [
+      "Consultation on your desired brow shape",
+      "Gentle cleansing of the brow area",
+      "Expert threading along the natural arch",
+      "Tweezing for any stray hairs",
+      "Finishing touch with soothing aloe",
+    ],
     faqs: [
       {
-        question: "How much does eyebrow threading cost?",
+        question: "How long does eyebrow threading take?",
         answer:
-          "Eyebrow threading starts at $10. Prices shown are starting prices, so call (973) 653-9322 to confirm the price for your service.",
+          "A full eyebrow threading session typically takes 10–15 minutes. We work efficiently so your wait time stays minimal.",
       },
-      REQUEST_FAQ,
-    ],
-    booking: { service: "eyebrow-threading" },
-    related: [
-      { text: "Eyebrow threading in Wayne: hours and visit details", href: "/eyebrow-threading-wayne-nj" },
-      { text: "Plan your visit to our Wayne salon", href: "/locations/wayne-nj" },
-      { text: "Full face threading prices", href: "/services/face-threading" },
+      {
+        question: "How often should I get eyebrows threaded?",
+        answer:
+          "Most clients return every 3–4 weeks. Hair grows back finer over time with regular threading, making each session easier.",
+      },
     ],
     icon: "Sparkles",
+    keywords: [
+      "eyebrow threading Wayne NJ",
+      "eyebrow threading near me",
+      "best eyebrow threading Wayne NJ",
+    ],
   },
   {
     id: "face-threading",
-    slug: "face-threading",
     name: "Full Face Threading",
-    h1: "Full Face Threading in Wayne, NJ",
-    intro:
-      "Explore threading for unwanted facial hair at our Wayne salon. Full face threading starts at $35; full face with neck starts at $40. View the menu for individual areas.",
-    shortDescription: "Threading for facial hair removal, with full-face options from $35.",
-    about: {
-      heading: "About This Service",
-      body: "Threading removes unwanted facial hair with a twisted cotton thread. Choose a single area, such as the upper lip or chin, or a full face service. Threading is a hair removal service; for skincare treatments, see our facials menu.",
-      links: [{ text: "facials menu", href: "/services/facials" }],
-    },
-    priceHeading: "Service Options & Prices",
-    priceItemIds: [
-      "full-face-threading",
-      "full-face-neck-threading",
-      "upper-lip-threading",
-      "lower-lip-threading",
-      "chin-threading",
-      "forehead-threading",
-      "side-threading",
-      "cheek-threading",
-      "neck-threading",
+    slug: "face-threading",
+    shortDescription:
+      "Upper lip, chin, sides, and forehead — complete facial hair removal.",
+    description:
+      "Full face threading addresses every area where unwanted facial hair appears — upper lip, chin, sides (cheeks), and forehead. We remove peach fuzz and coarser hairs with the same gentle threading technique, leaving skin smooth and luminous without any chemical irritation.",
+    benefits: [
+      "Complete facial hair removal in one visit",
+      "No wax residue or chemical exposure",
+      "Smooths skin texture and brightens complexion",
+      "Results visible immediately",
+      "Gentle enough for post-facial skin",
     ],
-    beforeVisit: SUITABILITY,
-    faqHeading: "Common Questions",
+    whatToExpect: [
+      "Brief skin assessment to identify all treatment areas",
+      "Threading each area systematically for thoroughness",
+      "Cool aloe application to soothe treated skin",
+      "Aftercare advice tailored to your skin type",
+    ],
     faqs: [
       {
-        question: "Is full face threading the same as a facial?",
+        question: "Is full face threading painful?",
         answer:
-          "No. Full face threading removes unwanted facial hair. A facial is a skincare treatment, and our facials have their own page and pricing.",
+          "There is mild discomfort, especially on the upper lip — but most clients find it very tolerable. The sensation is brief and fades immediately. First-timers often say it's much gentler than they expected.",
       },
-      REQUEST_FAQ,
-    ],
-    booking: { service: "full-face-threading" },
-    related: [
-      { text: "Eyebrow threading service and prices", href: "/services/eyebrow-threading" },
-      { text: "Skincare facials", href: "/services/facials" },
-      { text: "Full salon price menu", href: "/pricing" },
+      {
+        question: "Can I wear makeup after face threading?",
+        answer:
+          "We recommend waiting at least 2 hours before applying makeup to allow the follicles to close. Mineral powder is safest if you must apply something sooner.",
+      },
     ],
     icon: "User",
+    keywords: [
+      "face threading Wayne NJ",
+      "upper lip threading Wayne NJ",
+      "facial hair threading near me",
+    ],
   },
   {
     id: "waxing",
+    name: "Body Waxing",
     slug: "waxing",
-    name: "Waxing",
-    h1: "Waxing in Wayne, NJ",
-    intro:
-      "Explore waxing for underarms, arms, legs, bikini, Brazilian, and other areas. View the menu for starting prices or call to discuss your visit.",
-    shortDescription: "Face and body waxing, including Brazilian and full body.",
-    about: {
-      heading: "About This Service",
-      body: "We offer waxing for the face and body, including underarms, arms, legs, bikini line, Brazilian, back, and chest. Choose one area or combine several in the same visit. The full price menu lists every waxing area.",
-      links: [{ text: "full price menu", href: "/pricing" }],
-    },
-    priceHeading: "Service Options & Prices",
-    priceItemIds: [
-      "underarm-wax",
-      "half-arm-wax",
-      "full-arm-wax",
-      "half-leg-wax",
-      "full-leg-wax",
-      "bikini-line-wax",
-      "brazilian-wax",
-      "arm-leg-underarm-wax",
-      "full-body-wax",
+    shortDescription:
+      "Smooth, long-lasting hair removal for arms, legs, and more.",
+    description:
+      "Our body waxing services use premium, low-temperature wax formulas that adhere to hair — not skin — for a gentler, more effective treatment. From underarms and arms to legs and bikini line, we deliver consistently smooth results that last 3–6 weeks.",
+    benefits: [
+      "Hair-free results lasting 3–6 weeks",
+      "Hair grows back softer and finer over time",
+      "Exfoliates dead skin cells simultaneously",
+      "Quick treatment times",
+      "Premium wax formulas for sensitive skin",
     ],
-    beforeVisit: SUITABILITY,
-    faqHeading: "Common Questions",
+    whatToExpect: [
+      "Area cleansed and prepped with pre-wax oil",
+      "Wax applied in direction of hair growth",
+      "Quick removal strip against hair growth",
+      "Post-wax soothing lotion applied",
+      "Tweezers used for any remaining hairs",
+    ],
     faqs: [
       {
-        question: "Which areas can I have waxed?",
+        question: "How long does my hair need to be for waxing?",
         answer:
-          "The menu includes eyebrow, nose, ear, underarm, arm, leg, stomach, bikini line, Brazilian, back, chest, and full body waxing. View the pricing menu for starting prices.",
+          "Hair should be at least ¼ inch (about the length of a grain of rice) for best wax adhesion. We recommend not shaving for at least 2–3 weeks prior.",
       },
-      REQUEST_FAQ,
-    ],
-    booking: { category: "waxing" },
-    related: [
-      { text: "Full salon price menu", href: "/pricing" },
-      { text: "Full face threading", href: "/services/face-threading" },
+      {
+        question: "Should I exfoliate before waxing?",
+        answer:
+          "Gentle exfoliation 24–48 hours before your appointment helps prevent ingrown hairs, but avoid harsh scrubs or retinol in the 48 hours immediately before your session.",
+      },
     ],
     icon: "Zap",
+    keywords: [
+      "waxing Wayne NJ",
+      "body waxing near me",
+      "leg waxing Wayne NJ",
+    ],
   },
   {
     id: "facials",
+    name: "Facial Threading",
     slug: "facials",
-    name: "Facials",
-    h1: "Facials in Wayne, NJ",
-    intro:
-      "Explore skincare facials at Urmi Threading Salon, including Mini, Basic, and Diamond Facials. View the menu or call to discuss your visit.",
-    shortDescription: "Explore skincare facials and choose a treatment for your visit.",
-    about: {
-      heading: "Skincare Facials",
-      body: "A skincare facial is different from facial threading. Facials are skincare treatments; facial threading removes unwanted hair. For hair removal, explore our full face threading service.",
-      links: [{ text: "full face threading", href: "/services/face-threading" }],
-    },
-    priceHeading: "Facial Prices",
-    priceSummary: {
-      ids: ["mini-facial", "basic-facial", "diamond-facial"],
-      tail: "See the full menu for additional facial options.",
-    },
-    priceItemIds: [
-      "mini-facial",
-      "basic-facial",
-      "diamond-facial",
-      "deep-cleaning-facial",
-      "acne-facial",
-      "fruits-facial",
-      "gold-facial",
-      "repechage-facial",
-      "four-layer-facial",
+    shortDescription:
+      "Ancient, chemical-free hair removal using twisted cotton thread — no wax, no chemicals, no irritation.",
+    description:
+      "Facial threading is an ancient hair removal technique where an aesthetician uses a twisted antibacterial cotton thread to grip and extract unwanted hair directly from the follicle. It is the gold standard for removing peach fuzz and fine facial hair with precision — leaving skin silky smooth without any chemicals, heat, or products touching the skin.",
+    benefits: [
+      "100% chemical-free — nothing touches skin but a cotton thread",
+      "Removes fine peach fuzz and coarser facial hair with equal precision",
+      "No irritation for sensitive or acne-prone skin",
+      "Results last 3–5 weeks as hair regrows finer over time",
+      "Brightens complexion by removing surface hair that dulls skin tone",
     ],
-    beforeVisit: {
-      heading: "Before Your Visit",
-      body: "Tell us about your skin concerns, sensitivities, and recent treatments before your appointment. Call if you are unsure which facial to choose.",
-    },
-    faqHeading: "Facial Questions",
+    whatToExpect: [
+      "Consultation on which facial areas to treat",
+      "Gentle cleanse of the treatment area",
+      "Threading each zone with a twisted antibacterial cotton thread",
+      "Hair removed cleanly at the follicle — no pulling or tearing of skin",
+      "Soothing aloe applied to calm the skin afterward",
+    ],
     faqs: [
       {
-        question: "Is a facial the same as facial threading?",
+        question: "Is facial threading the same as a skincare facial?",
         answer:
-          "No. A facial is a skincare treatment. Facial threading removes unwanted facial hair. Our full face threading service has its own page and pricing.",
+          "No — facial threading is a hair removal service, not a skincare treatment. We use a twisted cotton thread to remove unwanted facial hair and peach fuzz from the follicle. There are no extractions, masks, or serums involved.",
       },
       {
-        question: "Which facials are available?",
+        question: "How long does facial threading last?",
         answer:
-          "Our menu includes Mini, Basic, Diamond, and other facial options. View the pricing menu or call (973) 653-9322 to discuss your visit.",
+          "Results typically last 3–5 weeks. With regular threading, hair regrows finer and sparser over time, so sessions become quicker and easier.",
       },
       {
-        question: "How do I request a facial appointment?",
+        question: "Is facial threading safe for sensitive skin?",
         answer:
-          "Choose a facial in the appointment request form or call (973) 653-9322. An online request is not confirmed until the salon confirms it.",
+          "Yes — it is one of the best options for sensitive skin. Nothing touches the skin except a cotton thread, so there is zero risk of a chemical reaction, burn, or wax irritation.",
       },
-    ],
-    booking: { category: "facials" },
-    related: [
-      { text: "Full face threading for facial hair", href: "/services/face-threading" },
-      { text: "Full salon price menu", href: "/pricing" },
     ],
     icon: "Heart",
+    keywords: [
+      "facial threading Wayne NJ",
+      "peach fuzz removal Wayne NJ",
+      "facial hair removal near me",
+      "threading salon Wayne NJ",
+    ],
   },
   {
     id: "eyelash-extensions",
-    slug: "eyelash-extensions",
     name: "Eyelash Extensions",
-    h1: "Eyelash Extensions in Wayne, NJ",
-    intro:
-      "Explore eyelash extensions at our Wayne salon. The menu lists extensions from $50. Call before booking to confirm the application type, appointment length, and aftercare for the service you want.",
-    shortDescription: "Eyelash extensions from $50. Call to discuss your service.",
-    about: {
-      heading: "About This Service",
-      body: "Tell the salon the look you have in mind when you call. They can explain the options available, how long your appointment will take, and the aftercare for your service. The menu also lists eyelash lifting and tinting.",
-    },
-    priceHeading: "Service Options & Prices",
-    priceItemIds: ["eyelash-extensions", "eyelash-lifting", "eyelash-tinting"],
-    beforeVisit: SUITABILITY,
-    faqHeading: "Common Questions",
+    slug: "eyelash-extensions",
+    shortDescription:
+      "Volume, length, and curl — lashes that wake up beautiful every day.",
+    description:
+      "Wake up every morning with full, gorgeous lashes. Our lash extension service applies individual synthetic lashes to each natural lash using a medical-grade adhesive, creating a natural or dramatic look that lasts 4–6 weeks with proper care.",
+    benefits: [
+      "Wake up with perfect lashes — no mascara needed",
+      "Fully customizable length, curl, and volume",
+      "Lightweight and comfortable to wear",
+      "Lasts 4–6 weeks with proper care",
+      "Safe for sensitive eyes with hypoallergenic options",
+    ],
+    whatToExpect: [
+      "Consultation on your desired style (natural, cat-eye, volume)",
+      "Under-eye pads and tape applied for comfort",
+      "Individual lashes bonded one-by-one to natural lashes",
+      "60–90 minute application for full set",
+      "Aftercare instructions provided",
+    ],
     faqs: [
       {
-        question: "How long does an eyelash extension appointment take?",
+        question: "How do I care for lash extensions?",
         answer:
-          "It depends on the service. Call (973) 653-9322 before booking and the salon will confirm the appointment length.",
+          "Avoid water for the first 24–48 hours, sleep on your back when possible, brush daily with a clean spoolie, and avoid oil-based products near the eyes.",
       },
-      REQUEST_FAQ,
-    ],
-    booking: { service: "eyelash-extensions" },
-    related: [
-      { text: "Brow and lash tinting", href: "/services/tinting" },
-      { text: "Full salon price menu", href: "/pricing" },
+      {
+        question: "Will lash extensions damage my natural lashes?",
+        answer:
+          "When applied correctly by a trained professional, lash extensions do not damage natural lashes. We match extension weight to the natural lash for safe, comfortable wear.",
+      },
     ],
     icon: "Eye",
+    keywords: [
+      "eyelash extensions Wayne NJ",
+      "lash extensions near me",
+      "lash salon Wayne NJ",
+    ],
   },
   {
     id: "henna",
+    name: "Henna",
     slug: "henna",
-    name: "Henna & Mehndi",
-    h1: "Henna & Mehndi in Wayne, NJ",
-    intro:
-      "Ask about henna designs for hands, feet, weddings, and special occasions. Pricing depends on the design and coverage. Call (973) 653-9322 to discuss your ideas and availability.",
-    shortDescription: "Henna for hands, feet, weddings and special occasions. Priced by quote.",
-    about: {
-      heading: "About This Service",
-      body: "Henna designs are available for hands, feet, and fuller coverage. Because every design is different, henna is priced by quote. Share photos or describe the style you like when you call.",
-    },
-    priceHeading: "Service Options & Prices",
-    priceItemIds: ["henna-hands", "henna-feet", "henna-full"],
-    priceNote: "Henna is quoted by design and coverage. Call (973) 653-9322 for a quote.",
-    extraSections: [
-      {
-        heading: "Planning Henna for a Wedding or Event?",
-        body: "Call with your event date, preferred design, and the areas you would like decorated. Ask the salon to confirm availability, appointment length, and the quote before making plans.",
-      },
+    shortDescription:
+      "Traditional henna art for celebrations, events, and everyday beauty.",
+    description:
+      "Henna is a time-honored tradition from South Asia and the Middle East, now embraced worldwide for its natural beauty and cultural significance. We use 100% natural henna paste — no black henna or chemical additives — to create intricate, long-lasting designs for weddings, festivals, and everyday occasions.",
+    benefits: [
+      "100% natural ingredients, no chemicals",
+      "Designs last 1–3 weeks",
+      "Painless, relaxing application",
+      "Perfect for weddings, Eid, Diwali, and other celebrations",
+      "Customizable designs from simple to intricate",
     ],
-    beforeVisit: SUITABILITY,
-    faqHeading: "Common Questions",
+    whatToExpect: [
+      "Consultation on design style and placement",
+      "Skin cleaned and dried thoroughly",
+      "Henna paste applied with precision cone",
+      "Drying time of 30–60 minutes (paste stays on)",
+      "Aftercare instructions to maximize color depth",
+    ],
     faqs: [
       {
-        question: "How much does henna cost?",
+        question: "How long does henna last?",
         answer:
-          "Henna is priced by design and coverage. Call (973) 653-9322 to describe your design and get a quote.",
+          "Henna typically lasts 1–3 weeks depending on placement and how well you care for it. Hands and feet, where skin is thicker, tend to hold color longest.",
       },
-      REQUEST_FAQ,
+      {
+        question: "Is henna safe during pregnancy?",
+        answer:
+          "Natural henna is generally considered safe during pregnancy. However, avoid black henna, which contains PPD, a chemical that can cause severe reactions. Always confirm with your healthcare provider.",
+      },
     ],
-    booking: { category: "henna" },
-    related: [{ text: "Full salon price menu", href: "/pricing" }],
     icon: "Palette",
+    keywords: [
+      "henna Wayne NJ",
+      "henna artist near me",
+      "mehndi Wayne NJ",
+    ],
   },
   {
     id: "tinting",
+    name: "Lash & Brow Tinting",
     slug: "tinting",
-    name: "Brow & Lash Tinting",
-    h1: "Brow & Lash Tinting in Wayne, NJ",
-    intro:
-      "Explore eyebrow and eyelash tinting at our Wayne salon. Eyebrow tinting starts at $15 and eyelash tinting starts at $20. Call to discuss the service before your visit.",
-    shortDescription: "Eyebrow tinting from $15 and eyelash tinting from $20.",
-    about: {
-      heading: "About This Service",
-      body: "Tinting adds color to the brows or lashes. If you are also booking eyebrow threading, mention both services in your request or when you call.",
-      links: [{ text: "eyebrow threading", href: "/services/eyebrow-threading" }],
-    },
-    priceHeading: "Service Options & Prices",
-    priceItemIds: ["eyebrow-tinting", "eyelash-tinting"],
-    beforeVisit: SUITABILITY,
-    faqHeading: "Common Questions",
+    shortDescription:
+      "Darker, fuller-looking lashes and brows — no mascara or brow pencil needed.",
+    description:
+      "Tinting uses a semi-permanent dye to enhance the natural color and fullness of your brows and lashes. It's the perfect low-maintenance solution for people with light, sparse, or uneven brows who want defined results that last 4–6 weeks.",
+    benefits: [
+      "Defined brows and lashes without daily makeup",
+      "Results last 4–6 weeks",
+      "Makes sparse brows appear fuller",
+      "Quick 30–45 minute treatment",
+      "Multiple shade options to match your hair and skin tone",
+    ],
+    whatToExpect: [
+      "Shade consultation to find your perfect match",
+      "Protective barrier applied around the treatment area",
+      "Tint mixed and applied carefully",
+      "Processing time of 10–15 minutes",
+      "Tint removed and results revealed",
+    ],
     faqs: [
       {
-        question: "Can I get tinting and threading in the same visit?",
+        question: "Is brow tinting safe for sensitive skin?",
         answer:
-          "You can ask for both. Note both services in your appointment request or call (973) 653-9322 to arrange it.",
+          "We perform a patch test prior to your first tinting session to ensure no adverse reaction. Most clients with sensitive skin tolerate tinting very well.",
       },
-      REQUEST_FAQ,
-    ],
-    booking: { category: "lash-brow" },
-    related: [
-      { text: "Eyebrow threading service and prices", href: "/services/eyebrow-threading" },
-      { text: "Eyelash extensions", href: "/services/eyelash-extensions" },
+      {
+        question: "Can I combine tinting with threading?",
+        answer:
+          "Yes — threading and tinting are often done together. We typically thread first to define the shape, then tint to enhance color. The combination takes under 45 minutes.",
+      },
     ],
     icon: "Brush",
+    keywords: [
+      "brow tinting Wayne NJ",
+      "lash tinting near me",
+      "eyebrow tinting Wayne NJ",
+    ],
   },
 ];
-
-export function getService(slug: ServicePageSlug): Service {
-  const s = SERVICES.find((x) => x.slug === slug);
-  if (!s) throw new Error(`Unknown service page ${slug}`);
-  return s;
-}
-
-export function bookingHref(b: Service["booking"]): string {
-  if (b.service) return `/book?service=${b.service}`;
-  if (b.category) return `/book?category=${b.category}`;
-  return "/book";
-}

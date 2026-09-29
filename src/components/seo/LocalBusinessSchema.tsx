@@ -1,32 +1,16 @@
-import { BUSINESS, WEEKLY_HOURS } from "@/lib/constants";
-import { SERVICES } from "@/lib/services";
-import JsonLd from "@/components/seo/JsonLd";
+import { BUSINESS } from "@/lib/constants";
+import { TESTIMONIALS } from "@/lib/testimonials";
 
-// The one BeautySalon entity for the site, rendered once from the root layout.
-// Deliberately omitted until verified: foundingDate, geo coordinates,
-// aggregateRating/review, priceRange and offer dates.
-
-const DAY_URI = [
-  "https://schema.org/Sunday",
-  "https://schema.org/Monday",
-  "https://schema.org/Tuesday",
-  "https://schema.org/Wednesday",
-  "https://schema.org/Thursday",
-  "https://schema.org/Friday",
-  "https://schema.org/Saturday",
-];
-
-export function businessSchema() {
-  return {
+export default function LocalBusinessSchema() {
+  const schema = {
     "@context": "https://schema.org",
     "@type": "BeautySalon",
-    "@id": BUSINESS.url,
     name: BUSINESS.name,
-    url: BUSINESS.url,
-    description:
-      "Family-owned threading and beauty salon in Wayne, New Jersey, offering threading, waxing, facials, eyelash extensions, henna, and tinting.",
-    telephone: BUSINESS.phoneRaw,
     image: `${BUSINESS.url}/og/storefront.jpg`,
+    "@id": BUSINESS.url,
+    url: BUSINESS.url,
+    telephone: BUSINESS.phoneRaw,
+    priceRange: "$$",
     address: {
       "@type": "PostalAddress",
       streetAddress: BUSINESS.address.street,
@@ -35,31 +19,74 @@ export function businessSchema() {
       postalCode: BUSINESS.address.zip,
       addressCountry: "US",
     },
-    hasMap: BUSINESS.mapUrl,
-    openingHoursSpecification: WEEKLY_HOURS.map((h) => ({
-      "@type": "OpeningHoursSpecification",
-      dayOfWeek: h.days.length === 1 ? DAY_URI[h.days[0]] : h.days.map((d) => DAY_URI[d]),
-      opens: h.open,
-      closes: h.close,
+    geo: {
+      "@type": "GeoCoordinates",
+      latitude: BUSINESS.geo.lat,
+      longitude: BUSINESS.geo.lng,
+    },
+    openingHoursSpecification: [
+      {
+        "@type": "OpeningHoursSpecification",
+        dayOfWeek: ["Monday", "Tuesday", "Wednesday"],
+        opens: "10:00",
+        closes: "18:30",
+      },
+      {
+        "@type": "OpeningHoursSpecification",
+        dayOfWeek: ["Thursday", "Friday"],
+        opens: "10:00",
+        closes: "19:00",
+      },
+      {
+        "@type": "OpeningHoursSpecification",
+        dayOfWeek: "Saturday",
+        opens: "10:00",
+        closes: "18:00",
+      },
+      {
+        "@type": "OpeningHoursSpecification",
+        dayOfWeek: "Sunday",
+        opens: "11:00",
+        closes: "17:00",
+      },
+    ],
+    aggregateRating: {
+      "@type": "AggregateRating",
+      ratingValue: BUSINESS.rating.toString(),
+      reviewCount: BUSINESS.reviewCount.toString(),
+      bestRating: "5",
+    },
+    review: TESTIMONIALS.slice(0, 6).map((t) => ({
+      "@type": "Review",
+      author: { "@type": "Person", name: t.name },
+      reviewRating: { "@type": "Rating", ratingValue: t.rating.toString(), bestRating: "5" },
+      reviewBody: t.text,
+      datePublished: t.datePublished,
     })),
-    sameAs: [BUSINESS.instagram, BUSINESS.facebook],
-    areaServed: BUSINESS.serviceArea.map((city) => ({ "@type": "City", name: `${city}, New Jersey` })),
+    sameAs: [BUSINESS.googleMapsUrl, BUSINESS.instagram, BUSINESS.facebook],
+    areaServed: BUSINESS.serviceArea.map((city) => ({
+      "@type": "City",
+      name: city,
+    })),
     hasOfferCatalog: {
       "@type": "OfferCatalog",
-      name: "Salon Services",
-      itemListElement: SERVICES.map((s) => ({
-        "@type": "Offer",
-        itemOffered: {
-          "@type": "Service",
-          name: s.name,
-          url: `${BUSINESS.url}/services/${s.slug}`,
-          provider: { "@id": BUSINESS.url },
-        },
-      })),
+      name: "Beauty Services",
+      itemListElement: [
+        { "@type": "Offer", itemOffered: { "@type": "Service", name: "Eyebrow Threading" } },
+        { "@type": "Offer", itemOffered: { "@type": "Service", name: "Face Threading" } },
+        { "@type": "Offer", itemOffered: { "@type": "Service", name: "Body Waxing" } },
+        { "@type": "Offer", itemOffered: { "@type": "Service", name: "Facials" } },
+        { "@type": "Offer", itemOffered: { "@type": "Service", name: "Eyelash Extensions" } },
+        { "@type": "Offer", itemOffered: { "@type": "Service", name: "Henna" } },
+        { "@type": "Offer", itemOffered: { "@type": "Service", name: "Tinting" } },
+      ],
     },
   };
-}
 
-export default function LocalBusinessSchema() {
-  return <JsonLd data={businessSchema()} />;
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+    />
+  );
 }

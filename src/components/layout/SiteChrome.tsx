@@ -4,6 +4,7 @@ import { usePathname } from "next/navigation";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
 import FloatingCallButton from "./FloatingCallButton";
+import ScrollProgress from "./ScrollProgress";
 import PromoBanner from "./PromoBanner";
 
 export default function SiteChrome() {
@@ -13,6 +14,7 @@ export default function SiteChrome() {
   return (
     <>
       <PromoBanner />
+      <ScrollProgress />
       <Navbar />
     </>
   );
@@ -25,8 +27,6 @@ export function SiteFooter() {
   return (
     <>
       <Footer />
-      {/* Reserves the sticky bar's height below the footer on < lg screens. */}
-      <div aria-hidden="true" className="lg:hidden h-[calc(4.75rem+env(safe-area-inset-bottom))] bg-charcoal" />
       <FloatingCallButton />
     </>
   );

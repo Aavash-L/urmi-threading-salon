@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
 
 function isAuthed(req: NextRequest) {
-  return !!process.env.ADMIN_PASSWORD && req.cookies.get("admin_auth")?.value === process.env.ADMIN_PASSWORD;
+  return req.cookies.get("admin_auth")?.value === process.env.ADMIN_PASSWORD;
 }
 
 export async function POST(req: NextRequest) {

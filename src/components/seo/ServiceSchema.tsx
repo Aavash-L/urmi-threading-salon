@@ -1,20 +1,45 @@
 import { BUSINESS } from "@/lib/constants";
-import JsonLd from "@/components/seo/JsonLd";
 
-// Page-specific Service entity. The provider references the single BeautySalon
-// entity (emitted once in the root layout) by @id instead of redefining it.
-export default function ServiceSchema({ name, description, url }: { name: string; description: string; url: string }) {
+interface ServiceSchemaProps {
+  name: string;
+  description: string;
+  url: string;
+}
+
+export default function ServiceSchema({ name, description, url }: ServiceSchemaProps) {
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    name,
+    description,
+    url,
+    provider: {
+      "@type": "BeautySalon",
+      name: BUSINESS.name,
+      address: {
+        "@type": "PostalAddress",
+        streetAddress: BUSINESS.address.street,
+        addressLocality: BUSINESS.address.city,
+        addressRegion: BUSINESS.address.state,
+        postalCode: BUSINESS.address.zip,
+        addressCountry: "US",
+      },
+      telephone: BUSINESS.phoneRaw,
+    },
+    areaServed: {
+      "@type": "City",
+      name: "Wayne",
+      containedInPlace: {
+        "@type": "State",
+        name: "New Jersey",
+      },
+    },
+  };
+
   return (
-    <JsonLd
-      data={{
-        "@context": "https://schema.org",
-        "@type": "Service",
-        name,
-        description,
-        url,
-        provider: { "@id": BUSINESS.url },
-        areaServed: { "@type": "City", name: "Wayne, New Jersey" },
-      }}
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
     />
   );
 }

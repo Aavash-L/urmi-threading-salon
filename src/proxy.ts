@@ -5,8 +5,7 @@ export function proxy(req: NextRequest) {
 
   if (pathname.startsWith("/admin") && pathname !== "/admin/login") {
     const auth = req.cookies.get("admin_auth")?.value;
-    // Deny when the password is not configured, so an unset variable never matches a missing cookie.
-    if (!process.env.ADMIN_PASSWORD || auth !== process.env.ADMIN_PASSWORD) {
+    if (auth !== process.env.ADMIN_PASSWORD) {
       return NextResponse.redirect(new URL("/admin/login", req.url));
     }
   }

@@ -1,6 +1,6 @@
 import Link from "next/link";
-import { MapPin, Phone, Mail, Clock } from "lucide-react";
-import { BUSINESS, FOOTER_BLURB } from "@/lib/constants";
+import { MapPin, Phone, Mail, Clock, Star } from "lucide-react";
+import { BUSINESS, REVIEWS_LABEL, RATING_LABEL } from "@/lib/constants";
 
 function InstagramIcon({ size = 18 }: { size?: number }) {
   return (
@@ -19,85 +19,126 @@ function FacebookIcon({ size = 18 }: { size?: number }) {
 }
 
 const quickLinks = [
-  { label: "Eyebrow Threading in Wayne", href: "/eyebrow-threading-wayne-nj" },
-  { label: "All Services", href: "/services" },
-  { label: "Prices", href: "/pricing" },
-  { label: "Request an Appointment", href: "/book" },
-  { label: "About Our Salon", href: "/about" },
-  { label: "Contact & Hours", href: "/contact" },
-  { label: "Plan Your Visit", href: "/locations/wayne-nj" },
+  { label: "Eyebrow Threading Wayne NJ", href: "/eyebrow-threading-wayne-nj" },
+  { label: "Services",                   href: "/services"  },
+  { label: "Pricing",                    href: "/pricing"   },
+  { label: "Current Offers",             href: "/#offers"   },
+  { label: "About Us",                   href: "/about"     },
+  { label: "Book Appointment",           href: "/book"      },
+  { label: "Contact",                    href: "/#contact"  },
 ];
-
-const footerLink = "text-gray-300 hover:text-white underline underline-offset-4 decoration-gray-500 hover:decoration-white text-sm";
 
 export default function Footer() {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="bg-charcoal text-white">
+    <footer className="bg-charcoal text-white" aria-label="Site footer">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
-          <div>
-            <p className="font-serif text-2xl font-bold text-white mb-3">Urmi Threading Salon</p>
-            <p className="text-gray-300 text-sm leading-relaxed">{FOOTER_BLURB}</p>
+
+          {/* Brand */}
+          <div className="lg:col-span-1">
+            <p className="font-serif text-2xl font-bold text-brand-gradient bg-clip-text mb-3">
+              Urmi Threading Salon
+            </p>
+            <p className="text-gray-400 text-sm leading-relaxed mb-5">
+              Wayne, NJ's trusted beauty salon since 2010. Precision threading, gentle technique, radiant results.
+            </p>
+            <div className="flex items-center gap-1 mb-1">
+              {Array.from({ length: 5 }).map((_, i) => (
+                <Star key={i} size={13} className="fill-amber-400 text-amber-400" />
+              ))}
+              <span className="text-gray-400 text-xs ml-1.5">{RATING_LABEL} · {REVIEWS_LABEL} reviews</span>
+            </div>
+            <p className="text-xs text-brand-pink mt-3 font-medium">
+              ✨ Every 9th brow threading is FREE
+            </p>
+            <div className="flex gap-4 mt-5">
+              <a
+                href={BUSINESS.instagram}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Urmi Threading Salon on Instagram"
+                className="text-gray-400 hover:text-brand-pink transition-colors"
+              >
+                <InstagramIcon size={20} />
+              </a>
+              <a
+                href={BUSINESS.facebook}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Urmi Threading Salon on Facebook"
+                className="text-gray-400 hover:text-brand-purple transition-colors"
+              >
+                <FacebookIcon size={20} />
+              </a>
+            </div>
           </div>
 
+          {/* Visit Us */}
           <div>
-            <h2 className="text-pink-300 font-semibold text-sm uppercase tracking-wider mb-5">Visit Us</h2>
+            <h3 className="text-brand-pink font-semibold text-sm uppercase tracking-wider mb-5">Visit Us</h3>
             <ul className="space-y-4">
               <li className="flex items-start gap-3">
-                <MapPin size={15} className="text-pink-300 mt-0.5 shrink-0" aria-hidden="true" />
-                <address className="text-gray-300 text-sm not-italic leading-relaxed">
+                <MapPin size={15} className="text-brand-pink mt-0.5 shrink-0" />
+                <address className="text-gray-400 text-sm not-italic leading-relaxed">
                   {BUSINESS.address.street}<br />
                   {BUSINESS.address.city}, {BUSINESS.address.state} {BUSINESS.address.zip}
                 </address>
               </li>
               <li className="flex items-center gap-3">
-                <Phone size={15} className="text-pink-300 shrink-0" aria-hidden="true" />
-                <a href={`tel:${BUSINESS.phoneRaw}`} className={footerLink}>
-                  Call {BUSINESS.phone}
+                <Phone size={15} className="text-brand-pink shrink-0" />
+                <a href={`tel:${BUSINESS.phoneRaw}`} className="text-gray-400 hover:text-white text-sm transition-colors">
+                  {BUSINESS.phone}
                 </a>
               </li>
               <li className="flex items-center gap-3">
-                <Mail size={15} className="text-pink-300 shrink-0" aria-hidden="true" />
-                <a href={`mailto:${BUSINESS.email}`} className={`${footerLink} break-all`}>
-                  {BUSINESS.email}
+                <Mail size={15} className="text-brand-pink shrink-0" />
+                <a href="mailto:urmithreadingandbeautysalon@gmail.com" className="text-gray-400 hover:text-white text-sm transition-colors break-all">
+                  urmithreadingandbeautysalon@gmail.com
                 </a>
               </li>
               <li className="flex items-center gap-3">
                 <InstagramIcon size={15} />
-                <a href={BUSINESS.instagram} target="_blank" rel="noopener noreferrer" className={footerLink}>
-                  Instagram {BUSINESS.instagramHandle}
-                </a>
-              </li>
-              <li className="flex items-center gap-3">
-                <FacebookIcon size={15} />
-                <a href={BUSINESS.facebook} target="_blank" rel="noopener noreferrer" className={footerLink}>
-                  Facebook
+                <a
+                  href={BUSINESS.instagram}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-gray-400 hover:text-brand-pink text-sm transition-colors"
+                >
+                  @urmithreading.wayne
                 </a>
               </li>
             </ul>
           </div>
 
+          {/* Hours */}
           <div>
-            <h2 className="text-pink-300 font-semibold text-sm uppercase tracking-wider mb-5">Salon Hours</h2>
+            <h3 className="text-brand-pink font-semibold text-sm uppercase tracking-wider mb-5">Hours</h3>
             <ul className="space-y-2">
               {BUSINESS.hours.map((h, i) => (
-                <li key={h.days} className="flex items-start gap-3 text-sm">
-                  {i === 0 ? <Clock size={14} className="text-pink-300 mt-0.5 shrink-0" aria-hidden="true" /> : <span className="w-[14px] shrink-0" />}
-                  <span className="text-gray-200 font-medium w-36 shrink-0">{h.days}</span>
-                  <span className="text-gray-300">{`${h.open} – ${h.close}`}</span>
+                <li key={i} className="flex items-start gap-3 text-sm">
+                  {i === 0 && <Clock size={14} className="text-brand-pink mt-0.5 shrink-0" />}
+                  {i !== 0 && <span className="w-[14px] shrink-0" />}
+                  <span className="text-gray-300 font-medium w-24 shrink-0">{h.days}:</span>
+                  <span className="text-gray-400">
+                    {`${h.open} – ${h.close}`}
+                  </span>
                 </li>
               ))}
             </ul>
           </div>
 
+          {/* Quick Links */}
           <div>
-            <h2 className="text-pink-300 font-semibold text-sm uppercase tracking-wider mb-5">Explore</h2>
+            <h3 className="text-brand-pink font-semibold text-sm uppercase tracking-wider mb-5">Quick Links</h3>
             <ul className="space-y-3">
               {quickLinks.map((link) => (
                 <li key={link.href}>
-                  <Link href={link.href} className={footerLink}>
+                  <Link
+                    href={link.href}
+                    className="text-gray-400 hover:text-white text-sm transition-colors hover:translate-x-1 inline-block"
+                  >
                     {link.label}
                   </Link>
                 </li>
@@ -106,11 +147,11 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="border-t border-gray-700 mt-12 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-gray-300">
-          <p>© {year} Urmi Threading Salon</p>
+        <div className="border-t border-gray-800 mt-12 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-gray-500">
+          <p>© {year} Urmi Threading Salon. All rights reserved.</p>
           <div className="flex gap-6">
-            <Link href="/privacy" className={footerLink}>Appointment Privacy</Link>
-            <a href="/sitemap.xml" className={footerLink}>Sitemap</a>
+            <Link href="/privacy" className="hover:text-white transition-colors">Privacy Policy</Link>
+            <Link href="/sitemap.xml" className="hover:text-white transition-colors">Sitemap</Link>
           </div>
         </div>
       </div>

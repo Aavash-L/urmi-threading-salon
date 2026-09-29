@@ -1,51 +1,36 @@
 "use client";
 
-import { usePathname } from "next/navigation";
-import { CalendarDays, Phone } from "lucide-react";
-import { BUSINESS, CTA } from "@/lib/constants";
-import TrackedLink from "@/components/analytics/TrackedLink";
+import Link from "next/link";
+import { motion } from "framer-motion";
+import { Phone, CalendarDays } from "lucide-react";
+import { BUSINESS } from "@/lib/constants";
+import { useReducedMotion } from "framer-motion";
 
-// Sticky call/request bar for every viewport where the header's call/request
-// buttons are hidden (< lg / 1024px). A matching spacer in SiteChrome reserves
-// room so the bar never covers the footer or the end of the page.
 export default function FloatingCallButton() {
-  const pathname = usePathname();
-  const onBookPage = pathname === "/book";
+  const shouldReduce = useReducedMotion();
 
   return (
-    <div
-      className="lg:hidden fixed bottom-0 inset-x-0 z-40 bg-white/95 backdrop-blur border-t border-lavender-100 px-3 pt-2.5"
-      style={{ paddingBottom: "calc(0.625rem + env(safe-area-inset-bottom))" }}
+    <motion.div
+      className="md:hidden fixed bottom-0 left-0 right-0 z-40 flex gap-3 px-4 pb-5 pt-3 bg-white/80 backdrop-blur-md border-t border-lavender-100"
+      initial={shouldReduce ? { opacity: 1 } : { opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 1, duration: 0.4 }}
     >
-      <div className="max-w-xl mx-auto grid grid-cols-2 gap-2">
-        <TrackedLink
-          href={`tel:${BUSINESS.phoneRaw}`}
-          event="call_click"
-          placement="sticky_bar"
-          className="flex items-center justify-center gap-1.5 bg-brand-gradient text-white font-semibold rounded-full min-h-12 px-2 text-[13px] sm:text-sm leading-tight text-center"
-        >
-          <Phone size={15} aria-hidden="true" className="shrink-0" />
-          <span>{CTA.call}</span>
-        </TrackedLink>
-        {onBookPage ? (
-          <a
-            href="#request-form"
-            className="flex items-center justify-center gap-1.5 border-2 border-brand-purple-strong text-brand-purple-strong bg-white font-semibold rounded-full min-h-12 px-2 text-[13px] sm:text-sm leading-tight text-center"
-          >
-            View Request Form
-          </a>
-        ) : (
-          <TrackedLink
-            href={CTA.requestHref}
-            event="booking_start"
-            placement="sticky_bar"
-            className="flex items-center justify-center gap-1.5 border-2 border-brand-purple-strong text-brand-purple-strong bg-white font-semibold rounded-full min-h-12 px-2 text-[13px] sm:text-sm leading-tight text-center"
-          >
-            <CalendarDays size={15} aria-hidden="true" className="shrink-0" />
-            <span>{CTA.request}</span>
-          </TrackedLink>
-        )}
-      </div>
-    </div>
+      <a
+        href={`tel:${BUSINESS.phoneRaw}`}
+        aria-label={`Call Urmi Threading Salon at ${BUSINESS.phone}`}
+        className="flex-1 flex items-center justify-center gap-2 border-2 border-brand-purple text-brand-purple font-semibold py-3.5 rounded-full text-sm"
+      >
+        <Phone size={16} />
+        Call Us
+      </a>
+      <Link
+        href="/book"
+        className="flex-1 flex items-center justify-center gap-2 bg-brand-gradient text-white font-semibold py-3.5 rounded-full shadow-lg text-sm"
+      >
+        <CalendarDays size={16} />
+        Book Now
+      </Link>
+    </motion.div>
   );
 }

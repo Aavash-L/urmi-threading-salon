@@ -1,29 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getBookableItem } from "@/lib/catalog";
-import { dateStatus, generateSlots } from "@/lib/booking/scheduling";
-import { getStore } from "@/lib/booking/store";
+import { supabase } from "@/lib/supabase";
 
-export const dynamic = "force-dynamic";
-
-const noStore = { "Cache-Control": "no-store" };
-
-// GET /api/availability?date=YYYY-MM-DD&service=<catalog id>
-// Returns preferred start times for that service. Errors are explicit (never an
-// empty "everything is free" answer).
 export async function GET(req: NextRequest) {
-  const date = req.nextUrl.searchParams.get("date") ?? "";
-  const item = getBookableItem(req.nextUrl.searchParams.get("service"));
-  if (!item) return NextResponse.json({ error: "Unknown service" }, { status: 400, headers: noStore });
+  const date = req.nextUrl.searchParams.get("date");
+  if (!date) return NextResponse.json({ bookedSlots: [] });
 
-  const status = dateStatus(date);
-  if (status !== "ok") return NextResponse.json({ date, status, slots: [] }, { headers: noStore });
+  const { data } = await supabase
+    .from("bookings")
+    .select("time")
+    .eq("date", date)
+    .neq("status", "cancelled");
 
-  try {
-    const existing = await getStore().listActive(date);
-    const slots = generateSlots(date, item.duration, existing);
-    return NextResponse.json({ date, status, slots }, { headers: noStore });
-  } catch (err) {
-    console.error("[availability] failed", err);
-    return NextResponse.json({ error: "Availability unavailable" }, { status: 503, headers: noStore });
-  }
+  const bookedSlots = (data ?? []).map((b: { time: string }) => b.time);
+  return NextResponse.json({ bookedSlots });
 }
