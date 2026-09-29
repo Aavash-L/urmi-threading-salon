@@ -58,6 +58,7 @@ function writeDraft(v: Partial<RequestInput>) {
 
 export default function Booking({ headingLevel = "h2" }: { headingLevel?: "h1" | "h2" }) {
   const Heading = headingLevel;
+  const Sub = headingLevel === "h1" ? "h2" : "h3";
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState("");
@@ -236,9 +237,9 @@ export default function Booking({ headingLevel = "h2" }: { headingLevel?: "h1" |
             {submitted ? (
               <div className="flex flex-col items-center text-center py-10 gap-4" role="status">
                 <CheckCircle2 size={56} className="text-emerald-700" aria-hidden="true" />
-                <h3 ref={successRef} tabIndex={-1} className="font-serif text-2xl font-bold text-charcoal focus:outline-none">
+                <Sub ref={successRef} tabIndex={-1} className="font-serif text-2xl font-bold text-charcoal focus:outline-none">
                   {BOOKING_COPY.successHeading}
-                </h3>
+                </Sub>
                 <p className="text-gray-700 leading-relaxed max-w-md">{BOOKING_COPY.successBody}</p>
                 <button
                   type="button"
@@ -464,14 +465,14 @@ export default function Booking({ headingLevel = "h2" }: { headingLevel?: "h1" |
 
           <aside className="space-y-6 min-w-0" aria-label="Calling and salon hours">
             <div className="bg-lavender-50 rounded-2xl p-6 space-y-3">
-              <h3 className="font-serif text-2xl font-bold text-charcoal">Prefer to Call?</h3>
+              <Sub className="font-serif text-2xl font-bold text-charcoal">Prefer to Call?</Sub>
               <CallButton placement="booking_aside" />
               <CallHelper />
             </div>
             <div className="bg-white border border-lavender-100 rounded-2xl p-6">
               <div className="flex items-center gap-2 mb-3">
                 <Clock size={18} className="text-brand-purple-strong" aria-hidden="true" />
-                <h3 className="font-semibold text-charcoal">Salon Hours</h3>
+                <Sub className="font-semibold text-charcoal">Salon Hours</Sub>
               </div>
               <HoursTable />
               <p className="text-sm text-gray-700 mt-3">Walk-ins are welcome during salon hours.</p>

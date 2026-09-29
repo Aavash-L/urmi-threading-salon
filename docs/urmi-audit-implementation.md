@@ -192,7 +192,7 @@ These are asserted by `scripts/verify-site.mjs` (added in a later phase).
 - [x] Phase 1 — accuracy & conversion repairs
 - [x] Phase 2 — booking correctness & shared catalog
 - [x] Phase 3 — metadata, local content, schema, privacy
-- [ ] Phase 4 — performance, accessibility, proof
+- [x] Phase 4 — performance, accessibility, proof
 
 Test/verification results are appended per phase below.
 
@@ -455,3 +455,131 @@ exact titles, no duplicate brand, self canonical/og:url, OG/Twitter parity, JSON
 exactly one BeautySalon, no unverified markup, FAQ answers visible, unchanged phone and
 address on every page, no banned claims, genuine 404, `/gallery` 308, one-location
 sentence and no travel/parking claims on non-Wayne pages).
+
+## Phase 4 — Performance, accessibility and proof
+
+Commit: `perf: improve public loading accessibility and salon proof`
+
+### Payload
+
+- Admin manifest and "Urmi Admin" Apple title are now only on `/admin` pages
+  (`src/app/admin/layout.tsx`). `/manifest.json` stays at the same URL/scope for
+  already-installed staff devices, with 192/512/maskable PNG icons instead of the
+  962 KB salon PNG. No public manifest (none is needed).
+- The raw `urmimainfront.png` was fetched because the admin manifest and the push
+  service worker used it as an icon; both now use `/icons/icon-192.png`. The homepage
+  requests one optimized hero image (~22 KB at 390 and 1440 px), never the raw PNG.
+- Favicon 4.5 KB. Unsplash stock removed (no third-party image hosts).
+- Hero, headings and CTAs are server-rendered with no entrance animation; animated
+  counters, the auto-scrolling carousel, scroll-progress bar and stock collage are gone.
+  `framer-motion` now loads only on `/admin`.
+- Fonts: Playfair limited to weight 700, `display: optional`; Inter not preloaded.
+- The booking form's shared schema moved to `zod/mini`: the form chunk went from
+  76 KB to 23 KB gzipped.
+- Map iframes are `loading="lazy"`, with an ordinary "Get Directions" link next to every map.
+- `prefers-reduced-motion` disables smooth scrolling, transitions and animation.
+
+### Accessibility
+
+- Contrast: text/control purple `#7E22CE` (6.98:1 on white); gradient buttons
+  `#C0267A→#8B35E0` (≥5.5:1 with white); footer text gray-300 on charcoal (≥11:1);
+  offer/terms text gray-700.
+- Body links are underlined (not colour-only); visible 3px focus outline everywhere.
+- 44px minimum for primary controls, including the hamburger and sticky bar buttons.
+- Mobile menu: moves focus in on open, Escape closes it, and focus returns to the
+  button. Desktop Services menu is a keyboard disclosure (Enter/Escape, `hidden` when closed).
+  Tabs on /pricing replaced by in-page category links; FAQ uses native `<details>`.
+- Form: visible labels, `aria-required`, `aria-invalid`, errors linked with
+  `aria-describedby`, first invalid field focused, submit errors in a focused
+  `role="alert"`, success message focused with `role="status"`, time-slot hints in
+  `aria-live`.
+- Accessible names: no aria-labels hide visible text; the Instagram handle and "Call …"
+  text are part of the link text.
+- Horizontal overflow: none at any tested width (the 320px case was the hours table,
+  fixed in the component; no global `overflow-x: hidden`).
+
+### Proof / photography
+
+Only the two real salon interior photos are used, described literally. No gallery was
+published ("Work From Our Salon" is ready to add when verified photos exist). The
+exact photo request is in `docs/local-search-handoff.md` §2.
+
+### Handoff
+
+`docs/local-search-handoff.md` lists owner facts, assets, GBP / Search Console / Vercel
+actions and the monthly measures; `docs/operational-test.md` has the receptionist and
+delivery test.
+
+## Final verification (2026-09-28, local production build)
+
+Environment: macOS, Node 22.20, Next 16.2.6 production build (`next start`), Google
+Chrome 154 driven by playwright-core. **No real iOS Safari/Android device checks were run**;
+mobile results are Chrome viewport emulation.
+
+| Check | Result |
+|---|---|
+| `next build` (without `RESEND_API_KEY`) | ✓ |
+| `tsc --noEmit` | ✓ |
+| `eslint src scripts tests` | 0 errors, 1 warning (react-hook-form `watch` "incompatible library" notice) — baseline was 5 errors, 7 warnings |
+| `npm test` (vitest) | 31/31 ✓ |
+| `scripts/verify-site.mjs` | ✓ 22 routes, 23 link targets, 38 anchors, assets |
+| `scripts/check-ui.mjs --axe` (22 routes × 320/360/390/640/768/1024/1440) | ✓ no overflow; call + request visible in first viewport; axe: 0 serious/critical (axe run at 390 and 1440) |
+| `scripts/check-a11y-flows.mjs` | ✓ 7/7 (skip link, menus, focus return, sticky bar vs submit/footer at 360/768, error focus, hero visible without animation) |
+| `scripts/e2e-booking.mjs` (test sink) | ✓ 8/8; sink ended with 1 pending request + 1 staff message; nothing sent externally |
+
+200% zoom is approximated by the 640px width run (1280px window at 200%); it was not
+tested with browser zoom on a physical display.
+
+### Checklist
+
+- [x] Production build passes.
+- [x] All original 21 sitemap routes return 200.
+- [x] /privacy returns 200 with content traced to the implementation.
+- [x] Unknown URLs return a genuine 404.
+- [x] No phone-number or business-address changes (asserted on every page).
+- [x] No slug changes (no redirects needed; `/gallery` 308 kept).
+- [x] No broken internal links, anchors, images, icons or OG assets.
+- [x] Unique final title, description, H1, canonical and OG URL per page.
+- [x] Exactly one business entity; page-level JSON-LD valid.
+- [x] No 2010/2016/age claims.
+- [x] No invented testimonials, ratings, medical claims or offer terms.
+- [x] Facials identified as skincare everywhere (HTML, JSON-LD, cards, nav, booking).
+- [x] Non-Wayne location pages point to the single Wayne salon.
+- [x] Call/request controls visible at mobile, tablet and desktop sizes.
+- [x] No overflow at 320/360/390/768/1024/1440 (and 640).
+- [ ] Real iOS Safari / Android devices — not available; Chrome emulation only.
+- [x] Keyboard, focus, reduced motion and contrast checks pass; 200% zoom approximated at 640px.
+- [x] Service preselection works (exact id and category).
+- [x] Email optional on client and server.
+- [x] Past slots and out-of-hours requests rejected server-side.
+- [x] Availability and submission failures never show false success.
+- [x] Delivery tested only against the test sink; no real customer messages.
+- [x] Public pages do not expose the admin install experience.
+- [x] Analytics events contain no personal appointment data.
+
+### Lighthouse 12.8.2 (3 runs each, medians; Chrome 154 headless)
+
+Mobile: Lighthouse default (Moto G Power emulation 412px, simulated throttling —
+150 ms RTT, 1.6 Mbps, 4× CPU). Desktop: `--preset=desktop` (1350px, 40 ms RTT,
+10 Mbps, 1× CPU). Localhost server, so TTFB is optimistic compared with Vercel.
+
+| Page | Perf | A11y | BP | SEO | FCP | LCP | CLS | TBT |
+|---|---|---|---|---|---|---|---|---|
+| Mobile `/` | 94 | 100 | 100 | 100 | 1.21 s | **3.08 s** | 0 | 14 ms |
+| Mobile `/book` | 96 | 100 | 100 | 100 | 1.22 s | **2.78 s** | 0 | 12 ms |
+| Mobile `/services/eyebrow-threading` | 97 | 100 | 100 | 100 | 1.21 s | **2.63 s** | 0 | 11 ms |
+| Mobile `/services/facials` | 97 | 100 | 100 | 100 | 1.21 s | **2.64 s** | 0 | 20 ms |
+| Desktop `/` | 100 | 100 | 100 | 100 | 0.33 s | 0.63 s | 0 | 0 ms |
+
+Baseline at the start of Phase 4 (same method): mobile `/` 92 / LCP 3.31 s,
+`/book` a11y 98 (heading order).
+
+**Missed target: mobile lab LCP ≤ 2.5 s.** The LCP element is text (hero H1 / intro
+paragraph); in the unthrottled trace it paints at ~0.16 s together with FCP. Lighthouse's
+simulated LCP includes every request that starts before that paint — mainly the Next.js/
+React framework chunks (~150 KB gzipped) plus the homepage's booking form. Font and form
+bundle reductions improved `/` from 3.31 s to 3.08 s. Further gains would need less
+client JavaScript on first load, e.g. moving the homepage form behind a "Request an
+Appointment" link or deferring its hydration. That was not done because the homepage
+form is an existing conversion path. These are lab numbers only; they are not field
+Core Web Vitals (no real-user data or INP) and say nothing about local rankings.

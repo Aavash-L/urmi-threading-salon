@@ -50,7 +50,8 @@ describe("appointment request submission", () => {
   });
 
   it("treats email as optional but validates it when given", async () => {
-    const { email: _omit, ...noEmail } = valid;
+    const noEmail: Partial<typeof valid> = { ...valid };
+    delete noEmail.email;
     expect((await submitRequest(noEmail, NOW)).status).toBe(200);
     const bad = await submitRequest({ ...valid, time: "11:15", email: "not-an-email" }, NOW);
     expect(bad.status).toBe(400);

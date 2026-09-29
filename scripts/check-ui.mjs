@@ -39,7 +39,8 @@ for (const width of widths) {
   const context = await browser.newContext({ viewport: { width, height: 800 }, reducedMotion: "reduce" });
   const page = await context.newPage();
   for (const route of ROUTES) {
-    const res = await page.goto(base + route, { waitUntil: "networkidle" });
+    const res = await page.goto(base + route, { waitUntil: "load" });
+    await page.waitForTimeout(150);
     const problems = [];
     if (res?.status() !== 200) problems.push(`status ${res?.status()}`);
 

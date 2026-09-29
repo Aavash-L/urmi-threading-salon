@@ -97,7 +97,6 @@ export default function AdminDashboard() {
   const router = useRouter();
 
   const fetchBookings = useCallback(async () => {
-    setLoading(true);
     const res = await fetch("/api/admin/bookings");
     if (res.status === 401) { router.push("/admin/login"); return; }
     const data: Booking[] = await res.json();
@@ -142,6 +141,8 @@ export default function AdminDashboard() {
   }, []);
 
   // Initial load
+  // fetchBookings only sets state after its first await, so this is not a synchronous cascade.
+  // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(() => { fetchBookings(); }, [fetchBookings]);
 
   // 30-second polling
@@ -149,22 +150,6 @@ export default function AdminDashboard() {
     const id = setInterval(silentPoll, 30_000);
     return () => clearInterval(id);
   }, [silentPoll]);
-
-  // Register service worker + set up push subscription
-  useEffect(() => {
-    if (!("serviceWorker" in navigator) || !("PushManager" in window)) return;
-
-    const vapidKey = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY;
-    if (!vapidKey) return;
-
-    navigator.serviceWorker.register("/sw.js").then(async (reg) => {
-      const perm = Notification.permission;
-      if (perm === "granted") {
-        await subscribePush(reg, vapidKey);
-      }
-    });
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   async function subscribePush(reg: ServiceWorkerRegistration, vapidKey: string) {
     try {
@@ -181,6 +166,21 @@ export default function AdminDashboard() {
       setPushEnabled(true);
     } catch {}
   }
+
+  // Register service worker + set up push subscription
+  useEffect(() => {
+    if (!("serviceWorker" in navigator) || !("PushManager" in window)) return;
+
+    const vapidKey = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY;
+    if (!vapidKey) return;
+
+    navigator.serviceWorker.register("/sw.js").then(async (reg) => {
+      const perm = Notification.permission;
+      if (perm === "granted") {
+        await subscribePush(reg, vapidKey);
+      }
+    });
+  }, []);
 
   async function enablePush() {
     if (!("serviceWorker" in navigator) || !("PushManager" in window)) return;
@@ -243,7 +243,8 @@ export default function AdminDashboard() {
   function toggleDate(date: string) {
     setExpandedDates((prev) => {
       const next = new Set(prev);
-      next.has(date) ? next.delete(date) : next.add(date);
+      if (next.has(date)) next.delete(date);
+      else next.add(date);
       return next;
     });
   }
@@ -305,7 +306,7 @@ export default function AdminDashboard() {
               </button>
             )}
             <button
-              onClick={fetchBookings}
+              onClick={() => { setLoading(true); fetchBookings(); }}
               className="p-2 rounded-full hover:bg-lavender-50 text-gray-400 hover:text-brand-purple transition-colors"
               aria-label="Refresh"
             >
