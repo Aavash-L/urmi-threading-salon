@@ -71,12 +71,6 @@ export const bookingServices: BookingService[] = [
   { name: "Basic Facial",               duration: 45,  price: 65,  category: "Facials" },
   { name: "Diamond Facial",             duration: 60,  price: 90,  category: "Facials" },
 
-  // Lash & Brow
-  { name: "Eyebrow Tinting",            duration: 20,  price: 15,  category: "Lash & Brow" },
-  { name: "Eyelash Tinting",            duration: 20,  price: 20,  category: "Lash & Brow" },
-  { name: "Eyelash Extensions",         duration: 90,  price: 50,  category: "Lash & Brow" },
-  { name: "Eyelash Exchange",           duration: 90,  price: 50,  category: "Lash & Brow" },
-
   // Henna (price varies by design complexity)
   { name: "Henna Design (hands)",       duration: 60,  price: 0,   category: "Henna" },
   { name: "Henna Design (feet)",        duration: 90,  price: 0,   category: "Henna" },
@@ -262,47 +256,6 @@ export const SERVICES: Service[] = [
     ],
   },
   {
-    id: "eyelash-extensions",
-    name: "Eyelash Extensions",
-    slug: "eyelash-extensions",
-    shortDescription:
-      "Volume, length, and curl — lashes that wake up beautiful every day.",
-    description:
-      "Wake up every morning with full, gorgeous lashes. Our lash extension service applies individual synthetic lashes to each natural lash using a medical-grade adhesive, creating a natural or dramatic look that lasts 4–6 weeks with proper care.",
-    benefits: [
-      "Wake up with perfect lashes — no mascara needed",
-      "Fully customizable length, curl, and volume",
-      "Lightweight and comfortable to wear",
-      "Lasts 4–6 weeks with proper care",
-      "Safe for sensitive eyes with hypoallergenic options",
-    ],
-    whatToExpect: [
-      "Consultation on your desired style (natural, cat-eye, volume)",
-      "Under-eye pads and tape applied for comfort",
-      "Individual lashes bonded one-by-one to natural lashes",
-      "60–90 minute application for full set",
-      "Aftercare instructions provided",
-    ],
-    faqs: [
-      {
-        question: "How do I care for lash extensions?",
-        answer:
-          "Avoid water for the first 24–48 hours, sleep on your back when possible, brush daily with a clean spoolie, and avoid oil-based products near the eyes.",
-      },
-      {
-        question: "Will lash extensions damage my natural lashes?",
-        answer:
-          "When applied correctly by a trained professional, lash extensions do not damage natural lashes. We match extension weight to the natural lash for safe, comfortable wear.",
-      },
-    ],
-    icon: "Eye",
-    keywords: [
-      "eyelash extensions Wayne NJ",
-      "lash extensions near me",
-      "lash salon Wayne NJ",
-    ],
-  },
-  {
     id: "henna",
     name: "Henna",
     slug: "henna",
@@ -341,47 +294,6 @@ export const SERVICES: Service[] = [
       "henna Wayne NJ",
       "henna artist near me",
       "mehndi Wayne NJ",
-    ],
-  },
-  {
-    id: "tinting",
-    name: "Lash & Brow Tinting",
-    slug: "tinting",
-    shortDescription:
-      "Darker, fuller-looking lashes and brows — no mascara or brow pencil needed.",
-    description:
-      "Tinting uses a semi-permanent dye to enhance the natural color and fullness of your brows and lashes. It's the perfect low-maintenance solution for people with light, sparse, or uneven brows who want defined results that last 4–6 weeks.",
-    benefits: [
-      "Defined brows and lashes without daily makeup",
-      "Results last 4–6 weeks",
-      "Makes sparse brows appear fuller",
-      "Quick 30–45 minute treatment",
-      "Multiple shade options to match your hair and skin tone",
-    ],
-    whatToExpect: [
-      "Shade consultation to find your perfect match",
-      "Protective barrier applied around the treatment area",
-      "Tint mixed and applied carefully",
-      "Processing time of 10–15 minutes",
-      "Tint removed and results revealed",
-    ],
-    faqs: [
-      {
-        question: "Is brow tinting safe for sensitive skin?",
-        answer:
-          "We perform a patch test prior to your first tinting session to ensure no adverse reaction. Most clients with sensitive skin tolerate tinting very well.",
-      },
-      {
-        question: "Can I combine tinting with threading?",
-        answer:
-          "Yes — threading and tinting are often done together. We typically thread first to define the shape, then tint to enhance color. The combination takes under 45 minutes.",
-      },
-    ],
-    icon: "Brush",
-    keywords: [
-      "brow tinting Wayne NJ",
-      "lash tinting near me",
-      "eyebrow tinting Wayne NJ",
     ],
   },
 ];

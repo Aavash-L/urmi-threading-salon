@@ -47,14 +47,6 @@ export default function ServicePageTemplate({ service }: ServicePageTemplateProp
       para3:
         "Regular facials, spaced 4–6 weeks apart, produce compounding benefits. The first visit cleans the slate; subsequent visits maintain the results and allow us to track how your skin is changing. Many clients notice that their home skincare products start working better after consistent facial treatments because their skin is better prepared to absorb them.",
     },
-    "eyelash-extensions": {
-      intro:
-        "Eyelash extensions are the ultimate low-maintenance beauty upgrade — wake up every morning with full, defined lashes and skip the mascara entirely. At Urmi Threading Salon, we use medical-grade adhesive and individually apply each extension to a single natural lash, creating a look that moves naturally and stays comfortable all day.",
-      para2:
-        "The application process takes 60–90 minutes for a full set. You'll lie comfortably with your eyes closed while we work, applying extensions one by one to ensure even distribution and proper weight balance. The result can be as natural or as dramatic as you prefer — we'll discuss your desired look in detail before we begin.",
-      para3:
-        "The key to long-lasting lash extensions is proper aftercare. Avoid water for the first 24–48 hours, sleep on your back when possible, use oil-free products near the eyes, and brush your lashes gently each morning with a clean spoolie. With good care, a full set typically lasts 4–6 weeks before you need a fill. Fills, which take 45–60 minutes, maintain the fullness as natural lashes shed.",
-    },
     "henna": {
       intro:
         "Henna has been used for thousands of years across South Asia, the Middle East, and North Africa for body art and celebration. At Urmi Threading Salon, we work exclusively with 100% natural henna paste — no black henna, no chemical additives — to ensure safe, vibrant results on all skin types.",
@@ -62,14 +54,6 @@ export default function ServicePageTemplate({ service }: ServicePageTemplateProp
         "Natural henna stains the skin through a compound called lawsone, which binds to the keratin in the outer skin layer. The color develops over the first 24–48 hours, deepening from orange to a rich brown or red-brown depending on your skin tone and how well you care for the paste after application. Hands and feet, where the skin is thickest, produce the deepest, longest-lasting stains.",
       para3:
         "We offer henna for weddings, Eid, Diwali, baby showers, birthdays, and everyday occasions. Our design options range from simple florals and geometric patterns to intricate bridal mehndi across both hands and feet. If you're planning henna for an event, we recommend booking in advance — bridal packages especially should be scheduled 1–2 days before the celebration so the color is at its richest peak.",
-    },
-    "tinting": {
-      intro:
-        "Lash and brow tinting is the simplest way to look more polished every day without adding to your makeup routine. At Urmi Threading Salon, we use semi-permanent professional tints that safely darken and define brows and lashes for results that last 4–6 weeks — no mascara, no brow pencil needed.",
-      para2:
-        "Brow tinting is particularly effective for clients with naturally light, sparse, or uneven brows. The tint fills in the appearance of gaps, makes fine hairs more visible, and creates a defined shape even without makeup. Lash tinting makes lashes appear darker, thicker, and longer — especially transformative for clients with naturally blonde or light-colored lashes.",
-      para3:
-        "Many clients combine tinting with threading in a single visit. We typically thread first to define the brow shape, then tint to enhance color and fullness. The combination takes under 45 minutes and the results are immediate — no drying time, no waiting. We perform a patch test before your first tinting session to confirm there's no sensitivity.",
     },
   };
 

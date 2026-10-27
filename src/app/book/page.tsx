@@ -6,7 +6,7 @@ import Booking from "@/components/sections/Booking";
 export const metadata: Metadata = {
   title: "Book an Appointment — Urmi Threading Salon Wayne NJ",
   description:
-    "Book your threading, waxing, facial, or lash appointment at Urmi Threading Salon in Wayne, NJ. Online booking or call (973) 653-9322. Walk-ins also welcome.",
+    "Book your threading, waxing, facial, or henna appointment at Urmi Threading Salon in Wayne, NJ. Online booking or call (973) 653-9322. Walk-ins also welcome.",
   alternates: { canonical: `${SITE_URL}/book` },
 };
 

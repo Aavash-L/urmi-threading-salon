@@ -129,7 +129,7 @@ export const LOCATIONS: Location[] = [
       {
         title: "Complete Beauty Services",
         description:
-          "Threading is just the beginning. Clifton clients combine eyebrow threading with waxing, tinting, or facials for a complete look in one visit.",
+          "Threading is just the beginning. Clifton clients combine eyebrow threading with waxing or facials for a complete look in one visit.",
       },
       {
         title: "Veteran Team",
@@ -221,7 +221,7 @@ export const LOCATIONS: Location[] = [
       {
         title: "All Services Under One Roof",
         description:
-          "Threading, waxing, facials, lash extensions, tinting, and henna. Little Falls clients love being able to take care of multiple beauty needs in one visit.",
+          "Threading, waxing, facials, and henna. Little Falls clients love being able to take care of multiple beauty needs in one visit.",
       },
       {
         title: "No-Pressure Environment",
@@ -272,7 +272,7 @@ export const LOCATIONS: Location[] = [
       {
         title: "Multiple Services in One Visit",
         description:
-          "Make the most of your trip — combine threading with waxing, tinting, or a facial to walk out fully refreshed.",
+          "Make the most of your trip — combine threading with waxing or a facial to walk out fully refreshed.",
       },
     ],
     faqs: [
@@ -318,7 +318,7 @@ export const LOCATIONS: Location[] = [
       {
         title: "Full Beauty Menu",
         description:
-          "From threading to lash extensions, facials to henna — Paramus clients can take care of their full beauty routine in one convenient trip to Wayne.",
+          "From threading to waxing, facials to henna — Paramus clients can take care of their full beauty routine in one convenient trip to Wayne.",
       },
     ],
     faqs: [

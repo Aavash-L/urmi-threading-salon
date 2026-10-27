@@ -645,7 +645,7 @@ export default function EyebrowThreadingWayneNJ() {
           <p className="text-sm text-gray-500">
             Also offering{" "}
             <Link href="/services" className="text-brand-purple hover:underline underline-offset-2">
-              waxing, facials, lash extensions, and henna
+              waxing, facials, and henna
             </Link>{" "}
             — view our{" "}
             <Link href="/about" className="text-brand-purple hover:underline underline-offset-2">

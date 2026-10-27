@@ -50,13 +50,6 @@ export const aboutImage3: ImageAsset = {
   height: 500,
 };
 
-export const lashExtensionsImage: ImageAsset = {
-  src: "https://images.unsplash.com/photo-1604654894610-df63bc536371?w=800&q=80",
-  alt: "Beautiful eyelash extensions applied at Urmi Threading Salon Wayne NJ",
-  width: 800,
-  height: 600,
-};
-
 export const facialImage: ImageAsset = {
   src: "https://images.unsplash.com/photo-1583795128727-6ec3642408f8?w=800&q=80",
   alt: "Relaxing facial treatment at Urmi Threading Salon Wayne NJ",
@@ -90,12 +83,6 @@ export const galleryImages: ImageAsset[] = [
     alt: "Precision eyebrow shaping by expert esthetician",
     width: 600,
     height: 750,
-  },
-  {
-    src: "https://images.unsplash.com/photo-1604654894610-df63bc536371?w=600&q=80",
-    alt: "Lash extension results at Urmi Threading Salon",
-    width: 600,
-    height: 600,
   },
   {
     src: "https://images.unsplash.com/photo-1583795128727-6ec3642408f8?w=600&q=80",

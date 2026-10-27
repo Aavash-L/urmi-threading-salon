@@ -8,11 +8,11 @@ import BreadcrumbSchema from "@/components/seo/BreadcrumbSchema";
 export const metadata: Metadata = {
   title: "Beauty Services — Threading, Waxing, Facials & More",
   description:
-    "Explore all services at Urmi Threading Salon in Wayne, NJ: eyebrow threading, waxing, facials, lash extensions, henna & tinting. Call (973) 653-9322.",
+    "Explore all services at Urmi Threading Salon in Wayne, NJ: eyebrow threading, face threading, waxing, facials & henna. Call (973) 653-9322.",
   alternates: { canonical: `${SITE_URL}/services` },
   openGraph: {
     title: "Beauty Services | Urmi Threading Salon",
-    description: "Threading, waxing, facials, lash extensions, henna & tinting in Wayne, NJ.",
+    description: "Threading, waxing, facials & henna in Wayne, NJ.",
     url: `${SITE_URL}/services`,
   },
 };

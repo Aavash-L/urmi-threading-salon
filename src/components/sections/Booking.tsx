@@ -14,7 +14,6 @@ const CATEGORY_EMOJI: Record<string, string> = {
   Threading: "✨",
   Waxing: "🌿",
   Facials: "🌸",
-  "Lash & Brow": "👁️",
   Henna: "🌺",
 };
 

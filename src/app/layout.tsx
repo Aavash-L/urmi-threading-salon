@@ -24,7 +24,7 @@ export const metadata: Metadata = {
     template: "%s | Urmi Threading Salon",
   },
   description:
-    `Wayne NJ's top-rated threading salon since 2010. Eyebrow threading, waxing, facials, lash extensions & henna. ${RATING_LABEL} ★ on Google · Walk-ins welcome · (973) 653-9322.`,
+    `Wayne NJ's top-rated threading salon since 2010. Eyebrow threading, waxing, facials & henna. ${RATING_LABEL} ★ on Google · Walk-ins welcome · (973) 653-9322.`,
   keywords: [
     "threading salon Wayne NJ",
     "eyebrow threading near me",

@@ -55,15 +55,6 @@ export const TESTIMONIALS: Testimonial[] = [
     datePublished: "2026-03-20",
   },
   {
-    id: "6",
-    name: "Anita R.",
-    rating: 5,
-    text: "The lash extensions are incredible — lightweight, natural-looking, and lasted well over 5 weeks with my aftercare routine. I've gotten so many compliments. The studio is spotless, which matters a lot to me.",
-    service: "Eyelash Extensions",
-    date: "3 weeks ago",
-    datePublished: "2026-05-01",
-  },
-  {
     id: "7",
     name: "Fatima H.",
     rating: 5,

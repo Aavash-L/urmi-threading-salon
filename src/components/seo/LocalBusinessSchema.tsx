@@ -76,9 +76,7 @@ export default function LocalBusinessSchema() {
         { "@type": "Offer", itemOffered: { "@type": "Service", name: "Face Threading" } },
         { "@type": "Offer", itemOffered: { "@type": "Service", name: "Body Waxing" } },
         { "@type": "Offer", itemOffered: { "@type": "Service", name: "Facials" } },
-        { "@type": "Offer", itemOffered: { "@type": "Service", name: "Eyelash Extensions" } },
         { "@type": "Offer", itemOffered: { "@type": "Service", name: "Henna" } },
-        { "@type": "Offer", itemOffered: { "@type": "Service", name: "Tinting" } },
       ],
     },
   };
