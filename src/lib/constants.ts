@@ -15,8 +15,8 @@ export const BUSINESS = {
     lng: -74.2421,
   },
   // Update these two to change the rating/review count everywhere on the site
-  rating: 4.8,
-  reviewCount: 267,
+  rating: 4.9,
+  reviewCount: 273,
   reviewsUrl: "https://g.page/r/Cfbomhoh-oQZEAE/review",
   established: 2010,
   url: "https://www.urmithreadingsalon.com",
@@ -46,7 +46,7 @@ export const BUSINESS = {
 
 export const SITE_URL = "https://www.urmithreadingsalon.com";
 
-// Shown as "267+" — the exact review count with a "+" suffix.
+// Shown as "273+" — the exact review count with a "+" suffix.
 export const REVIEW_COUNT_ROUNDED = BUSINESS.reviewCount;
 export const REVIEWS_LABEL = `${REVIEW_COUNT_ROUNDED}+`;
 export const RATING_LABEL = BUSINESS.rating.toFixed(1);
